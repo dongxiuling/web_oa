@@ -66,6 +66,35 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/process',
+    component: Layout,
+    // redirect: 'index',
+    meta : {
+      title: '流程管理',
+      icon: 'clipboard'
+    },
+    children: [
+      {
+        path: 'manage',
+        component: () => import('@/views/process/manage'),
+        name: '流程管理',
+        meta: { title: '流程管理', icon: 'example', noCache: true, affix: true }
+      },
+      {
+        path: 'temp',
+        component: () => import('@/views/process/temp'),
+        name: '流程模板',
+        meta: { title: '流程模板', icon: 'exit-fullscreen', noCache: true, affix: true }
+      },
+      {
+        path: 'index',
+        component: () => import('@/views/process/link'),
+        name: '环节管理',
+        meta: { title: '环节管理', icon: 'link', noCache: true, affix: true }
+      }
+    ]
+  },
+  {
     path: '/user',
     component: Layout,
     hidden: true,
