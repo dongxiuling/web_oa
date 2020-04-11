@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :inline="true" align="center">
+    <el-form ref="queryForm" :inline="true" >
       <el-form-item label="环节名称" prop="roleName">
         <el-input placeholder="请输入环节名称" clearable size="small" style="width: 240px" />
       </el-form-item>

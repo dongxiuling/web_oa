@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :inline="true" align="center" border>
+    <el-form ref="queryForm" :inline="true" border>
       <el-form-item label="案件类型" prop="status">
         <el-select placeholder="请选择" clearable size="small" style="width: 240px">
           <el-option />
