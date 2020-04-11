@@ -22,7 +22,7 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini">新增流程</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini">新增环节</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-edit" size="mini">流程配置</el-button>

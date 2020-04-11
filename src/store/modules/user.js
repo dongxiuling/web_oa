@@ -69,6 +69,7 @@ const user = {
     
     // 退出系统
     LogOut({ commit, state }) {
+      // console.log(111)
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
@@ -84,6 +85,7 @@ const user = {
 
     // 前端 登出
     FedLogOut({ commit }) {
+
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()

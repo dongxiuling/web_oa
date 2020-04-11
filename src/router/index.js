@@ -120,6 +120,27 @@ export const constantRoutes = [
         component: () => import('@/views/exam/examList'),
         name: '我的考试',
         meta: { title: '我的考试', icon: 'monitor', noCache: true, affix: true }
+      },
+      {
+        path: 'single',
+        component: () => import('@/views/exam/test/single'),
+        name: '单选题',
+        meta: { title: '单选题', icon: 'monitor', noCache: true, affix: true },
+        hidden: true
+      },
+      {
+        path: 'multiple',
+        component: () => import('@/views/exam/test/single'),
+        name: '单选题',
+        meta: { title: '单选题', icon: 'monitor', noCache: true, affix: true },
+        hidden: true
+      },
+      {
+        path: 'judge',
+        component: () => import('@/views/exam/test/judge'),
+        name: '判断题',
+        meta: { title: '判断题', icon: 'monitor', noCache: true, affix: true },
+        hidden: true
       }
     ]
   },

@@ -54,6 +54,7 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import { getToken, setToken, removeToken } from '@/utils/auth'
 
 export default {
   components: {
@@ -87,15 +88,21 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
+    logout() {
       this.$confirm('确定注销并退出系统吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$store.dispatch('LogOut').then(() => {
-          location.reload()
-        })
+          // 清楚token 角色 权限  调到登录页
+          this.$store.commit('SET_TOKEN', '')
+          this.$store.commit('SET_ROLES', [])
+          this.$store.commit('SET_PERMISSIONS', [])
+          removeToken();
+          this.$router.push('/login')
+        // this.$store.dispatch('LogOut').then(() => {
+        //   location.reload()
+        // })
       })
     }
   }

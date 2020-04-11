@@ -37,7 +37,7 @@
             size="mini" 
             type="text" 
             icon="el-icon-edit" 
-            @click="handleUpdate(scope.row)"
+            @click="goTest()"
             v-hasPermi="['system:dept:edit']"
           >考试</el-button>
           <el-button
@@ -118,7 +118,9 @@ export default {
     };
   },
   methods:{
-  
+    handleUpdate(){
+
+    }
   }
 };
 </script>
