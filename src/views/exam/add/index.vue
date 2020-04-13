@@ -58,6 +58,7 @@
           node-key="id"
           :props="defaultProps"
           @node-click="handleNodeClick"
+          :default-checked-keys="[1,6]"
         ></el-tree>
       </el-form-item>
       <el-form-item>

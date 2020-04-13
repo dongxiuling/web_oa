@@ -37,8 +37,9 @@
             size="mini" 
             type="text" 
             icon="el-icon-edit" 
-            @click="goTest()"
+            @click="$router.push('/exam/single')"
             v-hasPermi="['system:dept:edit']"
+
           >考试</el-button>
           <el-button
             v-if="scope.row.parentId != 0"

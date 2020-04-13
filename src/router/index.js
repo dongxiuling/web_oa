@@ -77,20 +77,17 @@ export const constantRoutes = [
       {
         path: 'manage',
         component: () => import('@/views/process/manage'),
-        name: '流程管理',
-        meta: { title: '流程管理', icon: 'example', noCache: true, affix: true }
+        meta: { title: '流程管理', icon: 'example' }
       },
       {
         path: 'temp',
         component: () => import('@/views/process/temp'),
-        name: '流程模板',
-        meta: { title: '流程模板', icon: 'exit-fullscreen', noCache: true, affix: true }
+        meta: { title: '流程模板', icon: 'exit-fullscreen' }
       },
       {
         path: 'index',
         component: () => import('@/views/process/link'),
-        name: '环节管理',
-        meta: { title: '环节管理', icon: 'link', noCache: true, affix: true }
+        meta: { title: '环节管理', icon: 'link' }
       }
     ]
   },
@@ -106,7 +103,7 @@ export const constantRoutes = [
       {
         path: 'add',
         component: () => import('@/views/exam/add'),
-        name: '发布考试',
+        // name: '发布考试',
         meta: { title: '发布考试', icon: 'edit', noCache: true, affix: true }
       },
       {
@@ -124,22 +121,36 @@ export const constantRoutes = [
       {
         path: 'single',
         component: () => import('@/views/exam/test/single'),
-        name: '单选题',
-        meta: { title: '单选题', icon: 'monitor', noCache: true, affix: true },
+        // name: '单选题',
+        meta: { title: '单选题', icon: 'monitor', noCache: true },
         hidden: true
       },
       {
         path: 'multiple',
-        component: () => import('@/views/exam/test/single'),
-        name: '单选题',
-        meta: { title: '单选题', icon: 'monitor', noCache: true, affix: true },
+        component: () => import('@/views/exam/test/multiple'),
+        // name: '多选题',
+        meta: { title: '多选题', icon: 'monitor', noCache: true  },
         hidden: true
       },
       {
         path: 'judge',
         component: () => import('@/views/exam/test/judge'),
-        name: '判断题',
-        meta: { title: '判断题', icon: 'monitor', noCache: true, affix: true },
+        // name: '判断题',
+        meta: { title: '判断题', icon: 'monitor', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'analytic',
+        component: () => import('@/views/exam/test/analytic'),
+        // name: '判断题',
+        meta: { title: '考试结果', icon: 'monitor', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'done',
+        component: () => import('@/views/exam/test/done'),
+        // name: '判断题',
+        meta: { title: '答案解析', icon: 'monitor', noCache: true },
         hidden: true
       }
     ]

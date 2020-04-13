@@ -45,10 +45,10 @@
           <el-button 
             size="mini" 
             type="text" 
-            icon="el-icon-plus" 
+            icon="el-icon-search" 
             @click="handleAdd(scope.row)"
             v-hasPermi="['system:dept:add']"
-          >新增</el-button>
+          >查看</el-button>
           <el-button
             v-if="scope.row.parentId != 0"
             size="mini"
