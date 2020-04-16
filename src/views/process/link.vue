@@ -19,7 +19,6 @@
         <el-button icon="el-icon-refresh" size="mini">重置</el-button>
       </el-form-item>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-plus" size="mini">新增环节</el-button>

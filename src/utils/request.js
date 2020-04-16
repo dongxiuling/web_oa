@@ -4,6 +4,7 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+
 // 创建axios实例
 const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
@@ -42,7 +43,7 @@ service.interceptors.response.use(res => {
           location.reload() // 为了重新实例化vue-router对象 避免bug
         })
       })
-    } else if (code !== 200) {
+    } else if (code != 200) {
       Notification.error({
         title: res.data.msg
       })
