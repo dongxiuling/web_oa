@@ -10,7 +10,7 @@
           style="width: 240px"
         />
       </el-form-item>
-      <el-form-item label="考试模块" >
+      <el-form-item label="考试模块">
         <el-select v-model="search.categoryId" placeholder="请选择考试模块">
           <el-option
             v-for="item in cateData"
@@ -33,7 +33,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="$router.push('/exam/add')"
-        >新增</el-button>
+        >发布考试</el-button>
       </el-col>
     </el-row>
 
@@ -48,8 +48,13 @@
       <el-table-column prop="duration" label="时长"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-search" @click="handleAdd(scope.row)">查看</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="updateHandle(scope.row)">修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-search"
+            @click="detailHandle(scope.row)"
+          >查看</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -84,7 +89,7 @@ export default {
         title: "",
         categoryId: ""
       },
-      loading:true
+      loading: true
     };
   },
   methods: {
@@ -145,9 +150,15 @@ export default {
           });
         });
     },
-    handleUpdate(_data) {
+    updateHandle(_data) {
       this.$router.push({
         path: "/exam/add",
+        query: { id: _data.id }
+      });
+    },
+    detailHandle(_data) {
+      this.$router.push({
+        path: "/exam/detail",
         query: { id: _data.id }
       });
     },

@@ -104,13 +104,21 @@ export const constantRoutes = [
         path: 'add',
         component: () => import('@/views/exam/add'),
         // name: '发布考试',
-        meta: { title: '发布考试', icon: 'edit', noCache: true, affix: true }
+        meta: { title: '发布考试', icon: 'edit', noCache: true, affix: true },
+        hidden: true
       },
       {
         path: 'addlist',
         component: () => import('@/views/exam/addList'),
         name: '我的发布',
-        meta: { title: '我的发布', icon: 'build', noCache: true, affix: true }
+        meta: { title: '我的发布', icon: 'build', noCache: true, affix: true },
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/exam/addList/detail'),
+        name: '我的发布详情',
+        meta: { title: '我的发布详情', icon: 'build', noCache: true, affix: true },
+        hidden: true
       },
       {
         path: 'examlist',
@@ -123,20 +131,6 @@ export const constantRoutes = [
         component: () => import('@/views/exam/test/single'),
         // name: '单选题',
         meta: { title: '单选题', icon: 'monitor', noCache: true },
-        hidden: true
-      },
-      {
-        path: 'multiple',
-        component: () => import('@/views/exam/test/multiple'),
-        // name: '多选题',
-        meta: { title: '多选题', icon: 'monitor', noCache: true  },
-        hidden: true
-      },
-      {
-        path: 'judge',
-        component: () => import('@/views/exam/test/judge'),
-        // name: '判断题',
-        meta: { title: '判断题', icon: 'monitor', noCache: true },
         hidden: true
       },
       {

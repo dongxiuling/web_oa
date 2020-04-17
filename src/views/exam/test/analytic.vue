@@ -7,12 +7,11 @@
         </div>
         <div style="margin-bottom:50px;">
           <h4>
-            <i class="el-icon-pie-chart"></i>得分：40.0
+            <i class="el-icon-pie-chart"></i>
+            得分：{{score}}
           </h4>
-          <h4>试卷： 计算机基础-数组专项练习</h4>
-          <h4>正确题数： 2/5</h4>
-          <h4>用时： 00:00:14</h4>
-          <!-- <el-button type="warning" @click="$router.push('/exam/done')">答案解析</el-button> -->
+          <h4>考试名称：{{title}}</h4>
+          <h4>正确题数： {{rightNum}}/{{total}}</h4>
         </div>
       </el-card>
     </el-row>
@@ -20,21 +19,32 @@
 </template>
 
 <script>
-import { getExamScore } from "@/api/exam";
+import {  getExamScore } from "@/api/exam";
+
 export default {
   data() {
     return {
-      score:{
-
-      }
+      examId: this.$route.query.examId,
+      rightNum: 0,
+      score: 0,
+      title: "",
+      total: 0
     };
   },
+  methods: {
+    getData() {
+      getExamScore({
+        examId: this.examId
+      }).then(res => {
+        this.rightNum = res.data.rightNum;
+        this.score = res.data.score;
+        this.title = res.data.title;
+        this.total = res.data.totalNum;
+      });
+    }
+  },
   created() {
-    getExamScore({
-      examId: this.$route.query.examId
-    }).then(res => {
-      console.log(res.data.total);
-    });
+    this.getData();
   }
 };
 </script>

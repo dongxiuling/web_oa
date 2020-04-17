@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="loading" v-if="!loading">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span v-if="ExerType == 1">单选题</span>
@@ -68,75 +68,17 @@ import { takeExam, commitQuestion, handExam } from "@/api/exam";
 export default {
   data() {
     return {
-      single: [
-        {
-          title: "单选第1111题",
-          chioceA: "aaaaaaaaaaaa111",
-          chioceB: "bbbbbbbbbbbb111",
-          chioceC: "cccccccccc111",
-          chioceD: "dddddddddd111"
-        },
-        {
-          title: "单选第222题",
-          chioceA: "aaaaaaaaaaaa222",
-          chioceB: "bbbbbbbbbbbb222",
-          chioceC: "cccccccccc222",
-          chioceD: "dddddddddd222"
-        },
-        {
-          title: "单选第3333题",
-          chioceA: "aaaaaaaaaaaa333",
-          chioceB: "bbbbbbbbbbbb333",
-          chioceC: "cccccccccc3333",
-          chioceD: "dddddddddd333"
-        }
-      ],
-      multiple: [
-        {
-          title: "多选1111题",
-          chioceA: "多选1aaaaaaa111",
-          chioceB: "多选1bbbbbbb111",
-          chioceC: "多选1cccccc111",
-          chioceD: "多选1dddddd111"
-        },
-        {
-          title: "多选222题",
-          chioceA: "多选1aaaaaaaa222",
-          chioceB: "多选1bbbbbbbb222",
-          chioceC: "多选1cccccc222",
-          chioceD: "多选1dddddd222"
-        },
-        {
-          title: "多选3333题",
-          chioceA: "多选1aaaaaaaa333",
-          chioceB: "多选1bbbbbbbb333",
-          chioceC: "多选1cccccc3333",
-          chioceD: "多选1dddddd333"
-        }
-      ],
-      judge: [
-        {
-          title: "判断1111题",
-          chioceA: "正确",
-          chioceB: "错误",
-          chioceC: "",
-          chioceD: ""
-        },
-        {
-          title: "判断2222题",
-          chioceA: "正确",
-          chioceB: "错误",
-          chioceC: "",
-          chioceD: ""
-        }
-      ],
+      single: [],
+      multiple: [],
+      judge: [],
       userAnswer: "",
       userAnswerArr: [],
       exerList: [],
       nowIndex: 0, //记录当前题索引,
       examId: this.$route.query.id,
       isAnswer: false, //是否答题
-      yesOrNo: true //答案视奏正确
+      yesOrNo: true, //答案视奏正确
+      loading: true
     };
   },
   computed: {
@@ -169,16 +111,25 @@ export default {
           res.data.multipleQues,
           res.data.judgmentQues
         );
+        this.loading = false;
       });
     },
     // 计算开始答题索引
     getIndex(single, multiple, judge) {
+      let count = 0;
       this.exerList = [...single, ...multiple, ...judge];
       for (let i = 0; i < this.exerList.length; i++) {
         if (this.exerList[i].userAnswer == null) {
           this.nowIndex = i;
+          count++;
           break;
         }
+      }
+      if (count == this.exerList.length) {
+        this.$router.push({
+          path: "/exam/analytic",
+          query: { examId: this.examId }
+        });
       }
     },
     commitHandle() {
@@ -201,27 +152,24 @@ export default {
         }
       });
     },
+    // 下一题
     next() {
       this.nowIndex++;
       this.userAnswer = "";
       this.isAnswer = false; //未答题
-      // if(nowIndex == this.exerList.length){
-
-      // }
     },
     handExam() {
       handExam({
         examId: this.examId
       }).then(res => {
+        // console.log();
         this.$message({
           message: "交卷成功",
           type: "success"
         });
         this.$router.push({
           path: "/exam/analytic",
-          query: {
-            examId: this.examId
-          }
+          query: { examId: this.examId }
         });
       });
     }

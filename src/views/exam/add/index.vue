@@ -257,6 +257,7 @@ export default {
     }
   },
   created() {
+    console.log(1111)
     // 获取分类列表
     this.getCateList();
     // 获取部门树形结构

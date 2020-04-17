@@ -82,6 +82,14 @@ export function handExam(params) {
 // 查看成绩
 export function getExamScore(params) {
     return request({
+        url: '/exam/getExamOver',
+        method: 'post',
+        params
+    })
+}
+// 查看我的发布详情
+export function getExamDetail(params) {
+    return request({
         url: '/exam/getExamContent',
         method: 'post',
         params
