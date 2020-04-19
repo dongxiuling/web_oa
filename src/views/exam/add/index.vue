@@ -104,13 +104,11 @@
 <script>
 import { getCategory } from "@/api/tool/category.js";
 import {
-  treeselect as deptTreeselect,
   createExam,
   getExamById,
   updateExam
 } from "@/api/exam";
-import { listUser } from "@/api/system/user";
-import qs from "qs";
+import { listUser,getUser } from "@/api/system/user";
 export default {
   data() {
     return {
@@ -187,7 +185,7 @@ export default {
     },
     /** 查询部门树结构 */
     getDeptTreeselect() {
-      deptTreeselect().then(response => {
+      getUser().then(response => {
         this.deptTree = response.data;
       });
     },
