@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-// 查询部门下拉树结构
-export function treeselect(params) {
-    return request({
-        url: '/system/user/getUserByDept',
-        method: 'get',
-        params
-    })
-}
 // 查询我的考试
 export function getMyExam(params) {
     return request({
