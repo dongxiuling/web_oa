@@ -177,7 +177,7 @@ export default {
     };
   },
   methods: {
-    //获取选中和半选中状态下的数据
+    //获取选中状态下的人员数据
     getCheckedNodes() {
       this.userIds = this.$refs.tree.getCheckedNodes(true).map(item => {
         return item.id;
