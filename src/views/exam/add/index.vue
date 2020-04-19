@@ -108,7 +108,7 @@ import {
   getExamById,
   updateExam
 } from "@/api/exam";
-import { listUser,getUser } from "@/api/system/user";
+import { listUser,getTreeUser } from "@/api/system/user";
 export default {
   data() {
     return {
@@ -185,7 +185,7 @@ export default {
     },
     /** 查询部门树结构 */
     getDeptTreeselect() {
-      getUser().then(response => {
+      getTreeUser().then(response => {
         this.deptTree = response.data;
       });
     },

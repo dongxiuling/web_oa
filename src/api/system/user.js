@@ -127,7 +127,7 @@ export function importTemplate() {
 }
 
 // 查询部门下拉树结构
-export function getUser(params) {
+export function getTreeUser(params) {
   return request({
       url: '/system/user/getUserByDept',
       method: 'get',
