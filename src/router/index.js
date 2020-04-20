@@ -201,6 +201,25 @@ export const constantRoutes = [
         meta: { title: '修改生成配置' }
       }
     ]
+  },
+  {
+    path: '/questionnaire',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'release',
+        component: () => import('@/views/questionnaire/release'),
+        name: 'release',
+        meta: { title: '发布问卷' }
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/questionnaire/list'),
+        name: 'list',
+        meta: { title: '问卷列表' }
+      }
+    ]
   }
 ]
 
