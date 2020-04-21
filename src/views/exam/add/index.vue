@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { getCategory } from "@/api/tool/category.js";
+import { getExamCategory } from "@/api/tool/category.js";
 import {
   createExam,
   getExamById,
@@ -189,9 +189,9 @@ export default {
         this.deptTree = response.data;
       });
     },
-    // 获取分类列表
+    // 获取分类列表ç
     getCateList() {
-      getCategory({
+      getExamCategory({
         pageNum: 1,
         pageSize: 1000,
         dictType: "sys_module_name"
@@ -255,7 +255,6 @@ export default {
     }
   },
   created() {
-    console.log(1111)
     // 获取分类列表
     this.getCateList();
     // 获取部门树形结构
