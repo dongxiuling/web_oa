@@ -1,0 +1,51 @@
+import request from '@/utils/request'
+
+// 查询我发布的文件
+export function getAddList(data) {
+    return request({
+        url: '/resources/selectMyCreated',
+        method: 'post',
+        data:data
+    })
+}
+// 查询我的文件
+export function getFileList(data) {
+    return request({
+        url: '/resources/selectMyResources',
+        method: 'post',
+        data:data
+    })
+}
+// 添加文件
+export function fileSave(data) {
+    return request({
+        url: '/resources/save',
+        method: 'post',
+        data:data
+    })
+}
+
+//修改的时候 根据id查询资料
+export function getFileById(data) {
+    return request({
+        url: '/resources/getResourcesById/'+data.id,
+        method: 'post',
+        // data:data
+    })
+}
+ 
+//修改资料
+export function updateFile(data) {
+    return request({
+        url: '/resources/update',
+        method: 'post',
+        data:data
+    })
+}
+//删除文件
+export function deleteFile(data) {
+    return request({
+        url: '/resources/delResourcesById/'+data.id,
+        method: 'get',
+    })
+}

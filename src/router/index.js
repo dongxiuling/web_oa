@@ -69,7 +69,7 @@ export const constantRoutes = [
     path: '/process',
     component: Layout,
     // redirect: 'index',
-    meta : {
+    meta: {
       title: '流程管理',
       icon: 'clipboard'
     },
@@ -95,7 +95,7 @@ export const constantRoutes = [
     path: '/exam',
     component: Layout,
     // redirect: 'index',
-    meta : {
+    meta: {
       title: '考试管理',
       icon: 'documentation'
     },
@@ -203,21 +203,31 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/questionnaire',
+    path: '/meeting',
     component: Layout,
-    hidden: true,
+    meta: {
+      title: '会议管理',
+      icon: 'message'
+    },
     children: [
       {
-        path: 'release',
-        component: () => import('@/views/questionnaire/release'),
-        name: 'release',
-        meta: { title: '发布问卷' }
+        path: 'add',
+        component: () => import('@/views/meeting/add'),
+        // name: '发布考试',
+        meta: { title: '发布会议', icon: 'edit', noCache: true, affix: true },
+        // hidden: true
       },
       {
-        path: 'list',
-        component: () => import('@/views/questionnaire/list'),
-        name: 'list',
-        meta: { title: '问卷列表' }
+        path: 'addlist',
+        component: () => import('@/views/meeting/addList'),
+        // name: '发布考试',
+        meta: { title: '我的发布', icon: 'build', noCache: true, affix: true },
+      },
+      {
+        path: 'filelist',
+        component: () => import('@/views/meeting/fileList'),
+        // name: '发布考试',
+        meta: { title: '我的会议', icon: 'monitor', noCache: true, affix: true },
       }
     ]
   }

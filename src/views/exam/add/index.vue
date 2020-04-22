@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { getExamCategory } from "@/api/tool/category.js";
+import { getCategory } from "@/api/tool/category.js";
 import {
   createExam,
   getExamById,
