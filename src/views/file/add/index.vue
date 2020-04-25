@@ -16,20 +16,13 @@
       </el-form-item>
       <el-form-item label="资料级别" prop="level">
         <el-select v-model="file.level" placeholder="请选择资料级别">
-          <el-option
-            v-for="(item,index) in levels"
-            :key="index"
-            :label="item"
-            :value="index+1"
-          ></el-option>
+          <el-option v-for="(item,index) in levels" :key="index" :label="item" :value="index+1"></el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="考试时长" prop="duration">
-        <el-input v-model="exam.duration" type="number" min="0" style="width:200px">
-          <span slot="suffix">分钟</span>
-        </el-input>
-      </el-form-item> -->
-      <el-form-item label="参考人员">
+      <el-form-item label="上传资料">
+        <Uploader v-on:getFile="getFileUrl()"></Uploader>
+      </el-form-item>
+      <el-form-item label="发送人员">
         <el-tree
           :data="deptTree"
           show-checkbox
@@ -51,12 +44,10 @@
 
 <script>
 import { getCategory } from "@/api/tool/category.js";
-import {
-  fileSave,
-  getFileById,
-  updateFile
-} from "@/api/file";
-import { listUser,getTreeUser } from "@/api/system/user";
+import { fileSave, getFileById, updateFile } from "@/api/file";
+import { listUser, getTreeUser } from "@/api/system/user";
+import Uploader from "@/components/Uploader";
+
 export default {
   data() {
     return {
@@ -65,14 +56,14 @@ export default {
       file: {
         title: "",
         cateId: "",
-        url:"http://www.rr.cc",
-        readUrl:"http://www.rr.cc",
+        url: "http://www.rr.cc",
+        readUrl: "http://www.rr.cc",
         userIds: []
       },
-      id:this.$route.query.id,
+      id: this.$route.query.id,
       rules: {
         title: [{ required: true, message: "请输入资料名称", trigger: "blur" }],
-        
+
         cateId: [
           { required: true, message: "请选择资料模块", trigger: "change" }
         ],
@@ -90,8 +81,11 @@ export default {
         label: "label",
         isLeaf: "leaf"
       },
-      levels:["紧急事件","重点关注事件","一般事件"]
+      levels: ["紧急事件", "重点关注事件", "一般事件"]
     };
+  },
+  components:{
+    Uploader
   },
   methods: {
     //获取选中状态下的人员数据
@@ -150,10 +144,15 @@ export default {
       });
     },
     // 修改考试获取信息
-    getFileById(id){
-      getFileById({id}).then(res=>{
+    getFileById(id) {
+      getFileById({ id }).then(res => {
         this.file = res.data;
-      })
+      });
+    },
+    // 获取wFid和nFid
+    getFileUrl(urlObj){
+      this.file.url = urlObj.wFid;
+      this.file.readUrl = urlObj.nFid;
     }
   },
   created() {
@@ -161,7 +160,7 @@ export default {
     this.getCateList();
     // 获取部门树形结构
     this.getDeptTreeselect();
-    if(this.id){
+    if (this.id) {
       // console.log(this.id)
       this.getFileById(this.id);
     }

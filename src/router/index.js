@@ -203,31 +203,15 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/meeting',
+    path: '/meetings',
     component: Layout,
-    meta: {
-      title: '会议管理',
-      icon: 'message'
-    },
+    hidden: true,
     children: [
       {
-        path: 'add',
-        component: () => import('@/views/meeting/add'),
-        // name: '发布考试',
-        meta: { title: '发布会议', icon: 'edit', noCache: true, affix: true },
-        // hidden: true
-      },
-      {
-        path: 'addlist',
-        component: () => import('@/views/meeting/addList'),
-        // name: '发布考试',
-        meta: { title: '我的发布', icon: 'build', noCache: true, affix: true },
-      },
-      {
-        path: 'filelist',
-        component: () => import('@/views/meeting/fileList'),
-        // name: '发布考试',
-        meta: { title: '我的会议', icon: 'monitor', noCache: true, affix: true },
+        path:'detail',
+        component: () => import('@/views/meeting/addList/detail'),
+        meta: { title: '会议详情', icon: 'monitor', noCache: true, affix: true },
+        // hidden: true,
       }
     ]
   }
