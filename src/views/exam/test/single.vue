@@ -127,7 +127,7 @@ export default {
       }
       if (count == this.exerList.length) {
         this.$router.push({
-          path: "/exam/analytic",
+          path: "/exams/analytic",
           query: { examId: this.examId }
         });
       }
@@ -168,7 +168,7 @@ export default {
           type: "success"
         });
         this.$router.push({
-          path: "/exam/analytic",
+          path: "/exams/analytic",
           query: { examId: this.examId }
         });
       });

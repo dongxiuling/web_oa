@@ -92,13 +92,9 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/exam',
+    path: '/exams',
     component: Layout,
-    // redirect: 'index',
-    meta: {
-      title: '考试管理',
-      icon: 'documentation'
-    },
+    hidden: true,
     children: [
       {
         path: 'add',
@@ -108,23 +104,11 @@ export const constantRoutes = [
         hidden: true
       },
       {
-        path: 'addlist',
-        component: () => import('@/views/exam/addList'),
-        name: '我的发布',
-        meta: { title: '我的发布', icon: 'build', noCache: true, affix: true },
-      },
-      {
         path: 'detail',
         component: () => import('@/views/exam/addList/detail'),
         name: '我的发布详情',
         meta: { title: '我的发布详情', icon: 'build', noCache: true, affix: true },
         hidden: true
-      },
-      {
-        path: 'examlist',
-        component: () => import('@/views/exam/examList'),
-        name: '我的考试',
-        meta: { title: '我的考试', icon: 'monitor', noCache: true, affix: true }
       },
       {
         path: 'single',
@@ -138,13 +122,6 @@ export const constantRoutes = [
         component: () => import('@/views/exam/test/analytic'),
         // name: '判断题',
         meta: { title: '考试结果', icon: 'monitor', noCache: true },
-        hidden: true
-      },
-      {
-        path: 'done',
-        component: () => import('@/views/exam/test/done'),
-        // name: '判断题',
-        meta: { title: '答案解析', icon: 'monitor', noCache: true },
         hidden: true
       }
     ]

@@ -49,3 +49,19 @@ export function deleteFile(data) {
         method: 'get',
     })
 }
+// 下载资料
+// POST /resources/uplaodResources/{id}
+
+export function downLoadFile(data) {
+    return request({
+        url: '/resources/delResourcesById/'+data.id,
+        method: 'get',
+    })
+}
+//预览资料
+export function readFile(data) {
+    return request({
+        url: '/resources/readResources/'+data.id,
+        method: 'post',
+    })
+}

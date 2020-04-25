@@ -20,7 +20,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="上传资料">
-        <Uploader v-on:getFile="getFileUrl()"></Uploader>
+        <Uploader v-on:getFile="getFileUrl(arguments)"></Uploader>
       </el-form-item>
       <el-form-item label="发送人员">
         <el-tree
@@ -150,9 +150,9 @@ export default {
       });
     },
     // 获取wFid和nFid
-    getFileUrl(urlObj){
-      this.file.url = urlObj.wFid;
-      this.file.readUrl = urlObj.nFid;
+    getFileUrl(args){
+      this.file.url = args[0];
+      this.file.readUrl = args[1];
     }
   },
   created() {

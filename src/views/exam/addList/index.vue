@@ -32,7 +32,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="$router.push('/exam/add')"
+          @click="$router.push('/exams/add')"
         >发布考试</el-button>
       </el-col>
     </el-row>
@@ -152,13 +152,13 @@ export default {
     },
     updateHandle(_data) {
       this.$router.push({
-        path: "/exam/add",
+        path: "/exams/add",
         query: { id: _data.id }
       });
     },
     detailHandle(_data) {
       this.$router.push({
-        path: "/exam/detail",
+        path: "/exams/detail",
         query: { id: _data.id }
       });
     },

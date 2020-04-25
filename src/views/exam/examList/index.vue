@@ -45,7 +45,7 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="$router.push({path:'/exam/single',query:{id:scope.row.id}})"
+            @click="$router.push({path:'/exams/single',query:{id:scope.row.id}})"
             v-if="scope.row.isFinished == null"
           >考试</el-button>
           <el-button
@@ -53,7 +53,7 @@
             type="text"
             icon="el-icon-thumb"
             v-else
-            @click="$router.push({path:'/exam/analytic',query:{examId:scope.row.id}})"
+            @click="$router.push({path:'/exams/analytic',query:{examId:scope.row.id}})"
           >查看</el-button>
         </template>
       </el-table-column>

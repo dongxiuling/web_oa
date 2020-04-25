@@ -2,14 +2,9 @@
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
       <el-form-item label="文件名称">
-        <el-input
-          placeholder="请输入文件名称"
-          v-model="search.title"
-          clearable
-          size="small"
-        />
+        <el-input placeholder="请输入文件名称" v-model="search.title" clearable size="small" />
       </el-form-item>
-       <el-form-item label="资料模块">
+      <el-form-item label="资料模块">
         <el-select v-model="search.categoryId" placeholder="请选择资料模块">
           <el-option
             v-for="item in cateData"
@@ -37,9 +32,11 @@
       <el-table-column prop="updateTime" label="上传时间" width="180"></el-table-column>
       <el-table-column prop="createTime" label="模块"></el-table-column>
       <el-table-column label="操作">
-        <template>
-          <el-button size="mini" type="text" icon="el-icon-edit">已下载</el-button>
-          <el-button size="mini" type="text" icon="el-icon-thumb">未下载</el-button>
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
+          <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
+          <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
+          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -59,7 +56,7 @@
 
 <script>
 import { getCategory } from "@/api/tool/category.js";
-import { getFileList } from "@/api/file.js";
+import { getFileList, downLoadFile, readFile } from "@/api/file.js";
 
 export default {
   data() {
@@ -75,7 +72,7 @@ export default {
       },
       total: 0, //分页总页数
       levels: [
-        {id:0,name:"全部事件"},
+        { id: 0, name: "全部事件" },
         { id: 1, name: "紧急事件" },
         { id: 2, name: "重点关注事件" },
         { id: 3, name: "一般事件" }
@@ -91,7 +88,7 @@ export default {
         size: this.pageSize,
         title: this.search.title,
         cateId: this.search.categoryId,
-        level:this.search.level
+        level: this.search.level
       }).then(res => {
         this.fileList = res.data.records;
         this.total = res.data.total;
@@ -106,9 +103,7 @@ export default {
         dictType: "file_module_status"
       }).then(res => {
         this.cateData = res.rows;
-        this.cateData.unshift(
-            { dictCode: 0, dictLabel: "全部模块" }
-        );
+        this.cateData.unshift({ dictCode: 0, dictLabel: "全部模块" });
       });
     },
     searchHandle() {
@@ -122,6 +117,20 @@ export default {
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
+    },
+    lookHandle(obj) {
+      console.log(obj.id)
+      readFile({
+        id: obj.id
+      }).then(res => {
+        window.open(obj.readUrl);
+      });
+    },
+    downHandle(obj) {
+      // 调用下载资料接口
+      downLoadFile({ id: obj.id }).then(res => {
+        window.open(obj.url);
+      });
     }
   },
   created() {
@@ -134,5 +143,8 @@ export default {
 .page-box {
   text-align: right;
   margin-top: 20px;
+}
+.el-tag {
+  cursor: pointer;
 }
 </style>
