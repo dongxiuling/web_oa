@@ -230,6 +230,28 @@ export const constantRoutes = [
         meta: { title: '我的会议', icon: 'monitor', noCache: true, affix: true },
       }
     ]
+  },
+  {
+    path: '/apply',
+    component: Layout,
+    meta: {
+      title: '申请管理',
+      icon: 'clipboard'
+    },
+    children: [
+      {
+        path: 'addlist',
+        component: () => import('@/views/apply/ApplyAdd'),
+        name: 'applyAdd',
+        meta: { title: '发起申请', icon: 'form', noCache: true, affix: true },
+      },
+      {
+        path: 'list',
+        component: () => import('@/views/apply/ApplyList'),
+        name: 'applyList',
+        meta: { title: '申请列表', icon: 'list', noCache: true, affix: true },
+      }
+    ]
   }
 ]
 
