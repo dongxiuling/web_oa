@@ -1,29 +1,13 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
-      <el-form-item label="资料名称">
+      <el-form-item label="会议名称">
         <el-input
-          placeholder="请输入资料名称"
+          placeholder="请输入会议名称"
           v-model="search.title"
           clearable
           size="small"
-          style="width: 240px"
         />
-      </el-form-item>
-      <el-form-item label="资料模块">
-        <el-select v-model="search.categoryId" placeholder="请选择资料模块">
-          <el-option
-            v-for="item in cateData"
-            :key="item.dictCode"
-            :label="item.dictLabel"
-            :value="item.dictCode"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-     <el-form-item label="资料级别" prop="level">
-        <el-select v-model="search.level" placeholder="请选择资料级别">
-          <el-option v-for="item in levels" :key="item.id" :label="item.name" :value="item.id"></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
@@ -37,18 +21,18 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="$router.push('/file/add')"
-        >发布文件</el-button>
+          @click="$router.push('/meeting/add')"
+        >发布会议</el-button>
       </el-col>
     </el-row>
 
-    <el-table :data="fileList" style="width: 100%" v-loading="loading">
+    <el-table :data="meetingList" style="width: 100%" v-loading="loading">
       <el-table-column label="序号">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column prop="title" label="文件名称"></el-table-column>
-      <el-table-column prop="createTime" label="更新时间" width="180"></el-table-column>
-      <el-table-column prop="categoryName" label="模块"></el-table-column>
+      <el-table-column prop="title" label="会议名称"></el-table-column>
+      <el-table-column prop="startTime" label="会议时间" width="180"></el-table-column>
+      <el-table-column prop="content" label="会议详情" width="180"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="updateHandle(scope.row)">修改</el-button>
@@ -77,29 +61,20 @@
 </template>
 
 <script>
-import { getCategory } from "@/api/tool/category.js";
-import { getAddList, deleteFile } from "@/api/file.js";
+
+import { getAddList, deleteMeeting } from "@/api/meeting.js";
 
 export default {
   data() {
     return {
       search: {
         title: "",
-        categoryId: 0,
-        level:0
       },
-      cateData: [],
       currentPage: 1,
       pageSize: 10,
-      fileList: [],
+      meetingList: [],
       loading: true,
-      total: 0,
-     levels: [
-        {id:0,name:"全部事件"},
-        { id: 1, name: "紧急事件" },
-        { id: 2, name: "重点关注事件" },
-        { id: 3, name: "一般事件" }
-      ]
+      total: 0
     };
   },
   methods: {
@@ -108,10 +83,8 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         title: this.search.title,
-        cateId: this.search.categoryId,
-        level:this.search.level
       }).then(res => {
-        this.fileList = res.data.records;
+        this.meetingList = res.data.records;
         this.total = res.data.total;
         this.loading = false;
       });
@@ -128,7 +101,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          deleteFile({
+          deleteMeeting({
             id: _data.id
           }).then(res => {
             this.$message({
@@ -147,14 +120,14 @@ export default {
     },
     updateHandle(_data) {
       this.$router.push({
-        path: "/file/add",
+        path: "/meeting/add",
         query: { id: _data.id }
       });
     },
     detailHandle(_data) {
       this.$router.push({
-        path: "/fil/detail",
-        query: { id: _data.id }
+        path: "/meetings/detail",
+        query: { id: _data.id,type:1 }
       });
     },
     searchHandle() {
@@ -162,26 +135,12 @@ export default {
     },
     reSetHandle() {
       this.search.title = "";
-      this.search.categoryId = "";
       this.getData();
     },
-    // 获取分类列表
-    getCateList() {
-      getCategory({
-        pageNum: 1,
-        pageSize: 1000,
-        dictType: "file_module_status"
-      }).then(res => {
-        this.cateData = res.rows;
-        this.cateData.unshift(
-            { dictCode: 0, dictLabel: "全部模块" }
-        );
-      });
-    }
+   
   },
   created() {
     this.getData();
-    this.getCateList(); //获取分类
   }
 };
 </script>

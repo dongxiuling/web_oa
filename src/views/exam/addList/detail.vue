@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { getExamDetail } from "@/api/exam";
+import { getMeetingDetail } from "@/api/meeting";
 export default {
   data() {
     return {
