@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
-    <el-form ref="exam" :model="exam" :rules="rules" label-width="80px">
-      <el-form-item label="考试名称" prop="title">
-        <el-input v-model="exam.title" style="width:300px"></el-input>
+    <el-form ref="question" :model="question" :rules="rules" label-width="80px">
+      <el-form-item label="问卷名称" prop="title">
+        <el-input v-model="question.title" style="width:300px"></el-input>
       </el-form-item>
-      <el-form-item label="考试模块" prop="categoryId">
-        <el-select v-model="exam.categoryId" placeholder="请选择考试模块">
+      <el-form-item label="问卷类型" prop="categoryId">
+        <el-select v-model="question.categoryId" placeholder="请选择问卷类型">
           <el-option
             v-for="item in cateData"
             :key="item.dictCode"
@@ -14,12 +14,12 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="考试时长" prop="duration">
-        <el-input v-model="exam.duration" type="number" min="0" style="width:200px">
+      <el-form-item label="问卷时长" prop="duration">
+        <el-input v-model="question.duration" type="number" min="0" style="width:200px">
           <span slot="suffix">分钟</span>
         </el-input>
       </el-form-item>
-      <el-form-item label="考试时间">
+      <el-form-item label="问卷时间">
         <el-date-picker  style="width:400px"
           v-model="time"
           type="daterange"
@@ -33,127 +33,93 @@
       <el-form-item label="单选题">
         <el-col :span="3">
           <el-form-item prop="singleNum">
-            <el-input v-model="exam.singleNum" type="number" size="small" min="0">
+            <el-input v-model="question.singleNum" type="number" size="small" min="0">
               <template slot="append">个</template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
+        <!-- <el-col :span="5">
           <el-form-item prop="singleScore">
-            <el-input v-model="exam.singleScore" type="number" size="small" min="0">
+            <el-input v-model="question.singleScore" type="number" size="small" min="0">
               <template slot="prepend">每题</template>
               <template slot="append">分</template>
             </el-input>
           </el-form-item>
-        </el-col>
+        </el-col> -->
       </el-form-item>
-      <el-form-item label="多选题">
+      <el-form-item label="简答题">
         <el-col :span="3">
-          <el-form-item prop="multipleNum">
-            <el-input v-model="exam.multipleNum" type="number" size="small" min="0">
+          <el-form-item prop="shortNum">
+            <el-input v-model="question.shortNum" type="number" size="small" min="0">
               <template slot="append">个</template>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
-          <el-form-item prop="multipleScore">
-            <el-input v-model="exam.multipleScore" type="number" size="small" min="0">
+        <!-- <el-col :span="5">
+          <el-form-item prop="shortScore">
+            <el-input v-model="question.shortScore" type="number" size="small" min="0">
               <template slot="prepend">每题</template>
               <template slot="append">分</template>
             </el-input>
           </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="判断题">
-        <el-col :span="3">
-          <el-form-item prop="judgmentNum">
-            <el-input v-model="exam.judgmentNum" type="number" size="small" min="0">
-              <template slot="append">个</template>
-            </el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item prop="judgmentScore">
-            <el-input v-model="exam.judgmentScore" type="number" size="small" min="0">
-              <template slot="prepend">每题</template>
-              <template slot="append">分</template>
-            </el-input>
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="参考人员">
-        <el-tree
-          :data="deptTree"
-          show-checkbox
-          node-key="id"
-          ref="tree"
-          :props="defaultProps"
-          @check="getCheckedNodes()"
-          :default-checked-keys="userIds"
-        ></el-tree>
+        </el-col> -->
       </el-form-item>
       <el-form-item>
-        <el-button v-if="$route.query.id" type="primary" @click="updateHandle('exam')">确定修改</el-button>
-        <el-button v-else type="primary" @click="submitForm('exam')">立即创建</el-button>
-        <el-button @click="resetForm('exam')">取消</el-button>
+        <el-button v-if="$route.query.id" type="primary" @click="updateHandle('question')">确定修改</el-button>
+        <el-button v-else type="primary" @click="submitForm('question')">立即创建</el-button>
+        <el-button @click="resetForm('question')">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { getCategory } from '@/api/tool/category.js';
+// import { getCategory } from '@/api/tool/category.js'
 import {
-  createExam,
-  getExamById,
-  updateExam
-} from '@/api/exam';
-import { listUser,getTreeUser } from '@/api/system/user';
+  createExam,       //createQues
+  getExamById,      //fetQuesById
+  updateExam        //updateQues
+} from '@/api/exam'     //"@/api/ques"
+import { getTreeUser } from '@/api/system/user'
 export default {
   data() {
     return {
-      cateData: [],
-      selectCate: "",
+      cateData: [
+        { dictCode: 1, dictLabel: 'aa' }
+      ],
+      selectCate: '',
       deptTree: [],
-      exam: {
+      question: {
         title: "",
         duration: "",
         categoryId: "",
         singleNum: 0,
-        singleScore: 0,
-        multipleNum: 0,
-        multipleScore: 0,
-        judgmentNum: 0,
-        judgmentScore: 0
+        // singleScore: 0,
+        shortNum: 0,
+        // shortScore: 0
       },
-      id:this.$route.query.id,
+      id: this.$route.query.id,
       rules: {
-        title: [{ required: true, message: "请输入考试名称", trigger: "blur" }],
+        title: [{ required: true, message: "请输入问卷名称", trigger: "blur" }],
         duration: [
-          { required: true, message: "请输入考试时长", trigger: "blur" }
+          { required: true, message: "请输入问卷时长", trigger: "blur" }
           //  { type: 'number', message: '考试时长必须为数字值', trigger: 'blur' },
         ],
         categoryId: [
-          { required: true, message: "请选择考试类目", trigger: "change" }
+          { required: true, message: "请选择问卷类目", trigger: "change" }
         ],
         singleNum: [
           { required: true, message: "请输入单选题个数", trigger: "blur" }
         ],
-        singleScore: [
-          { required: true, message: "请输入单选题个数", trigger: "blur" }
+        // singleScore: [
+        //   { required: true, message: "请输入单选题个数", trigger: "blur" }
+        // ],
+        shortNum: [
+          { required: true, message: "请输入简答题个数", trigger: "blur" }
         ],
-        multipleNum: [
-          { required: true, message: "请输入多选题个数", trigger: "blur" }
-        ],
-        multipleScore: [
-          { required: true, message: "请输入多选题个数", trigger: "blur" }
-        ],
-        judgmentNum: [
-          { required: true, message: "请输入判断题个数", trigger: "blur" }
-        ],
-        judgmentScore: [
-          { required: true, message: "请输入判断题个数", trigger: "blur" }
-        ]
+        // shortScore: [
+        //   { required: true, message: "请输入简答题个数", trigger: "blur" }
+        // ]
         // time: [
         //   {
         //     type: "date",
@@ -194,7 +160,7 @@ export default {
       getExamCategory({
         pageNum: 1,
         pageSize: 1000,
-        dictType: "sys_module_name"
+        dictType: "sys_module_name"         //
       }).then(res => {
         this.cateData = res.rows;
       });
@@ -216,7 +182,7 @@ export default {
     // 添加考试
     addHandle() {
       let params = {
-        ...this.exam,
+        ...this.question,
         startDate: this.time[0],
         endDate: this.time[1],
         userIds: this.userIds.join(",")
@@ -226,13 +192,13 @@ export default {
           message: "添加成功",
           type: "success"
         });
-        this.$router.push("/exam/addlist");
+        this.$router.push("/questionnaire/addlist");
       });
     },
     // 修改考试
     updateHandle() {
       let params = {
-        ...this.exam,
+        ...this.question,
         startDate: this.time[0],
         endDate: this.time[1],
         userIds: this.userIds.join(",")
@@ -241,28 +207,28 @@ export default {
         this.$message({
           message: "修改成功",
           type: "success"
-        });
-        this.$router.push("/exam/addlist");
-      });
+        })
+        this.$router.push('/questionnaire/addlist')
+      })
     },
     // 修改考试获取信息
-    getExamById(id){
-      getExamById({id}).then(res=>{
-        this.exam = res.data;
-        this.time = [res.data.startDate,res.data.endDate];
-        this.userIds = res.data.userIds.split(',');
+    getExamById(id) {
+      getExamById({ id }).then(res => {
+        this.question = res.data
+        this.time = [res.data.startDate, res.data.endDate]
+        this.userIds = res.data.userIds.split(',')
       })
     }
   },
   created() {
     // 获取分类列表
-    this.getCateList();
+    this.getCateList()
     // 获取部门树形结构
-    this.getDeptTreeselect();
-    if(this.id){
+    this.getDeptTreeselect()
+    if (this.id) {
       // console.log(this.id)
-      this.getExamById(this.id);
+      this.getExamById(this.id)
     }
   }
-};
+}
 </script>

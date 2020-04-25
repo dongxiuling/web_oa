@@ -230,6 +230,31 @@ export const constantRoutes = [
         meta: { title: '我的会议', icon: 'monitor', noCache: true, affix: true },
       }
     ]
+  },
+  {
+    path: '/questionnaire',
+    component: Layout,
+    meta: {
+      title: '问卷管理',
+      icon: 'message'
+    },
+    children: [
+      {
+        path: 'add',
+        component: () => import ('@/views/questionnaire/add'),
+        meta: { title: '发布问卷', icon: 'edit', noCache: true, affix: true }
+      },
+      {
+        path: 'addList',
+        component: () => import ('@/views/questionnaire/addList'),
+        meta: { title: '我的发布', icon: 'monitor', noCache: true, affix: true }
+      },
+      {
+        path: 'queList',
+        component: () => import ('@/views/questionnaire/queList'),
+        meta: { title: '我的问卷', icon: 'build', noCache: true, affix: true }
+      }
+    ]
   }
 ]
 
