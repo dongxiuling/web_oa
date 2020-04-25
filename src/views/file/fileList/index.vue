@@ -29,8 +29,8 @@
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
       <el-table-column prop="title" label="文件名称"></el-table-column>
-      <el-table-column prop="updateTime" label="上传时间" width="180"></el-table-column>
-      <el-table-column prop="createTime" label="模块"></el-table-column>
+      <el-table-column prop="createTime" label="上传时间" width="180"></el-table-column>
+      <el-table-column prop="categoryName" label="模块"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
