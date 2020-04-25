@@ -45,6 +45,7 @@
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
       </el-col>
+      <Uploader></Uploader>
     </el-row>
 
     <el-table
@@ -69,7 +70,10 @@
 </template>
 
 <script>
+  import Uploader from '@/components/Uploader'
+  import Treeselect from "@riophae/vue-treeselect";
 export default {
+  components: { Uploader },
   data() {
     return {
       tableData: [
