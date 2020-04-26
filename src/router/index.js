@@ -193,30 +193,18 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/questionnaire',
+    path: '/questions',
     component: Layout,
-    meta: {
-      title: '问卷管理',
-      icon: 'message'
-    },
+    hidden: true,
     children: [
       {
-        path: 'add',
-        component: () => import ('@/views/questionnaire/add'),
-        meta: { title: '发布问卷', icon: 'edit', noCache: true, affix: true }
-      },
-      {
-        path: 'addList',
-        component: () => import ('@/views/questionnaire/addList'),
-        meta: { title: '我的发布', icon: 'monitor', noCache: true, affix: true }
-      },
-      {
-        path: 'queList',
-        component: () => import ('@/views/questionnaire/queList'),
-        meta: { title: '我的问卷', icon: 'build', noCache: true, affix: true }
+        path:'test',
+        component: () => import('@/views/questionnaire/add/test'),
+        // meta: { title: '会议详情', icon: 'monitor', noCache: true, affix: true },
+        hidden: true,
       }
     ]
-  }
+  },
 ]
 
 export default new Router({

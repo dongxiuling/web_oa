@@ -11,43 +11,18 @@
           style="width: 240px"
         />
       </el-form-item>
-      <!-- <el-form-item label="考试模块">
-        <el-select v-model="search.categoryId" placeholder="请选择考试模块">
-          <el-option
-            v-for="item in cateData"
-            :key="item.dictCode"
-            :label="item.dictLabel"
-            :value="item.dictCode"
-          ></el-option>
-        </el-select>
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
       </el-form-item>
     </el-form>
-<!-- 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="$router.push('/questionnaire/add')"
-        >发布问卷</el-button>
-      </el-col>
-    </el-row> -->
-
     <el-table :data="quesList" style="width: 100%" v-loading="loading">
       <el-table-column label="序号">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
       <el-table-column prop="title" label="问卷名称"></el-table-column>
-      <el-table-column prop="startDate" label="开始时间" width="180"></el-table-column>
-      <el-table-column prop="endDate" label="结束时间" width="180"></el-table-column>
-      <!-- <el-table-column prop="categoryName" label="模块"></el-table-column> -->
-      <el-table-column prop="duration" label="时长"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column prop="endDate" label="截止时间" ></el-table-column>
+      <el-table-column label="操作" >
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="updateHandle(scope.row)">修改</el-button>
           <el-button
@@ -76,7 +51,7 @@
 </template>
 
 <script>
-import { getCategory } from "@/api/tool/category.js";
+import { getMyQuestion } from "@/api/question/index.js";
 import { getCreatedExam, delExam } from "@/api/exam";
 export default {
   data() {
@@ -96,33 +71,17 @@ export default {
   },
   methods: {
     getData() {
-      let categoryId;
-      if (!this.search.categoryId) {
-        categoryId = 0;
-      } else {
-        categoryId = this.search.categoryId;
-      }
-      getCreatedExam({
+      getMyQuestion({
         current: this.currentPage,
         size: this.pageSize,
-        title: this.search.title,
-        categoryId: categoryId
+        title: this.search.title
       }).then(res => {
         this.quesList = res.data.records;
         this.total = res.data.total;
         this.loading = false;
       });
     },
-    // 获取分类列表
-    getCateList() {
-      getCategory({
-        pageNum: 1,
-        pageSize: 1000,
-        dictType: "sys_module_name"
-      }).then(res => {
-        this.cateData = res.rows;
-      });
-    },
+  
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
@@ -167,13 +126,11 @@ export default {
     },
     reSetHandle() {
       this.search.title = "";
-      this.search.categoryId = "";
       this.getData();
     }
   },
   created() {
     this.getData();
-    this.getCateList(); //获取分类
   }
 };
 </script>

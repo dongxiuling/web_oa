@@ -4,7 +4,19 @@
       <el-form-item label="问卷名称" prop="title">
         <el-input v-model="question.title" style="width:300px"></el-input>
       </el-form-item>
-      <el-form-item label="参会人员">
+      <el-form-item label="问卷简介" prop="content">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 4}"
+          v-model="question.content"
+          style="width:300px"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="截止日期" prop="endDate">
+        <el-date-picker v-model="question.endDate" 
+        value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期"></el-date-picker>
+      </el-form-item>
+      <el-form-item label="参与人员">
         <el-tree
           :data="deptTree"
           show-checkbox
@@ -12,7 +24,7 @@
           ref="tree"
           :props="defaultProps"
           @check="getCheckedNodes()"
-          :default-checked-keys="meeting.userIds"
+          :default-checked-keys="userIds"
         ></el-tree>
       </el-form-item>
       <el-form-item>
@@ -25,60 +37,23 @@
 </template>
 
 <script>
-// import { getCategory } from '@/api/tool/category.js'
 import {
-  createExam, //createQues
+  addQue, //createQues
   getExamById, //fetQuesById
   updateExam //updateQues
-} from "@/api/exam"; //"@/api/ques"
+} from "@/api/question/index.js"; //"@/api/ques"
 import { getTreeUser } from "@/api/system/user";
 export default {
   data() {
     return {
-      cateData: [{ dictCode: 1, dictLabel: "aa" }],
-      selectCate: "",
-      deptTree: [],
+      deptTree:[],
       question: {
-        title: "",
-        duration: "",
-        categoryId: "",
-        singleNum: 0,
-        // singleScore: 0,
-        shortNum: 0
-        // shortScore: 0
+        title: ""
       },
       id: this.$route.query.id,
       rules: {
-        title: [{ required: true, message: "请输入问卷名称", trigger: "blur" }],
-        duration: [
-          { required: true, message: "请输入问卷时长", trigger: "blur" }
-          //  { type: 'number', message: '考试时长必须为数字值', trigger: 'blur' },
-        ],
-        categoryId: [
-          { required: true, message: "请选择问卷类目", trigger: "change" }
-        ],
-        singleNum: [
-          { required: true, message: "请输入单选题个数", trigger: "blur" }
-        ],
-        // singleScore: [
-        //   { required: true, message: "请输入单选题个数", trigger: "blur" }
-        // ],
-        shortNum: [
-          { required: true, message: "请输入简答题个数", trigger: "blur" }
-        ]
-        // shortScore: [
-        //   { required: true, message: "请输入简答题个数", trigger: "blur" }
-        // ]
-        // time: [
-        //   {
-        //     type: "date",
-        //     required: true,
-        //     message: "请选择日期",
-        //     trigger: "change"
-        //   }
-        // ]
+        title: [{ required: true, message: "请输入问卷名称", trigger: "blur" }]
       },
-      time: [],
       userIds: [],
       props: {
         label: "name",
@@ -104,18 +79,7 @@ export default {
         this.deptTree = response.data;
       });
     },
-    // 获取分类列表ç
-    getCateList() {
-      getExamCategory({
-        pageNum: 1,
-        pageSize: 1000,
-        dictType: "sys_module_name" //
-      }).then(res => {
-        this.cateData = res.rows;
-      });
-    },
     submitForm(formName) {
-      console.log(11111);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.addHandle();
@@ -128,20 +92,18 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    // 添加考试
+    // 添加问卷
     addHandle() {
       let params = {
         ...this.question,
-        startDate: this.time[0],
-        endDate: this.time[1],
-        userIds: this.userIds.join(",")
+        userIds: this.userIds
       };
-      createExam(params).then(res => {
+      addQue(params).then(res => {
         this.$message({
           message: "添加成功",
           type: "success"
         });
-        this.$router.push("/questionnaire/addlist");
+        this.$router.push("/question/addList");
       });
     },
     // 修改考试
@@ -150,14 +112,14 @@ export default {
         ...this.question,
         startDate: this.time[0],
         endDate: this.time[1],
-        userIds: this.userIds.join(",")
+        userIds: this.userIds
       };
       updateExam(params).then(res => {
         this.$message({
           message: "修改成功",
           type: "success"
         });
-        this.$router.push("/questionnaire/addlist");
+        this.$router.push("/question/addList");
       });
     },
     // 修改考试获取信息
@@ -165,13 +127,11 @@ export default {
       getExamById({ id }).then(res => {
         this.question = res.data;
         this.time = [res.data.startDate, res.data.endDate];
-        this.userIds = res.data.userIds.split(",");
+        this.userIds = res.data.userIds;
       });
     }
   },
   created() {
-    // 获取分类列表
-    this.getCateList();
     // 获取部门树形结构
     this.getDeptTreeselect();
     if (this.id) {

@@ -1,6 +1,5 @@
 <template>
-    <div>
-       <div class="app-container">
+  <div class="list">
     <el-form ref="queryForm" :inline="true">
       <el-form-item label="问卷名称">
         <el-input
@@ -11,16 +10,6 @@
           style="width: 240px"
         />
       </el-form-item>
-      <!-- <el-form-item label="考试模块">
-        <el-select v-model="search.categoryId" placeholder="请选择考试模块">
-          <el-option
-            v-for="item in cateData"
-            :key="item.dictCode"
-            :label="item.dictLabel"
-            :value="item.dictCode"
-          ></el-option>
-        </el-select>
-      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
@@ -33,30 +22,24 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="$router.push('/questionnaire/add')"
+          @click="$router.push('/question/add')"
         >发布问卷</el-button>
       </el-col>
     </el-row>
-
-    <el-table :data="quesList" style="width: 100%" v-loading="loading">
-      <el-table-column label="序号">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
-      <el-table-column prop="title" label="问卷名称"></el-table-column>
-      <el-table-column prop="startDate" label="开始时间" width="180"></el-table-column>
-      <el-table-column prop="endDate" label="结束时间" width="180"></el-table-column>
-      <!-- <el-table-column prop="categoryName" label="模块"></el-table-column> -->
-      <el-table-column prop="duration" label="时长"></el-table-column>
-      <el-table-column label="操作" width="200">
+    <el-table border :data="addList" style="width: 100%">
+      <el-table-column label="ID" width="50">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="updateHandle(scope.row)">修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-search"
-            @click="detailHandle(scope.row)"
-          >查看</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
+          <span>{{ scope.row.id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="问卷名称" width="180">
+        <template slot-scope="scope">
+          <span>{{ scope.row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column class="handle_row" label="操作">
+        <template slot-scope="scope">
+          <el-button size="mini" @click="GoExcises(scope.row)">编辑问卷</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,116 +55,61 @@
       ></el-pagination>
     </div>
   </div>
-    </div>
 </template>
-
 <script>
-import { getCategory } from "@/api/tool/category.js";
-import { getCreatedExam, delExam } from "@/api/exam";
+import { getAddList } from "@/api/question/index.js";
 export default {
   data() {
     return {
-      cateData: [],
-      categoryId: "",
-      quesList: [],
-      total: 0,
-      currentPage: 1,
-      pageSize: 10,
-      search: {
-        title: "",
-        categoryId: ""
-      },
-      loading: true
+      search: {},
+      addList:[],
+      total:0,
+      currentPage:1,
+      pageSize:10
     };
+  },
+  created() {
+    this.getData();
   },
   methods: {
     getData() {
-      let categoryId;
-      if (!this.search.categoryId) {
-        categoryId = 0;
-      } else {
-        categoryId = this.search.categoryId;
-      }
-      getCreatedExam({
-        current: this.currentPage,
-        size: this.pageSize,
-        title: this.search.title,
-        categoryId: categoryId
+      getAddList({
+        title:this.search.title,
+        pageNum: this.currentPage,
+        pageSize: this.pageSize
       }).then(res => {
-        this.quesList = res.data.records;
-        this.total = res.data.total;
-        this.loading = false;
+        this.addList = res.data.records;
       });
     },
-    // 获取分类列表
-    getCateList() {
-      getCategory({
-        pageNum: 1,
-        pageSize: 1000,
-        dictType: "sys_module_name"
-      }).then(res => {
-        this.cateData = res.rows;
+    GoExcises(_data) {
+      this.$router.push({
+        path: "/questions/test/",
+        query: { naireId: _data.id }
       });
     },
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
     },
-    /** 删除按钮操作 */
-    delHandle(_data) {
-      this.$confirm("此操作将永久删除问卷且无法恢复, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          delExam({
-            id: _data.id
-          }).then(res => {
-            this.$message({
-              message: "删除成功",
-              type: "success"
-            });
-            this.getData();
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+    searchHandle(){
+       this.getData() ;
     },
-    updateHandle(_data) {
-      this.$router.push({
-        path: "/questionnaire/add",
-        query: { id: _data.id }
-      });
-    },
-    detailHandle(_data) {
-      this.$router.push({
-        path: "/questionnaire/addList/detail",
-        query: { id: _data.id }
-      });
-    },
-    searchHandle() {
-      this.getData();
-    },
-    reSetHandle() {
+     reSetHandle() {
       this.search.title = "";
-      this.search.categoryId = "";
       this.getData();
     }
-  },
-  created() {
-    this.getData();
-    this.getCateList(); //获取分类
   }
 };
 </script>
 <style lang="scss" scoped>
-.page-box {
-  text-align: right;
-  margin-top: 20px;
+.list {
+  padding: 20px;
+}
+.add_btn {
+  float: right;
+  margin-bottom: 10px;
+}
+.pages {
+  float: right;
 }
 </style>
