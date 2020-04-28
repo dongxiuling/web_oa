@@ -25,17 +25,14 @@ import Layout from '@/layout'
  */
 
 // 公共路由
-export const constantRoutes = [
-  {
+export const constantRoutes = [{
     path: '/redirect',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect')
-      }
-    ]
+    children: [{
+      path: '/redirect/:path(.*)',
+      component: () => import('@/views/redirect')
+    }]
   },
   {
     path: '/login',
@@ -56,14 +53,17 @@ export const constantRoutes = [
     path: '',
     component: Layout,
     redirect: 'index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/index'),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+    children: [{
+      path: 'index',
+      component: () => import('@/views/index'),
+      name: '首页',
+      meta: {
+        title: '首页',
+        icon: 'dashboard',
+        noCache: true,
+        affix: true
       }
-    ]
+    }]
   },
   {
     path: '/process',
@@ -73,78 +73,80 @@ export const constantRoutes = [
       title: '流程管理',
       icon: 'clipboard'
     },
-    children: [
-      {
+    children: [{
         path: 'manage',
         component: () => import('@/views/process/manage'),
-        meta: { title: '流程管理', icon: 'example' }
+        meta: {
+          title: '流程管理',
+          icon: 'example'
+        }
       },
       {
         path: 'temp',
         component: () => import('@/views/process/temp'),
-        meta: { title: '流程模板', icon: 'exit-fullscreen' }
+        meta: {
+          title: '流程模板',
+          icon: 'exit-fullscreen'
+        }
       },
       {
         path: 'index',
         component: () => import('@/views/process/link'),
-        meta: { title: '环节管理', icon: 'link' }
+        meta: {
+          title: '环节管理',
+          icon: 'link'
+        }
       }
     ]
   },
   {
-    path: '/exam',
+    path: '/exams',
     component: Layout,
-    // redirect: 'index',
-    meta: {
-      title: '考试管理',
-      icon: 'documentation'
-    },
-    children: [
-      {
+    hidden: true,
+    children: [{
         path: 'add',
         component: () => import('@/views/exam/add'),
         // name: '发布考试',
-        meta: { title: '发布考试', icon: 'edit', noCache: true, affix: true },
+        meta: {
+          title: '发布考试',
+          icon: 'edit',
+          noCache: true,
+          affix: true
+        },
         hidden: true
-      },
-      {
-        path: 'addlist',
-        component: () => import('@/views/exam/addList'),
-        name: '我的发布',
-        meta: { title: '我的发布', icon: 'build', noCache: true, affix: true },
       },
       {
         path: 'detail',
         component: () => import('@/views/exam/addList/detail'),
         name: '我的发布详情',
-        meta: { title: '我的发布详情', icon: 'build', noCache: true, affix: true },
+        meta: {
+          title: '我的发布详情',
+          icon: 'build',
+          noCache: true,
+          affix: true
+        },
         hidden: true
-      },
-      {
-        path: 'examlist',
-        component: () => import('@/views/exam/examList'),
-        name: '我的考试',
-        meta: { title: '我的考试', icon: 'monitor', noCache: true, affix: true }
       },
       {
         path: 'single',
         component: () => import('@/views/exam/test/single'),
         // name: '单选题',
-        meta: { title: '单选题', icon: 'monitor', noCache: true },
+        meta: {
+          title: '单选题',
+          icon: 'monitor',
+          noCache: true
+        },
         hidden: true
       },
       {
         path: 'analytic',
         component: () => import('@/views/exam/test/analytic'),
         // name: '判断题',
-        meta: { title: '考试结果', icon: 'monitor', noCache: true },
-        hidden: true
-      },
-      {
-        path: 'done',
-        component: () => import('@/views/exam/test/done'),
-        // name: '判断题',
-        meta: { title: '答案解析', icon: 'monitor', noCache: true },
+        meta: {
+          title: '考试结果',
+          icon: 'monitor',
+          noCache: true
+        },
         hidden: true
       }
     ]
@@ -154,66 +156,71 @@ export const constantRoutes = [
     component: Layout,
     hidden: true,
     redirect: 'noredirect',
-    children: [
-      {
-        path: 'profile',
-        component: () => import('@/views/system/user/profile/index'),
-        name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
+    children: [{
+      path: 'profile',
+      component: () => import('@/views/system/user/profile/index'),
+      name: 'Profile',
+      meta: {
+        title: '个人中心',
+        icon: 'user'
       }
-    ]
+    }]
   },
   {
     path: '/dict',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'type/data/:dictId(\\d+)',
-        component: () => import('@/views/system/dict/data'),
-        name: 'Data',
-        meta: { title: '字典数据', icon: '' }
+    children: [{
+      path: 'type/data/:dictId(\\d+)',
+      component: () => import('@/views/system/dict/data'),
+      name: 'Data',
+      meta: {
+        title: '字典数据',
+        icon: ''
       }
-    ]
+    }]
   },
   {
     path: '/job',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/monitor/job/log'),
-        name: 'JobLog',
-        meta: { title: '调度日志' }
+    children: [{
+      path: 'log',
+      component: () => import('@/views/monitor/job/log'),
+      name: 'JobLog',
+      meta: {
+        title: '调度日志'
       }
-    ]
+    }]
   },
   {
     path: '/gen',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path: 'edit',
-        component: () => import('@/views/tool/gen/editTable'),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置' }
+    children: [{
+      path: 'edit',
+      component: () => import('@/views/tool/gen/editTable'),
+      name: 'GenEdit',
+      meta: {
+        title: '修改生成配置'
       }
-    ]
+    }]
   },
   {
     path: '/meetings',
     component: Layout,
     hidden: true,
-    children: [
-      {
-        path:'detail',
-        component: () => import('@/views/meeting/addList/detail'),
-        meta: { title: '会议详情', icon: 'monitor', noCache: true, affix: true },
-        // hidden: true,
-      }
-    ]
+    children: [{
+      path: 'detail',
+      component: () => import('@/views/meeting/addList/detail'),
+      meta: {
+        title: '会议详情',
+        icon: 'monitor',
+        noCache: true,
+        affix: true
+      },
+      // hidden: true,
+    }]
   },
   {
     path: '/apply',
@@ -222,25 +229,47 @@ export const constantRoutes = [
       title: '申请管理',
       icon: 'clipboard'
     },
-    children: [
-      {
+    children: [{
         path: 'addlist',
         component: () => import('@/views/apply/ApplyAdd'),
         name: 'applyAdd',
-        meta: { title: '发起申请', icon: 'form', noCache: true, affix: true },
+        meta: {
+          title: '发起申请',
+          icon: 'form',
+          noCache: true,
+          affix: true
+        },
       },
       {
         path: 'list',
         component: () => import('@/views/apply/ApplyList'),
         name: 'applyList',
-        meta: { title: '申请列表', icon: 'list', noCache: true, affix: true },
+        meta: {
+          title: '申请列表',
+          icon: 'list',
+          noCache: true,
+          affix: true
+        },
       }
     ]
-  }
+  },
+  {
+    path: '/questions',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'test',
+      component: () => import('@/views/questionnaire/add/test'),
+      // meta: { title: '会议详情', icon: 'monitor', noCache: true, affix: true },
+      hidden: true,
+    }]
+  },
 ]
 
 export default new Router({
   mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   routes: constantRoutes
 })

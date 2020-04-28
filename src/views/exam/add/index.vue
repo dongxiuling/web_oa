@@ -102,13 +102,13 @@
 </template>
 
 <script>
-import { getCategory } from "@/api/tool/category.js";
+import { getCategory } from '@/api/tool/category.js';
 import {
   createExam,
   getExamById,
   updateExam
-} from "@/api/exam";
-import { listUser,getTreeUser } from "@/api/system/user";
+} from '@/api/exam';
+import { listUser,getTreeUser } from '@/api/system/user';
 export default {
   data() {
     return {

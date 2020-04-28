@@ -32,8 +32,6 @@
             step: '00:15',
             end: '18:30'
           }"
-          format="HH:mm:ss"
-          value-format="HH:mm:ss"
           placeholder="选择时间"
         ></el-time-select>
       </el-form-item>
@@ -141,7 +139,7 @@ export default {
         this.$router.push("/meeting/addlist");
       });
     },
-    // 修改考试
+    // 修改会议
     updateHandle() {
       updateMeeting({ ...this.meeting, startTime: this.startTime }).then(
         res => {
@@ -159,7 +157,7 @@ export default {
         this.meeting = res.data;
         let arr = res.data.startTime.split(" ");
         this.date = arr[0];
-        this.time = arr[1];
+        this.time = arr[1].substring(0,arr[1].length-3);
       });
     }
   },
