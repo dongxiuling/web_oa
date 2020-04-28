@@ -1,83 +1,83 @@
-<!-- 发起申请 -->
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="活动名称">
-        <span>小明</span>
-      </el-form-item>
-      <el-form-item label="活动区域">
-        <el-select v-model="form.region" placeholder="请选择活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="活动时间">
-        <el-col :span="11">
-          <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-        </el-col>
-        <el-col class="line" style="text-align:center" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="即时配送">
-        <el-switch v-model="form.delivery"></el-switch>
-      </el-form-item>
-      <el-form-item label="活动性质">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-          <el-checkbox label="地推活动" name="type"></el-checkbox>
-          <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-          <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="特殊资源">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="线上品牌商赞助"></el-radio>
-          <el-radio label="线下场地免费"></el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="活动形式">
-        <el-input type="textarea" v-model="form.desc"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row>
+      <!-- 左侧分类导航 start -->
+      <el-col :span="3">
+        <h5 class="left-title">申请类别</h5>
+        <el-tabs @tab-click="changeType" tab-position="left" style="height: 200px;">
+          <el-tab-pane
+            v-for="item in processType.list"
+            :key="item.dictLabel"
+            :label="item.dictLabel"
+          ></el-tab-pane>
+        </el-tabs>
+      </el-col>
+      <!-- 右侧表单部分 -->
+      <el-col :span="21">
+        <div class="right-content">
+          <!-- 顶部按钮区域 star -->
+          <el-alert class="form-title" title="车辆申请" type="info" center :closable="false"></el-alert>
+          <!-- 动态表单 -->
+          <apply-form/>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+import ApplyForm from './components/ApplyForm.vue'
+import { getType } from "@/api/apply/add";
 export default {
   data() {
     return {
-      form: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+      processType: {
+        //流程分类列表
+        list: [],
+        now: {}
       }
     };
   },
-  methods: {
-    onSubmit() {
-      console.log("submit!");
-    }
+  components:{
+    ApplyForm
   },
-  //生命周期 - 创建完成（访问当前this实例）
-  created() {},
-  //生命周期 - 挂载完成（访问DOM元素）
-  mounted() {}
+  created() {
+    this.getWorkFollowType();
+  },
+  methods: {
+    //获取流程分类
+    getWorkFollowType() {
+      let querySting = {
+        pageNum: 1,
+        pageSize: 10,
+        dictType: "flow_type"
+      };
+      getType(querySting).then(res => {
+        this.processType.list = res.rows;
+        this.changeType({ index: 0 });
+      });
+    },
+    //切换左侧申请类型
+    changeType(tab) {
+      let thisIndex = tab.index;
+      this.processType.now = this.processType.list[thisIndex];
+    },
+  }
 };
 </script>
 <style scoped>
-.app-container{
-  width: 50%;
+.left-title {
+  margin: 10px 25px;
 }
-
+.add-form {
+  width: 80%;
+  margin: 0 auto;
+}
+.right-content{
+  width: 60%;
+}
+.form-title {
+  margin-bottom: 20px;
+  font-weight: bolder;
+}
 </style>
