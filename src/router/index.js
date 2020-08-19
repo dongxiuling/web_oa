@@ -199,6 +199,26 @@ export const constantRoutes = [{
       hidden: true,
     }]
   },
+  {
+    path: '/plans',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'addWork',
+      component: () => import('@/views/plan/add/work'),
+      name: 'AddWork',
+      meta: {
+        title: '创建工作计划'
+      }
+    }, {
+      path: 'addStudy',
+      component: () => import('@/views/plan/add/study'),
+      name: 'AddStudy',
+      meta: {
+        title: '创建学习计划'
+      }
+    }]
+  },
 ]
 
 export default new Router({
