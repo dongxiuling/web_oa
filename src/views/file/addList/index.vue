@@ -31,7 +31,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -40,7 +40,7 @@
           @click="$router.push('/file/add')"
         >发布文件</el-button>
       </el-col>
-    </el-row>
+    </el-row> -->
 
     <el-table :data="fileList" style="width: 100%" v-loading="loading">
       <el-table-column label="序号">
@@ -49,7 +49,7 @@
       <el-table-column prop="title" label="文件名称"></el-table-column>
       <el-table-column prop="createTime" label="更新时间" width="180"></el-table-column>
       <el-table-column prop="categoryName" label="模块"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="260">
         <template slot-scope="scope">
           <!-- <el-button size="mini" type="text" icon="el-icon-edit" @click="updateHandle(scope.row)">修改</el-button> -->
           <!-- <el-button
@@ -60,6 +60,8 @@
             isRead
           >查看</el-button> -->
           <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="editHandle(scope.row)">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="afreshHandle(scope.row)">重新指派</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -146,13 +148,15 @@ export default {
           });
         });
     },
-    updateHandle(_data) {
+    // 修改操作
+    editHandle(_data) {
       this.$router.push({
         path: "/file/add",
         query: { id: _data.id }
       });
     },
-    detailHandle(_data) {
+    // 重新指派
+    afreshHandle(_data) {
       this.$router.push({
         path: "/fil/detail",
         query: { id: _data.id }

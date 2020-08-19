@@ -38,8 +38,6 @@
           <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
           <!-- <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
           <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag> -->
-          <el-tag type="danger" v-if="scope.row.isDone" @click="finishHandle(scope.row )">落实</el-tag>
-          <el-tag type="info" v-else>已落实</el-tag>
         </template>
       </el-table-column>
     </el-table>
