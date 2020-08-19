@@ -66,40 +66,6 @@ export const constantRoutes = [{
     }]
   },
   {
-    path: '/process',
-    component: Layout,
-    // redirect: 'index',
-    meta: {
-      title: '流程管理',
-      icon: 'clipboard'
-    },
-    children: [{
-        path: 'manage',
-        component: () => import('@/views/process/manage'),
-        meta: {
-          title: '流程管理',
-          icon: 'example'
-        }
-      },
-      {
-        path: 'temp',
-        component: () => import('@/views/process/temp'),
-        meta: {
-          title: '流程模板',
-          icon: 'exit-fullscreen'
-        }
-      },
-      {
-        path: 'index',
-        component: () => import('@/views/process/link'),
-        meta: {
-          title: '环节管理',
-          icon: 'link'
-        }
-      }
-    ]
-  },
-  {
     path: '/exams',
     component: Layout,
     hidden: true,
@@ -221,37 +187,6 @@ export const constantRoutes = [{
       },
       // hidden: true,
     }]
-  },
-  {
-    path: '/apply',
-    component: Layout,
-    meta: {
-      title: '申请管理',
-      icon: 'clipboard'
-    },
-    children: [{
-        path: 'addlist',
-        component: () => import('@/views/apply/ApplyAdd'),
-        name: 'applyAdd',
-        meta: {
-          title: '发起申请',
-          icon: 'form',
-          noCache: true,
-          affix: true
-        },
-      },
-      {
-        path: 'list',
-        component: () => import('@/views/apply/ApplyList'),
-        name: 'applyList',
-        meta: {
-          title: '申请列表',
-          icon: 'list',
-          noCache: true,
-          affix: true
-        },
-      }
-    ]
   },
   {
     path: '/questions',
