@@ -63,3 +63,10 @@ export function readFile(data) {
         method: 'get',
     })
 }
+// 落实资料
+export function finishFile(data) {
+    return request({
+        url: '/resources/doneResources/'+data.id,
+        method: 'get',
+    })
+}

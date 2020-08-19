@@ -130,7 +130,7 @@ export default {
           message: "添加成功",
           type: "success"
         });
-        this.$router.push("/file/addlist");
+        this.$router.push("/file/myfile");
       });
     },
     // 修改考试
@@ -140,7 +140,7 @@ export default {
           message: "修改成功",
           type: "success"
         });
-        this.$router.push("/file/addlist");
+        this.$router.push("/file/myfile");
       });
     },
     // 修改考试获取信息
