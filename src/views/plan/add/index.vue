@@ -55,6 +55,7 @@
       <el-table-column align="center" prop="name" label="计划名称"></el-table-column>
       <el-table-column align="center" prop="startDate" label="开始日期"></el-table-column>
       <el-table-column align="center" prop="endDate" label="结束日期"></el-table-column>
+      <el-table-column align="center" prop="type" label="类型"></el-table-column>
     </el-table>
   </div>
 </template>
