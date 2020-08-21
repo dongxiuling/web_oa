@@ -37,7 +37,7 @@
           <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
           <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
           <!-- <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
-          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag> -->
+          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag>-->
         </template>
       </el-table-column>
     </el-table>
@@ -58,7 +58,18 @@
 <script>
 import { getCategory } from "@/api/tool/category.js";
 import { getFileList, downLoadFile, readFile, finishFile } from "@/api/file.js";
+$("#file-info").append(`
+  <div id="+res.entity.filePath+">
+    <p class='col-sm-4 control-file-info'>${res.entity.fileName}</p>
+    <p class='col-sm-4 control-file-info'>${res.entity.remark}</p>
+    <p class='col-sm-4 control-file-info'>
+      <a>打开</a>    
+      <a href='#'>下载</a>    
+      <a id='${res.entity.filePath}' href='javascript:delFile(${res.entity.filePath});'>删除</a>
+    </p>
+  </div>`);
 
+// $("#file-info").append("<div id="+res.entity.filePath+"><p class='col-sm-4 control-file-info'>"+res.entity.fileName+"</p><p class='col-sm-4 control-file-info'>"+res.entity.remark+"</p><p class='col-sm-4 control-file-info'><a>打开</a>    <a href='#'>下载</a>    <a id="+res.entity.filePath+" onclick='delFile("+res.entity.filePath+")'>删除</a></p></div>");
 export default {
   data() {
     return {
