@@ -12,10 +12,12 @@
         <settings />
       </right-panel>
     </div>
+    <MsgSocket/>
   </div>
 </template>
 
 <script>
+import MsgSocket from '@/components/WebSocket'
 import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
@@ -23,13 +25,17 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Layout',
+  created(){
+    this.$store.dispatch("checkMessage");
+  },
   components: {
     AppMain,
     Navbar,
     RightPanel,
     Settings,
     Sidebar,
-    TagsView
+    TagsView,
+    MsgSocket
   },
   mixins: [ResizeMixin],
   computed: {

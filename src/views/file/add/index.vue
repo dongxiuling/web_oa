@@ -161,7 +161,6 @@ export default {
     // 获取部门树形结构
     this.getDeptTreeselect();
     if (this.id) {
-      // console.log(this.id)
       this.getFileById(this.id);
     }
   }

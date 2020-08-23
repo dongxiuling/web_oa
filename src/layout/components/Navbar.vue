@@ -3,7 +3,7 @@
     <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
-
+    
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
@@ -42,6 +42,13 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <el-tooltip content="进入消息中心查看消息" effect="dark" placement="bottom">
+    <div class="msg-remind" @click="goMessageCenter">
+      <el-badge :value="message>0?message:''" class="item">
+        <i class="el-icon-message-solid"></i>
+      </el-badge>
+    </div>
+    </el-tooltip>
   </div>
 </template>
 
@@ -70,7 +77,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
+      'device',
+      'message'
     ]),
     setting: {
       get() {
@@ -85,6 +93,10 @@ export default {
     }
   },
   methods: {
+    // 跳转消息列表
+    goMessageCenter(){
+      this.$router.push('/message/messageList')
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -110,6 +122,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.msg-remind{
+  float: right;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding:0 8px;
+  cursor: pointer;
+  &:hover{
+    background: rgba(0,0,0,0.025)
+  }
+  .el-icon-message-solid:before {
+    content: "\E799";
+    opacity: 0.6;
+    font-size: 22px;
+  }
+}
 .navbar {
   height: 50px;
   overflow: hidden;

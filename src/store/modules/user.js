@@ -1,4 +1,5 @@
 import { login, logout, getInfo } from '@/api/login'
+import { hasMessage } from '@/api/message'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -7,12 +8,17 @@ const user = {
     name: '',
     avatar: '',
     roles: [],
-    permissions: []
+    permissions: [],
+    userId:"",
+    message:0
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_USERID:(state,userId)=>{
+      state.userId = userId
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -25,6 +31,9 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_MESSAGE:(state,remind) => {
+      state.message = remind;
     }
   },
 
@@ -60,6 +69,7 @@ const user = {
           }
           commit('SET_NAME', user.username)
           commit('SET_AVATAR', avatar)
+          commit('SET_USERID',user.userId)
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -69,7 +79,6 @@ const user = {
     
     // 退出系统
     LogOut({ commit, state }) {
-      // console.log(111)
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
@@ -85,11 +94,21 @@ const user = {
 
     // 前端 登出
     FedLogOut({ commit }) {
-
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         removeToken()
         resolve()
+      })
+    },
+    // 检索当前用户是否有未读消息 并返回个数
+    checkMessage({commit, state }){
+      return new Promise((resolve, reject) => {
+        hasMessage().then((res) => {
+          commit('SET_MESSAGE',res.data)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
       })
     }
   }
