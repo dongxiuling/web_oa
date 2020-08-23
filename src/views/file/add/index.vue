@@ -66,7 +66,8 @@ export default {
         cateId: "",
         url: "http://www.rr.cc",
         readUrl: "http://www.rr.cc",
-        userIds: []
+        userIds: [],
+        type:"128"
       },
       id: this.$route.query.id,
       rules: {

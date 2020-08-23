@@ -23,3 +23,11 @@ export function hasMessage(data) {
     data: data
   })
 }
+// 设置消息为已读
+export function changeMessageStatus(data) {
+  return request({
+    url: '/msg/update',
+    method: 'post',
+    data: data
+  })
+}

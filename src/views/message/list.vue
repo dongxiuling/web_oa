@@ -13,11 +13,20 @@
           <el-table-column prop="type" label="消息类型" width="180"></el-table-column>
           <el-table-column prop="date" label="下发日期" width="180"></el-table-column>
           <el-table-column prop="commander" label="消息下发者" width="180"></el-table-column>
-          <el-table-column label="操作" width="200">
+          <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button icon="el-icon-search" type="text" size="small">查看</el-button>
-              <el-button icon="el-icon-edit" type="text" size="small">编辑</el-button>
-              <el-button icon="el-icon-delete" type="text" size="small">删除</el-button>
+              <el-button
+                @click="goDetail(scope.row.typeId,scope.row.id)"
+                icon="el-icon-search"
+                type="text"
+                size="small"
+              >查看</el-button>
+              <el-button
+                @click="setStatus(scope.row.id)"
+                icon="el-icon-edit"
+                type="text"
+                size="small"
+              >标记已读</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -27,8 +36,8 @@
 </template>
 
 <script>
-import { messageList, getType } from "@/api/message";
-import { dateFormat } from "@/utils/format"
+import { messageList, getType, changeMessageStatus } from "@/api/message";
+import { dateFormat } from "@/utils/format";
 export default {
   data() {
     return {
@@ -42,7 +51,7 @@ export default {
     async initData() {
       this.loading = true;
       await this.getMessageType();
-      await this.getMessageList(10, 1);
+      await this.getMessageList(100, 1);
       this.loading = false;
     },
     //获取消息类型
@@ -53,12 +62,10 @@ export default {
           pageSize: 10,
           dictType: "message_type"
         }).then(res => {
-          var _data = [];
-          _data = res.rows.map((item)=>{
-            return{
-              [item.dictCode]:item.dictLabel
-            }
-          })
+          var _data = {};
+          res.rows.map(item => {
+            _data[item.dictCode] = item.dictLabel;
+          });
           this.messageType = _data;
           resolve();
         });
@@ -72,16 +79,35 @@ export default {
           size: 10
         }).then(res => {
           let _data = res.data.records;
-          _data = _data.map((item)=>{
-            return{
-              date: dateFormat('YYYY-mm-dd',item.createTime),
+          _data = _data.map(item => {
+            return {
+              date: dateFormat("YYYY-mm-dd", item.createTime),
               commander: item.userName,
               title: item.title,
-              type: this.messageType[item.type]
-            }
-          })
+              type: this.messageType[item.type],
+              typeId: item.type,
+              id: item.id
+            };
+          });
           this.dataList = _data;
-          console.log(res.data.records)
+          resolve();
+        });
+      });
+    },
+    // 查看消息
+    goDetail(type,id) {
+      this.setStatus(id).then((res)=>{
+        console.log(type);
+      })
+    },
+    // 设置消息为已读
+    setStatus(id) {
+      return new Promise((resolve, reject) => {
+        changeMessageStatus({
+          id
+        }).then(res => {
+          this.initData();
+          this.$store.dispatch("checkMessage"); //修改铃铛状态;
           resolve();
         });
       });
