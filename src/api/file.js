@@ -70,3 +70,21 @@ export function finishFile(data) {
         method: 'get',
     })
 }
+
+// 再次通知  查看阅读详情
+export function getResources(data) {
+    return request({
+        url: '/resources/getResources/'+data.id,
+        method: 'get',
+    })
+}
+
+
+//修改资料
+export function remindFile(data) {
+    return request({
+        url: '/resources/remind',
+        method: 'post',
+        data:data
+    })
+}

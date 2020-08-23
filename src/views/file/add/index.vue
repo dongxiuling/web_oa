@@ -23,6 +23,7 @@
         <Uploader v-on:getFile="getFileUrl(arguments)"></Uploader>
       </el-form-item>
       <el-form-item label="发送人员">
+        <el-input placeholder="输入关键字进行过滤" v-model="filterText" ></el-input>
         <el-tree
           :data="deptTree"
           show-checkbox
@@ -31,6 +32,7 @@
           :props="defaultProps"
           @check="getCheckedNodes()"
           :default-checked-keys="file.userIds"
+          :filter-node-method="filterNode"
         ></el-tree>
       </el-form-item>
       <el-form-item>
@@ -53,6 +55,12 @@ export default {
     return {
       cateData: [],
       deptTree: [],
+      defaultProps: {
+        children: "children",
+        label: "label",
+        isLeaf: "leaf"
+      },
+      filterText: "",
       file: {
         title: "",
         cateId: "",
@@ -76,16 +84,16 @@ export default {
         label: "name",
         children: "zones"
       },
-      defaultProps: {
-        children: "children",
-        label: "label",
-        isLeaf: "leaf"
-      },
       levels: ["紧急事件", "重点关注事件", "一般事件"]
     };
   },
-  components:{
+  components: {
     Uploader
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val);
+    }
   },
   methods: {
     //获取选中状态下的人员数据
@@ -99,6 +107,10 @@ export default {
       getTreeUser().then(response => {
         this.deptTree = response.data;
       });
+    },
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
     },
     // 获取分类列表ç
     getCateList() {
@@ -150,7 +162,7 @@ export default {
       });
     },
     // 获取wFid和nFid
-    getFileUrl(args){
+    getFileUrl(args) {
       this.file.url = args[0];
       this.file.readUrl = args[1];
     }

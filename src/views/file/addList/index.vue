@@ -20,7 +20,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-     <el-form-item label="资料级别" prop="level">
+      <el-form-item label="资料级别" prop="level">
         <el-select v-model="search.level" placeholder="请选择资料级别">
           <el-option v-for="item in levels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
@@ -40,7 +40,7 @@
           @click="$router.push('/file/add')"
         >发布文件</el-button>
       </el-col>
-    </el-row> -->
+    </el-row>-->
 
     <el-table :data="fileList" style="width: 100%" v-loading="loading">
       <el-table-column label="序号">
@@ -58,10 +58,15 @@
             icon="el-icon-search"
             @click="detailHandle(scope.row)"
             isRead
-          >查看</el-button> -->
+          >查看</el-button>-->
           <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="editHandle(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="afreshHandle(scope.row)">重新指派</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="afreshHandle(scope.row)"
+          >再次提醒</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -76,12 +81,54 @@
         @current-change="handleCurrentChange"
       ></el-pagination>
     </div>
+    <el-dialog title="重新指派" :visible.sync="outerVisible">
+      <el-form label-width="100px">
+        <el-form-item label="已查看：">
+          <span v-for="(user,index) in users" :key="index">
+            <el-tag v-if="user.isRead" type="success">{{user.deptName}}-{{user.userName}}</el-tag>
+          </span>
+        </el-form-item>
+        <el-form-item label="未查看：">
+          <span v-for="(user,index) in users" :key="index">
+            <el-tag v-if="!user.isRead" type="info">{{user.deptName}}-{{user.userName}}</el-tag>
+          </span>
+        </el-form-item>
+        <el-form-item label="重新指派：">
+          <!-- <el-tag type="info">张三</el-tag>
+          <el-tag type="info">李四</el-tag>
+          <el-tag type="info">王五</el-tag>-->
+          <el-input placeholder="输入关键字进行过滤" v-model="filterText" size="mini"></el-input>
+          <el-tree
+            :data="deptTree"
+            show-checkbox
+            node-key="id"
+            ref="tree"
+            :props="defaultProps"
+            :filter-node-method="filterNode"
+            @check="getCheckedNodes()"
+            :default-checked-keys="file.userIds"
+          ></el-tree>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="outerVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateHandle()">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getCategory } from "@/api/tool/category.js";
-import { getAddList, deleteFile } from "@/api/file.js";
+import {
+  getAddList,
+  deleteFile,
+  getFileById,
+  remindFile,
+  getResources
+} from "@/api/file.js";
+import { listUser, getTreeUser } from "@/api/system/user";
+// import { fileSave, getFileById, updateFile } from "@/api/file";
 
 export default {
   data() {
@@ -89,7 +136,7 @@ export default {
       search: {
         title: "",
         categoryId: 0,
-        level:0
+        level: 0
       },
       cateData: [],
       currentPage: 1,
@@ -97,14 +144,35 @@ export default {
       fileList: [],
       loading: true,
       total: 0,
-     levels: [
-        {id:0,name:"全部事件"},
+      levels: [
+        { id: 0, name: "全部事件" },
         { id: 1, name: "紧急事件" },
         { id: 2, name: "重点关注事件" },
         { id: 3, name: "一般事件" }
-      ]
+      ],
+      outerVisible: false,
+      file: {
+        title: "",
+        cateId: "",
+        url: "http://www.rr.cc",
+        readUrl: "http://www.rr.cc",
+        userIds: []
+      },
+      defaultProps: {
+        children: "children",
+        label: "label",
+        isLeaf: "leaf"
+      },
+      deptTree: [],
+      filterText: '',//tree过滤
+      users: [] //存放已读和未读的用户 isRead 0|1
     };
   },
+  watch: {
+      filterText(val) {
+        this.$refs.tree.filter(val);
+      }
+    },
   methods: {
     getData() {
       getAddList({
@@ -112,7 +180,7 @@ export default {
         size: this.pageSize,
         title: this.search.title,
         cateId: this.search.categoryId,
-        level:this.search.level
+        level: this.search.level
       }).then(res => {
         this.fileList = res.data.records;
         this.total = res.data.total;
@@ -157,10 +225,18 @@ export default {
     },
     // 重新指派
     afreshHandle(_data) {
-      this.$router.push({
-        path: "/fil/detail",
-        query: { id: _data.id }
-      });
+      this.outerVisible = true;
+      // 查询部门树结构
+      this.getDeptTreeselect();
+      // 获取阅读人详情
+      this.getReadDetail(_data.id);
+      //  获取已勾选人员
+      this.getFileById(_data.id);
+      // 获取  id: _data.id  的数据
+      // this.$router.push({
+      //   path: "/fil/detail",
+      //   query: { id: _data.id }
+      // });
     },
     searchHandle() {
       this.getData();
@@ -178,15 +254,56 @@ export default {
         dictType: "file_module_status"
       }).then(res => {
         this.cateData = res.rows;
-        this.cateData.unshift(
-            { dictCode: 0, dictLabel: "全部模块" }
-        );
+        this.cateData.unshift({ dictCode: 0, dictLabel: "全部模块" });
+      });
+    },
+    // filter-node-method，值为过滤函数。
+    filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+    },
+    //获取选中状态下的人员数据
+    getCheckedNodes() {
+      this.file.userIds = this.$refs.tree.getCheckedNodes(true).map(item => {
+        return item.id;
+      });
+    },
+    /** 查询部门树结构 */
+    getDeptTreeselect() {
+      getTreeUser().then(response => {
+        this.deptTree = response.data;
+      });
+    },
+    // 获取已勾选人员
+    getFileById(id) {
+      getFileById({ id }).then(res => {
+        this.file = res.data;
+      });
+    },
+    // 重新提醒
+    updateHandle() {
+      remindFile(this.file).then(res => {
+        this.$message({
+          message: "修改成功",
+          type: "success"
+        });
+        this.outerVisible = false;
+        this.$router.push("/file/myfile");
+      });
+    },
+    // 获取阅读详情
+    getReadDetail(id) {
+      getResources({ id }).then(res => {
+        this.users = res.data.users;
+        // console.log(res.data.users)
       });
     }
   },
   created() {
     this.getData();
     this.getCateList(); //获取分类
+    this.getDeptTreeselect();
+    // this.getFileById(this.id);
   }
 };
 </script>

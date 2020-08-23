@@ -37,7 +37,7 @@
           <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
           <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
           <!-- <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
-          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag> -->
+          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag>-->
         </template>
       </el-table-column>
     </el-table>
@@ -58,7 +58,6 @@
 <script>
 import { getCategory } from "@/api/tool/category.js";
 import { getFileList, downLoadFile, readFile, finishFile } from "@/api/file.js";
-
 export default {
   data() {
     return {
