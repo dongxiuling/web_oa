@@ -31,11 +31,15 @@
           </el-table-column>
         </el-table>
       </div>
+      <div class="pagination">
+        <el-pagination @current-change="changePage" :page-size="10" background layout="prev, pager, next" :total="message"></el-pagination>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import { messageList, getType, changeMessageStatus } from "@/api/message";
 import { dateFormat } from "@/utils/format";
 export default {
@@ -51,7 +55,7 @@ export default {
     async initData() {
       this.loading = true;
       await this.getMessageType();
-      await this.getMessageList(100, 1);
+      await this.getMessageList(10, 1);
       this.loading = false;
     },
     //获取消息类型
@@ -71,12 +75,18 @@ export default {
         });
       });
     },
+    // 分页数据
+    async changePage(current){
+      this.loading = true;
+      await this.getMessageList(10, current);
+      this.loading = false;
+    },
     //获取消息列表
     getMessageList(count, page) {
       return new Promise((resolve, reject) => {
         messageList({
-          current: 0,
-          size: 10
+          current: page,
+          size: count
         }).then(res => {
           let _data = res.data.records;
           _data = _data.map(item => {
@@ -95,10 +105,10 @@ export default {
       });
     },
     // 查看消息
-    goDetail(type,id) {
-      this.setStatus(id).then((res)=>{
+    goDetail(type, id) {
+      this.setStatus(id).then(res => {
         console.log(type);
-      })
+      });
     },
     // 设置消息为已读
     setStatus(id) {
@@ -112,6 +122,9 @@ export default {
         });
       });
     }
+  },
+  computed: {
+    ...mapGetters(["message"])
   },
   //生命周期 - 创建完成（访问当前this实例）
   created() {
@@ -129,5 +142,10 @@ export default {
 .table-content {
   background-color: #fff;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+.pagination{
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 </style>
