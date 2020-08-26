@@ -36,10 +36,10 @@
         <template slot-scope="scope">
           <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
           <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
-          <!-- <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
-          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag> -->
-          <el-tag type="danger" v-if="scope.row.isDone" @click="finishHandle(scope.row )">落实</el-tag>
-          <el-tag type="info" v-else>已落实</el-tag>
+          <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
+          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag>
+          <el-tag type="info" v-if="scope.row.isDone">已落实</el-tag>
+          <el-tag type="danger" v-else @click="finishHandle(scope.row )">未落实</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -130,15 +130,16 @@ export default {
         this.getData();
       });
     },
+    //下载
     downHandle(obj) {
-      // 调用下载资料接口
+      // 修改下载状态
       downLoadFile({ id: obj.id }).then(res => {
         window.open(obj.url);
          this.getData();
       });
     },
+    // 落实
     finishHandle(obj) {
-      console.log(111)
       // 调用下载资料接口
       finishFile({ id: obj.id }).then(res => {
         // window.open(obj.url);
