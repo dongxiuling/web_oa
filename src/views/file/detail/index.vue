@@ -16,7 +16,7 @@
           <b>{{detailInfo.timeStr}}</b>
         </el-form-item>
         <el-form-item label="文件发布者">
-          <b>{{detailInfo.cateStr}}</b>
+          <b>{{detailInfo.userName}}</b>
         </el-form-item>
         <el-form-item label="操作">
           <el-button @click="openTabWin(detailInfo.readUrl,'view')" v-if="detailInfo.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button>
@@ -87,7 +87,7 @@ export default {
       return new Promise((resolve, reject) => {
         getFileById({ id }).then(res => {
           this.detailInfo = res.data;
-          this.detailInfo.levelStr = this.levels[res.data.level + 1];
+          this.detailInfo.levelStr = this.levels[res.data.level - 1];
           this.detailInfo.timeStr = dateFormat(
             "YYYY-mm-dd",
             res.data.createTime
