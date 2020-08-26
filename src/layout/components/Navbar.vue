@@ -6,7 +6,7 @@
     
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <!-- <search id="header-search" class="right-menu-item" />
         
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
@@ -20,13 +20,14 @@
 
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        </el-tooltip> -->
 
       </template>
 
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+      <el-dropdown class=" right-menu-item hover-effect" trigger="click">
+        <div class="user-info">
+          <div class="user-name">{{user_name}}</div>
+          <!-- <img :src="avatar" class="user-avatar"> -->
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -78,7 +79,8 @@ export default {
       'sidebar',
       'avatar',
       'device',
-      'message'
+      'message',
+      'user_name'
     ]),
     setting: {
       get() {
@@ -122,6 +124,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.user-info{
+  padding-right: 20px;
+  position: relative;
+  .user-name{
+    display: flex;
+    justify-content: center;
+  }
+  i{
+    position: absolute;
+    right: 2px;
+    top:15px;
+  }
+}
 .msg-remind{
   float: right;
   height: 100%;

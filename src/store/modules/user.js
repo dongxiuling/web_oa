@@ -46,6 +46,10 @@ const user = {
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
         login(username, password, code, uuid).then(res => {
+          if(res.token == 2){//判断验证码是否错误
+            resolve(res.token);
+            return true;
+          }
           setToken(res.token)
           commit('SET_TOKEN', res.token)
           resolve()
@@ -67,7 +71,7 @@ const user = {
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
-          commit('SET_NAME', user.username)
+          commit('SET_NAME', user.nickName)
           commit('SET_AVATAR', avatar)
           commit('SET_USERID',user.userId)
           resolve(res)
