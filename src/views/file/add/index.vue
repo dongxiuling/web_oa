@@ -67,7 +67,7 @@ export default {
         url: "http://www.rr.cc",
         readUrl: "http://www.rr.cc",
         userIds: [],
-        type:"128"
+        type:"regulatory_documents"
       },
       id: this.$route.query.id,
       rules: {

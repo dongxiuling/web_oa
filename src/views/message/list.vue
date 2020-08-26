@@ -2,6 +2,10 @@
 <template>
   <div class="container">
     <div class="app-container">
+      <el-tabs v-model="msgType" @tab-click="changeType">
+        <el-tab-pane label="未读消息" name="new"></el-tab-pane>
+        <el-tab-pane label="已读消息" name="old"></el-tab-pane>
+      </el-tabs>
       <div class="table-content">
         <el-table v-loading="loading" :data="dataList" style="width: 100%">
           <el-table-column prop="title" label="消息名称">
@@ -22,6 +26,7 @@
                 size="small"
               >查看</el-button>
               <el-button
+                v-if="msgType == 'new'"
                 @click="setStatus(scope.row.id)"
                 icon="el-icon-edit"
                 type="text"
@@ -32,7 +37,7 @@
         </el-table>
       </div>
       <div class="pagination">
-        <el-pagination @current-change="changePage" :page-size="10" background layout="prev, pager, next" :total="message"></el-pagination>
+        <el-pagination :current-page.sync="currentPage" @current-change="changePage" :page-size="10" background layout="prev, pager, next" :total="message"></el-pagination>
       </div>
     </div>
   </div>
@@ -40,23 +45,28 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { messageList, getType, changeMessageStatus } from "@/api/message";
+import { doneMessage, messageList, getType, changeMessageStatus } from "@/api/message";
 import { dateFormat } from "@/utils/format";
 export default {
   data() {
     return {
+      currentPage:1,
+      msgType:"new",
       messageType: {},
       loading: false,
       dataList: []
     };
   },
   methods: {
+    //切换消息类型
+    async changeType(tab,event){
+      this.currentPage = 1;
+      await this.getMessageList();
+    },
     //初始化数据
     async initData() {
-      this.loading = true;
       await this.getMessageType();
       await this.getMessageList(10, 1);
-      this.loading = false;
     },
     //获取消息类型
     getMessageType() {
@@ -68,7 +78,7 @@ export default {
         }).then(res => {
           var _data = {};
           res.rows.map(item => {
-            _data[item.dictCode] = item.dictLabel;
+            _data[item.dictValue] = item.dictLabel;
           });
           this.messageType = _data;
           resolve();
@@ -77,14 +87,14 @@ export default {
     },
     // 分页数据
     async changePage(current){
-      this.loading = true;
       await this.getMessageList(10, current);
-      this.loading = false;
     },
     //获取消息列表
     getMessageList(count, page) {
+      this.loading = true;
       return new Promise((resolve, reject) => {
-        messageList({
+        let _fun = this.msgType=='new'? messageList:doneMessage;
+        _fun({
           current: page,
           size: count
         }).then(res => {
@@ -101,6 +111,7 @@ export default {
             };
           });
           this.dataList = _data;
+          this.loading = false;
           resolve();
         });
       });
@@ -108,7 +119,7 @@ export default {
     // 查看消息
     goDetail(type, id,detailId) {
       this.setStatus(id).then(res => {
-        if(type == '128'){
+        if(type == 'regulatory_documents'){
           this.$router.push("/files/detail/"+detailId);
         }
       });

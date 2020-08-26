@@ -19,8 +19,9 @@
           <b>{{detailInfo.cateStr}}</b>
         </el-form-item>
         <el-form-item label="操作">
-          <el-button @click="openTabWin(detailInfo.readUrl)" v-if="detailInfo.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button>
-          <el-button @click="openTabWin(detailInfo.url)" icon="el-icon-download" size="small" type="info">下载文件</el-button>
+          <el-button @click="openTabWin(detailInfo.readUrl,'view')" v-if="detailInfo.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button>
+          <el-button @click="openTabWin(detailInfo.url,'download')" icon="el-icon-download" size="small" type="info">下载文件</el-button>
+          <el-button @click="doneFile" v-if="!detailInfo.isDone" icon="el-icon-s-claim" size="small" type="warning">落实</el-button>
         </el-form-item>
         <el-form-item label="提示" v-if="!detailInfo.readUrl">
           <el-alert style="padding:0;width:auto" title="当前文件格式暂不支持预览" type="info" :closable="false"></el-alert>
@@ -32,7 +33,7 @@
 
 <script>
 import { getCategory } from "@/api/tool/category.js";
-import { getFileById } from "@/api/file";
+import { getFileById,readFile,downLoadFile,finishFile } from "@/api/file";
 import { dateFormat } from "@/utils/format";
 export default {
   data() {
@@ -44,8 +45,21 @@ export default {
     };
   },
   methods: {
+    // 落实操作
+    doneFile(){
+      this.loading = true;
+      finishFile({ id: this.detailInfo.id }).then(res => {
+        this.loading = false;
+        this.$router.push("/file/filelist");
+      });
+    },
     // 下载或预览操作
-    openTabWin(url){
+    async openTabWin(url,type){
+      if(type=="view"){
+        await readFile({id:this.detailInfo.id})
+      }else if(type="download"){
+        await downLoadFile({id:this.detailInfo.id})
+      }
       window.open(url,"_blank");
     },
     // 初始化数据
