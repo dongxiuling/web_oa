@@ -136,7 +136,7 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    // 添加考试
+    // 添加法规
     addHandle() {
       fileSave(this.file).then(res => {
         this.$message({
@@ -146,7 +146,7 @@ export default {
         this.$router.push("/file/myfile");
       });
     },
-    // 修改考试
+    // 修改法规
     updateHandle() {
       updateFile(this.file).then(res => {
         this.$message({
@@ -156,7 +156,7 @@ export default {
         this.$router.push("/file/myfile");
       });
     },
-    // 修改考试获取信息
+    // 修改法规获取信息
     getFileById(id) {
       getFileById({ id }).then(res => {
         this.file = res.data;

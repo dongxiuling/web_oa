@@ -151,12 +151,12 @@ export default {
         { id: 3, name: "一般事件" }
       ],
       outerVisible: false,
+      // 重新派发数据
       file: {
         title: "",
-        cateId: "",
-        url: "http://www.rr.cc",
-        readUrl: "http://www.rr.cc",
-        userIds: []
+        userIds: [],
+        type:128,
+        id:0
       },
       defaultProps: {
         children: "children",
@@ -165,7 +165,8 @@ export default {
       },
       deptTree: [],
       filterText: '',//tree过滤
-      users: [] //存放已读和未读的用户 isRead 0|1
+      users: [], //存放已读和未读的用户 isRead 0|1,
+      // afreshData:{} //重新指派数据
     };
   },
   watch: {
@@ -230,13 +231,8 @@ export default {
       this.getDeptTreeselect();
       // 获取阅读人详情
       this.getReadDetail(_data.id);
-      //  获取已勾选人员
+      // 获取法规详情
       this.getFileById(_data.id);
-      // 获取  id: _data.id  的数据
-      // this.$router.push({
-      //   path: "/fil/detail",
-      //   query: { id: _data.id }
-      // });
     },
     searchHandle() {
       this.getData();
@@ -274,14 +270,19 @@ export default {
         this.deptTree = response.data;
       });
     },
-    // 获取已勾选人员
+    // 获取详情
     getFileById(id) {
       getFileById({ id }).then(res => {
-        this.file = res.data;
+        // console.log(res,"获取法规详情")
+        this.file.id = res.data.id;
+        this.file.title = res.data.title;
+        this.file.type = "regulatory_documents"; //res.data.type;
+        this.file.userIds =  res.data.userIds;
       });
     },
-    // 重新提醒
+    // 重新指派
     updateHandle() {
+      console.log(this.file);
       remindFile(this.file).then(res => {
         this.$message({
           message: "修改成功",
