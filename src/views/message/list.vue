@@ -16,7 +16,7 @@
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
               <el-button
-                @click="goDetail(scope.row.typeId,scope.row.id)"
+                @click="goDetail(scope.row.typeId,scope.row.id,scope.row.contentId)"
                 icon="el-icon-search"
                 type="text"
                 size="small"
@@ -96,7 +96,8 @@ export default {
               title: item.title,
               type: this.messageType[item.type],
               typeId: item.type,
-              id: item.id
+              id: item.id,
+              contentId:item.contentId
             };
           });
           this.dataList = _data;
@@ -105,9 +106,11 @@ export default {
       });
     },
     // 查看消息
-    goDetail(type, id) {
+    goDetail(type, id,detailId) {
       this.setStatus(id).then(res => {
-        console.log(type);
+        if(type == '128'){
+          this.$router.push("/files/detail/"+detailId);
+        }
       });
     },
     // 设置消息为已读
