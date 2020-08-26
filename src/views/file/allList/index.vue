@@ -37,7 +37,9 @@
           <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
           <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
           <!-- <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
-          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag>-->
+          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag> -->
+          <el-tag @click="downHandle(scope.row )">下载</el-tag>
+
         </template>
       </el-table-column>
     </el-table>
@@ -129,10 +131,10 @@ export default {
     },
     downHandle(obj) {
       // 调用下载资料接口
-      downLoadFile({ id: obj.id }).then(res => {
+      // downLoadFile({ id: obj.id }).then(res => {
         window.open(obj.url);
-         this.getData();
-      });
+        //  this.getData();
+      // });
     },
     finishHandle(obj) {
       console.log(111)
