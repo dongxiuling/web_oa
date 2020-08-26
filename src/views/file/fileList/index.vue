@@ -36,8 +36,9 @@
         <template slot-scope="scope">
           <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
           <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
-          <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">已下载</el-tag>
-          <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag>
+          <el-tag @click="downHandle(scope.row )">下载</el-tag>
+          <!-- <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">下载</el-tag> -->
+          <!-- <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag> -->
           <el-tag type="info" v-if="scope.row.isDone">已落实</el-tag>
           <el-tag type="danger" v-else @click="finishHandle(scope.row )">未落实</el-tag>
         </template>
@@ -133,10 +134,10 @@ export default {
     //下载
     downHandle(obj) {
       // 修改下载状态
-      downLoadFile({ id: obj.id }).then(res => {
+      // downLoadFile({ id: obj.id }).then(res => {
         window.open(obj.url);
-         this.getData();
-      });
+        //  this.getData();
+      // });downHandle
     },
     // 落实
     finishHandle(obj) {
