@@ -65,6 +65,7 @@ export default {
     },
     //初始化数据
     async initData() {
+      this.$store.dispatch("checkMessage"); //修改铃铛状态;
       await this.getMessageType();
       await this.getMessageList(10, 1);
     },
