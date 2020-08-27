@@ -157,7 +157,7 @@ export default {
     },
     // 修改法规
     updateHandle() {
-      updateFile(this.file).then(res => {
+      updateFile({...this.file,type:"regulatory_documents"}).then(res => {
         this.$message({
           message: "修改成功",
           type: "success"
