@@ -1,185 +1,144 @@
 <template>
-  <div class="app-container">
-    <el-form ref="meeting" :model="meeting" :rules="rules" label-width="80px">
-      <el-form-item label="会议名称" prop="title">
-        <el-input v-model="meeting.title" style="width:300px"></el-input>
-      </el-form-item>
-      <el-form-item label="会议地点" prop="place">
-        <el-input v-model="meeting.place" style="width:300px"></el-input>
-      </el-form-item>
-      <el-form-item label="会议内容" prop="content">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2, maxRows: 4}"
-          placeholder="请输入会议内容"
-          v-model="meeting.content"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="会议时间" prop="meetingDate">
-        <el-date-picker
-          v-model="date"
-          type="date"
-          placeholder="选择日期"
-          format="yyyy 年 MM 月 dd 日"
-          value-format="yyyy-MM-dd"
-        ></el-date-picker>
-      </el-form-item>
-      <el-form-item prop="meetingTime">
-        <el-time-select
-          v-model="time"
-          :picker-options="{
-            start: '08:30',
-            step: '00:15',
-            end: '18:30'
-          }"
-          placeholder="选择时间"
-        ></el-time-select>
-      </el-form-item>
+  <div>
+    <FullCalendar :options="calendarOptions" />
 
-      <el-form-item label="参会人员">
-        <el-tree
-          :data="deptTree"
-          show-checkbox
-          node-key="id"
-          ref="tree"
-          :props="defaultProps"
-          @check="getCheckedNodes()"
-          :default-checked-keys="meeting.userIds"
-        ></el-tree>
-      </el-form-item>
-      <el-form-item>
-        <el-button v-if="$route.query.id" type="primary" @click="updateHandle('meeting')">确定修改</el-button>
-        <el-button v-else type="primary" @click="submitForm('meeting')">立即创建</el-button>
-        <el-button @click="resetForm('meeting')">取消</el-button>
-      </el-form-item>
-    </el-form>
+    <el-drawer title="会议预定" :visible.sync="drawer" :with-header="false">
+      <book :bookConfig="bookConfig"/>
+    </el-drawer>
+
+    <el-popover
+      placement="bottom"
+      title="标题"
+      width="200"
+      trigger="manual"
+      content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
+      v-model="visible"
+    ></el-popover>
   </div>
 </template>
 
 <script>
-import { meetingSave, getMeetingById, updateMeeting } from "@/api/meeting";
-import { listUser, getTreeUser } from "@/api/system/user";
+import FullCalendar from '@fullcalendar/vue'
+import interactionPlugin from '@fullcalendar/interaction'; // for selectable
+import dayGridPlugin from '@fullcalendar/daygrid'; // for dayGridMonth view
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import '@fullcalendar/core/locales/zh-cn.js'
+import Book from './book.vue'
+import { dateFormat } from "@/utils/format";
+
 export default {
+  components: {
+    FullCalendar, // make the <FullCalendar> tag available
+    Book
+  },
   data() {
     return {
-      deptTree: [],
-      meeting: {
-        title: "",
-        place: "",
-        content: "",
-        userIds: []
-      },
-      date: "",
-      time: "",
-      id: this.$route.query.id,
-      rules: {
-        title: [{ required: true, message: "请输入会议名称", trigger: "blur" }],
-        place: [{ required: true, message: "请输入地点名称", trigger: "blur" }],
-        content: [
-          { required: true, message: "请输入会议内容", trigger: "blur" }
+      drawer: false,
+      bookConfig: {},
+      visible: true,
+      calendarOptions: {
+        locale: "zh-cn",
+        plugins: [resourceTimelinePlugin, interactionPlugin],
+        titleFormat: {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        },
+        buttonText: {
+          today: '今天',
+          month: '月',
+          week: '周',
+          day: '日',
+          list: '列表'
+        },
+        slotLabelFormat: {
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: false
+        },
+        initialView: 'resourceTimelineDay',
+        dateClick: this.handleDateClick,
+        selectable: true,
+        select: selectionInfo => {
+          console.log(selectionInfo)
+          console.log('selected ' + selectionInfo.startStr + ' to ' + selectionInfo.endStr)
+          this.drawer = true
+          console.log(dateFormat("YYYY-mm-dd HH:MM:SS", selectionInfo.start))
+          console.log(dateFormat("YYYY-mm-dd HH:MM:SS", selectionInfo.end))
+          // this.content = selectionInfo.startStr + ' 到 ' + selectionInfo.endStr
+          this.bookConfig = {
+            start: dateFormat("YYYY-mm-dd HH:MM:SS", selectionInfo.start),
+            end: dateFormat("YYYY-mm-dd HH:MM:SS", selectionInfo.end),
+            roomId: 1
+          }
+        },
+        resourceAreaWidth: '20%',
+        resourceAreaColumns: [
+          {
+            field: 'title',
+            headerContent: '会场名称'
+          },
+          {
+            field: 'occupancy',
+            headerContent: '最大容纳人数'
+          }
         ],
-        // meetingTime: [{ required: true, message: "请输入会议时间", trigger: "blur" }],
-        // meetingDate: [{ required: true, message: "请输入会议日期", trigger: "blur" }],
-        userIds: [
-          { required: true, message: "请选择参会人员", trigger: "change" }
-        ]
-      },
-      props: {
-        label: "name",
-        children: "zones"
-      },
-      defaultProps: {
-        children: "children",
-        label: "label",
-        isLeaf: "leaf"
+        // resources: 'https://fullcalendar.io/demo-resources.json?with-nesting&with-colors',
+        // events: 'https://fullcalendar.io/demo-events.json?single-day&for-resource-timeline'
+        resources: [
+          { id: 1, title: '第一会场', occupancy: 40 },
+          { id: 2, title: '第二会场', occupancy: 60 },
+          { id: 3, title: '第三会场', occupancy: 50 },
+          { id: 4, title: '第四会场', occupancy: 100 },
+          { id: 5, title: '第五会场', occupancy: 80 },
+        ],
+        events: [
+          {
+            resourceId: 1,
+            title: '全体大会',
+            start: '2020-08-26T01:00:00+08:00',
+            end: '2020-08-26T12:00:00+08:00',
+            color: 'orange'
+          },
+          {
+            resourceId: 2,
+            title: '开会啦',
+            start: '2020-08-26T11:00:00+08:00',
+            end: '2020-08-26T22:00:00+08:00',
+            color: 'green'
+          },
+          {
+            resourceId: 3,
+            title: '开会啦',
+            start: '2020-08-26T10:00:00+08:00',
+            end: '2020-08-26T14:00:00+08:00',
+            // color: 'blue'
+          }
+        ],
+        eventClick: info => {
+          console.log(info);
+          console.log('Event: ' + info.event.title);
+          console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+          console.log('View: ' + info.view.type);
+          // this.visible = true
+          this.drawer = true
+          this.content = info.event.title
+        }
       }
-    };
-  },
-  computed: {
-    startTime() {
-      return this.date + " " + this.time + ":00";
     }
   },
   methods: {
-    //获取选中状态下的人员数据
-    getCheckedNodes() {
-      this.meeting.userIds = this.$refs.tree.getCheckedNodes(true).map(item => {
-        return item.id;
-      });
+    handleDateClick: function (arg) {
+      console.log('date click! ' + arg.dateStr)
     },
-    /** 查询部门树结构 */
-    getDeptTreeselect() {
-      getTreeUser().then(response => {
-        this.deptTree = response.data;
-      });
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.addHandle();
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    // 添加会议
-    addHandle() {
-      meetingSave({
-        ...this.meeting,
-        startTime: this.startTime
-      }).then(res => {
-        this.$message({
-          message: "添加成功",
-          type: "success"
-        });
-        this.$router.push("/meeting/addlist");
-      });
-    },
-    // 修改会议
-    updateHandle() {
-      updateMeeting({ ...this.meeting, startTime: this.startTime }).then(
-        res => {
-          this.$message({
-            message: "修改成功",
-            type: "success"
-          });
-          this.$router.push("/meeting/addlist");
-        }
-      );
-    },
-    // 修改考试获取信息
-    getMeetingById(id) {
-      getMeetingById({ id }).then(res => {
-        this.meeting = res.data;
-        let arr = res.data.startTime.split(" ");
-        this.date = arr[0];
-        this.time = arr[1].substring(0,arr[1].length-3);
-      });
+    getRoomList() {
+
     }
   },
-  created() {
-    // 获取部门树形结构
-    this.getDeptTreeselect();
-    if (this.id) {
-      this.getMeetingById(this.id);
-    }
-  },
-  beforeRouteUpdate(to, from, next) {
-    if (!to.query.id) {
-      this.meeting = {
-        title: "",
-        place: "",
-        content: "",
-        userIds: []
-      },
-      this.date = "";
-      this.time = "";
-    }
-    next();
+  mounted() {
+
   }
-};
+}
+
 </script>
+

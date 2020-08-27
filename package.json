@@ -40,6 +40,13 @@
     "url": "https://gitee.com/y_project/RuoYi-Vue.git"
   },
   "dependencies": {
+    "@fullcalendar/core": "^5.3.0",
+    "@fullcalendar/daygrid": "^5.3.0",
+    "@fullcalendar/interaction": "^5.3.0",
+    "@fullcalendar/moment": "^5.3.0",
+    "@fullcalendar/resource-timeline": "^5.3.0",
+    "@fullcalendar/timegrid": "^5.3.0",
+    "@fullcalendar/vue": "^5.3.0",
     "@riophae/vue-treeselect": "0.4.0",
     "axios": "0.18.1",
     "clipboard": "2.0.4",
@@ -50,13 +57,14 @@
     "js-beautify": "^1.10.2",
     "js-cookie": "2.2.0",
     "jsencrypt": "3.0.0-rc.1",
+    "moment": "^2.27.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",
     "qs": "^6.9.3",
     "screenfull": "4.2.0",
     "sortablejs": "1.8.4",
-    "vue": "2.6.10",
+    "vue": "2.6.11",
     "vue-count-to": "1.0.13",
     "vue-cropper": "0.4.9",
     "vue-quill-editor": "3.0.6",
@@ -68,8 +76,8 @@
   },
   "devDependencies": {
     "@babel/core": "7.0.0",
-    "@babel/register": "7.0.0",
     "@babel/parser": "^7.7.4",
+    "@babel/register": "7.0.0",
     "@vue/cli-plugin-babel": "3.5.3",
     "@vue/cli-plugin-eslint": "^3.9.1",
     "@vue/cli-plugin-unit-jest": "3.5.3",
@@ -98,7 +106,7 @@
     "serve-static": "^1.13.2",
     "svg-sprite-loader": "4.1.3",
     "svgo": "1.2.0",
-    "vue-template-compiler": "2.6.10"
+    "vue-template-compiler": "2.6.11"
   },
   "engines": {
     "node": ">=8.9",
