@@ -59,7 +59,7 @@
 
 <script>
 import { getCategory } from "@/api/tool/category.js";
-import { getFileList, downLoadFile, readFile, finishFile } from "@/api/file.js";
+import { getALlList, downLoadFile, readFile, finishFile } from "@/api/file.js";
 export default {
   data() {
     return {
@@ -85,7 +85,7 @@ export default {
   methods: {
     handleUpdate() {},
     getData() {
-      getFileList({
+      getALlList({
         current: this.currentPage,
         size: this.pageSize,
         title: this.search.title,

@@ -42,21 +42,21 @@
       </el-col>
     </el-row>-->
 
-    <el-table :data="fileList" style="width: 100%" v-loading="loading">
+    <el-table :data="fileList" style="width: 100%" v-loading="loading" @row-click="openDetails">
       <el-table-column type="index" width="50" label="序号"></el-table-column>
       <el-table-column prop="title" label="法规名称" width="240"></el-table-column>
       <el-table-column prop="createTime" label="更新时间" width="200"></el-table-column>
       <el-table-column prop="categoryName" label="模块"></el-table-column>
       <el-table-column label="操作" width="350">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-view" @click="detailHandle(scope.row)" >详情</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="editHandle(scope.row)">修改</el-button>
+          <el-button size="mini" type="text" icon="el-icon-view" @click.stop="detailHandle(scope.row)" >详情</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click.stop="delHandle(scope.row)">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click.stop="editHandle(scope.row)">修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="afreshHandle(scope.row)"
+            @click.stop="afreshHandle(scope.row)"
           >再次提醒</el-button>
         </template>
       </el-table-column>
@@ -276,13 +276,10 @@ export default {
         this.$router.push("/file/myfile");
       });
     },
-    // // 获取阅读详情
-    // getReadDetail(id) {
-    //   getResources({ id }).then(res => {
-    //     this.users = res.data.users;
-    //     // console.log(res.data.users)
-    //   });
-    // }
+    // 点击 查看详情
+    openDetails(row) {
+      this.$router.push("/files/mydetail/"+row.id);
+    }
   },
   created() {
     this.getData();

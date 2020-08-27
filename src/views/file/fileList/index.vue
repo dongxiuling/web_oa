@@ -24,7 +24,7 @@
         <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="fileList" style="width: 100%" v-loading="loading">
+    <el-table :data="fileList" style="width: 100%" v-loading="loading" @row-click="openDetails">
       <el-table-column type="index" width="50" label="序号"></el-table-column>
       <el-table-column prop="title" label="法规名称" width="180"></el-table-column>
       <el-table-column prop="createTime" label="上传时间" width="160"></el-table-column>
@@ -45,20 +45,20 @@
       <el-table-column label="操作" width="240">
         <template slot-scope="scope">
           <!-- v-if="scope.row.isRead"  -->
-          <el-button type="primary" plain size="mini" @click="downHandle(scope.row )">下载</el-button>
+          <el-button type="primary" plain size="mini" @click.stop="downHandle(scope.row )">下载</el-button>
           <el-button
             type="info"
             plain
             size="mini"
             v-if="scope.row.isDone"
-            @click="finishHandle(scope.row)"
+            @click.stop="finishHandle(scope.row)"
           >落实</el-button>
-          <el-button type="danger" v-else size="mini" plain @click="finishHandle(scope.row )">落实</el-button>
+          <el-button type="danger" v-else size="mini" plain @click.stop="finishHandle(scope.row )">落实</el-button>
           <el-button
             type="success"
             plain
             size="mini"
-            @click="lookHandle(scope.row)"
+            @click.stop="lookHandle(scope.row)"
             v-if="scope.row.readUrl"
           >查看</el-button>
         </template>
@@ -154,17 +154,14 @@ export default {
     //下载
     downHandle(obj) {
       // 修改下载状态
-      // downLoadFile({ id: obj.id }).then(res => {
       window.open(obj.url);
-      //  this.getData();
-      // });downHandle
     },
     // 落实
     finishHandle(obj) {
       if (obj.isDone) {
         this.$message({
-          message: '当前法规已落实',
-          type: 'warning'
+          message: "当前法规已落实",
+          type: "warning"
         });
       } else {
         this.$confirm("确认落实此法规，落实后无法恢复, 是否继续?", "提示", {
@@ -179,6 +176,10 @@ export default {
           });
         });
       }
+    },
+    // 点击 查看详情
+    openDetails(row) {
+      this.$router.push("/files/detail/"+row.id);
     }
   },
   created() {

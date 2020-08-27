@@ -16,6 +16,14 @@ export function getFileList(data) {
         data:data
     })
 }
+// 查询全部文件
+export function getALlList(data) {
+    return request({
+        url: '/resources/selectResources',
+        method: 'post',
+        data:data
+    })
+}
 // 添加文件
 export function fileSave(data) {
     return request({

@@ -4,7 +4,7 @@
     <div class="content" v-loading="loading">
       <el-form label-width="180px">
         <el-form-item label="法规文件名称">
-          <b>{{detailInfo.title}}</b>
+          <b>{{detailInfo.title}} {{detailInfo.name}}</b>
         </el-form-item>
         <el-form-item label="法规分类">
           <b>{{detailInfo.cateStr}}</b>
@@ -19,22 +19,22 @@
           <b>{{detailInfo.userName}}</b>
         </el-form-item>
         <el-form-item label="已查看：">
-          <span v-for="(user,index) in users" :key="index">
+          <span v-for="(user,index) in users" class="user-list" :key="index">
             <el-tag v-if="user.isRead" type="success">{{user.deptName}}-{{user.userName}}</el-tag>
           </span>
         </el-form-item>
         <el-form-item label="未查看：">
-          <span v-for="(user,index) in users" :key="index">
+          <span v-for="(user,index) in users" class="user-list" :key="index">
             <el-tag v-if="!user.isRead" type="info">{{user.deptName}}-{{user.userName}}</el-tag>
           </span>
         </el-form-item>
         <el-form-item label="已落实：">
-          <span v-for="(user,index) in users" :key="index">
+          <span v-for="(user,index) in users" class="user-list" :key="index">
             <el-tag v-if="user.isRead" type="success">{{user.deptName}}-{{user.userName}}</el-tag>
           </span>
         </el-form-item>
         <el-form-item label="未落实：">
-          <span v-for="(user,index) in users" :key="index">
+          <span v-for="(user,index) in users" class="user-list" :key="index">
             <el-tag v-if="!user.isRead" type="info">{{user.deptName}}-{{user.userName}}</el-tag>
           </span>
         </el-form-item>
@@ -153,5 +153,8 @@ export default {
   width: 80%;
   background-color: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+.user-list{
+  margin-right: 3px;
 }
 </style>
