@@ -5,29 +5,25 @@
       class="uploader-example"
       @complete="complete"
       @file-success="onFileSuccess"
-      :files="file1"
+      :file="file"
       :list="true"
     >
       <uploader-unsupport></uploader-unsupport>
       <uploader-drop>
         <!-- <span>将文件拖拽到此或点击选择文件按钮上传文件</span> -->
-        <!-- <br /> -->
-        <uploader-btn :attrs="attrs" single>上传文件</uploader-btn>
-        <!-- <br /> -->
-        <!-- <span style="color:#f00;">* 注：一次只能上传一个文件</span> -->
+        <uploader-btn :attrs="attrs" single v-if="!change">上传文件</uploader-btn>
+        <uploader-btn :attrs="attrs" single v-else>修改文件</uploader-btn>
+        <br />
+        <span class="file-tip">* 注：一次只能上传一个文件</span>
       </uploader-drop>
       <uploader-list>
-            <uploader-file :class="'file_' + file1.id" v-if="file1" :file="file1" :list="true"></uploader-file>
-        <!-- <template slot-scope="props">
-        <ul class="file-list">
-          <li v-for="(file,index) in props.fileList" :key="file.id">
-            <uploader-file :class="'file_' + file.id" :file="file" v-if="index===props.fileList.length-1" :list="true"></uploader-file>
-          </li>
-          <div class="no-file" v-if="!props.fileList.length">
-            <i class="nucfont inuc-empty-file"></i> 暂无待上传文件
-          </div>
-        </ul>
-        </template> -->
+        <uploader-file :class="'file_' + file.id" v-if="file" :file="file" :list="true"></uploader-file>
+        <div class="file-list no-file" v-if="!change">
+          <i class="nucfont inuc-empty-file"></i> 暂无待上传文件
+        </div>
+        <div class="file-list" v-else>
+          <div v-if="!file">已上传文件: {{name}}</div>
+        </div>
       </uploader-list>
     </uploader>
   </div>
@@ -51,20 +47,10 @@ export default {
       attrs: {
         accept: "*" //接受文件类型
       },
-      file:null
+      file: null
     };
   },
-  props:["myFile"],
-  computed:{
-    file1(){
-      if(this.file){
-        return this.file;
-      }else{
-        console.log(this.myFile)
-        return this.myFile;
-      }
-    }
-  },
+  props: ["change", "name"], //change true 代表修改|false代表添加
   methods: {
     onFileSuccess(rootFile, file, response, chunk) {
       console.log("file-success", response, file);
@@ -92,28 +78,54 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.uploader-drop{
-    width:300px;
-    height:160px;
-    border: 1px dashed #d9d9d9;
-    background: url(../../assets/image/uploader.jpg) center center no-repeat;
-    background-size:270px;
-    border-radius: 5px;
-}
-.uploader-drop:hover {
-    border-color: #409eff;
-}
-.uploader-btn{
-  border:none;
-  padding: 0;
-  width:100%;
-  height:100%;
-  text-indent: -999px;
+// .uploader-drop{
+//     width:300px;
+//     height:160px;
+//     border: 1px dashed #d9d9d9;
+//     background: url(../../assets/image/uploader.jpg) center center no-repeat;
+//     background-size:270px;
+//     border-radius: 5px;
+// }
+// .uploader-drop:hover {
+//     border-color: #409eff;
+// }
+.uploader-btn {
+  padding: 9px 15px;
+  font-size: 12px;
+  border-radius: 3px;
+  color: #fff;
+  background-color: #409eff;
+  border-color: #409eff;
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
 }
 .uploader-btn:hover {
-    background-color: transparent;
+  background: #66b1ff;
+  border-color: #66b1ff;
+  color: #fff;
 }
-.uploader-file[status="success"] .uploader-file-remove {
+.uploader-drop {
+  border: 1px solid #ebebeb;
+  border-radius: 3px;
+  background: #fff;
+}
+.file-tip {
+  font-size: 12px;
+  color: #606266;
+  margin-top: 7px;
+}
+.file-list {
+  color: #606266;
   display: block;
+  overflow: hidden;
+  padding-left: 4px;
+  text-overflow: ellipsis;
+  transition: color 0.3s;
+  white-space: nowrap;
 }
+// .uploader-file[status="success"] .uploader-file-remove {
+//   display: block;
+// }
 </style>

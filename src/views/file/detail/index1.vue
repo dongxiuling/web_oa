@@ -41,7 +41,7 @@
         <el-form-item label="操作">
           <el-button @click="openTabWin(detailInfo.readUrl,'view')" v-if="detailInfo.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button>
           <el-button @click="openTabWin(detailInfo.url,'download')" icon="el-icon-download" size="small" type="info">下载文件</el-button>
-          <el-button @click="doneFile" v-if="!detailInfo.isDone" icon="el-icon-s-claim" size="small" type="warning">落实</el-button>
+          <!-- <el-button @click="doneFile" v-if="!detailInfo.isDone" icon="el-icon-s-claim" size="small" type="warning">落实</el-button> -->
         </el-form-item>
         <el-form-item label="提示" v-if="!detailInfo.readUrl">
           <el-alert style="padding:0;width:auto" title="当前文件格式暂不支持预览" type="info" :closable="false"></el-alert>
