@@ -20,10 +20,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="上传法规">
-        <Uploader v-on:getFile="getFileUrl(arguments)" :myFile="myFile"></Uploader>
+        <Uploader v-on:getFile="getFileUrl(arguments)" :change="isChange" :name="file.name"></Uploader>
+        <!-- <el-button @click="openTabWin(file.readUrl,'view')" v-if="file.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button> -->
+        <el-button v-if="id" @click="openTabWin(file.url,'download')" icon="el-icon-download" size="small" type="success">下载文件</el-button>
       </el-form-item>
       <el-form-item label="发送人员">
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText" ></el-input>
+        <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
         <el-tree
           :data="deptTree"
           show-checkbox
@@ -46,7 +48,7 @@
 
 <script>
 import { getCategory } from "@/api/tool/category.js";
-import { fileSave, getFileById, updateFile } from "@/api/file";
+import { fileSave, getFileById, updateFile ,downLoadFile,readFile} from "@/api/file";
 import { listUser, getTreeUser } from "@/api/system/user";
 import Uploader from "@/components/Uploader";
 
@@ -67,9 +69,10 @@ export default {
         url: "http://www.rr.cc",
         readUrl: "http://www.rr.cc",
         userIds: [],
-        type:"regulatory_documents",
-        name:""
+        type: "regulatory_documents",
+        name: ""
       },
+      isChange: false, //false添加 true修改
       id: this.$route.query.id,
       rules: {
         title: [{ required: true, message: "请输入法规名称", trigger: "blur" }],
@@ -86,28 +89,7 @@ export default {
         label: "name",
         children: "zones"
       },
-      levels: ["紧急事件", "重点关注事件", "一般事件"],
-      myFile:{
-        aborted: false,
-allError: false,
-averageSpeed: 0,
-completed: true,
-currentSpeed: 0,
-error: false,
-fileType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-id: 3,
-isFolder: false,
-isRoot: false,
-name: "test2.docx",
-paused: false,
-relativePath: "test2.docx",
-size: 12015,
-uniqueIdentifier: "12015-test2docx",
-_lastProgressCallback: 1598459948966,
-_prevProgress: 0,
-_prevUploadedSize: 12015,
-_progeressId: 72,
-      }
+      levels: ["紧急事件", "重点关注事件", "一般事件"]
     };
   },
   components: {
@@ -160,13 +142,18 @@ _progeressId: 72,
     },
     // 添加法规
     addHandle() {
-      fileSave(this.file).then(res => {
-        this.$message({
-          message: "添加成功",
-          type: "success"
+      // 验证 是否上传文件
+      if (this.file.name) {
+        fileSave(this.file).then(res => {
+          this.$message({
+            message: "添加成功",
+            type: "success"
+          });
+          this.$router.push("/file/myfile");
         });
-        this.$router.push("/file/myfile");
-      });
+      }else{
+        this.$message.error('请选择上传文件');
+      }
     },
     // 修改法规
     updateHandle() {
@@ -189,7 +176,17 @@ _progeressId: 72,
       this.file.url = args[1];
       this.file.readUrl = args[2];
       this.file.name = args[0];
-    }
+      this.isChange = true;
+    },
+    // 下载或预览操作
+    async openTabWin(url,type){
+      if(type=="view"){
+        await readFile({id:this.file.id})
+      }else if(type="download"){
+        await downLoadFile({id:this.file.id})
+      }
+      window.open(url,"_blank");
+    },
   },
   created() {
     // 获取分类列表
@@ -198,6 +195,8 @@ _progeressId: 72,
     this.getDeptTreeselect();
     if (this.id) {
       this.getFileById(this.id);
+      // 修改upload 状态 false添加 true修改
+      this.isChange = true;
     }
   }
 };

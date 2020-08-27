@@ -25,9 +25,7 @@
       </el-form-item>
     </el-form>
     <el-table :data="fileList" style="width: 100%" v-loading="loading">
-      <el-table-column label="序号">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
+      <el-table-column type="index" width="50" label="序号"></el-table-column>
       <el-table-column prop="title" label="法规名称" width="180"></el-table-column>
       <el-table-column prop="createTime" label="上传时间" width="160"></el-table-column>
       <el-table-column prop="readTime" label="查阅时间" width="160"></el-table-column>
@@ -107,7 +105,7 @@ export default {
         dictType: "file_module_status"
       }).then(res => {
         this.cateData = res.rows;
-        this.cateData.unshift({ dictCode: 0, dictLabel: "全部模块" });
+        this.cateData.unshift({ dictCode: 0, dictLabel: "全部分类" });
       });
     },
     searchHandle() {

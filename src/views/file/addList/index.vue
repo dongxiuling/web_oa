@@ -43,13 +43,11 @@
     </el-row>-->
 
     <el-table :data="fileList" style="width: 100%" v-loading="loading">
-      <el-table-column label="序号">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
-      <el-table-column prop="title" label="法规名称" width="180"></el-table-column>
-      <el-table-column prop="createTime" label="更新时间" width="160"></el-table-column>
+      <el-table-column type="index" width="50" label="序号"></el-table-column>
+      <el-table-column prop="title" label="法规名称" width="240"></el-table-column>
+      <el-table-column prop="createTime" label="更新时间" width="200"></el-table-column>
       <el-table-column prop="categoryName" label="模块"></el-table-column>
-      <el-table-column label="操作" width="260">
+      <el-table-column label="操作" width="350">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-view" @click="detailHandle(scope.row)" >详情</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
@@ -236,7 +234,7 @@ export default {
         dictType: "file_module_status"
       }).then(res => {
         this.cateData = res.rows;
-        this.cateData.unshift({ dictCode: 0, dictLabel: "全部模块" });
+        this.cateData.unshift({ dictCode: 0, dictLabel: "全部分类" });
       });
     },
     // filter-node-method，值为过滤函数。
