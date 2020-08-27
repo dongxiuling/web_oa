@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-form ref="file" :model="file" :rules="rules" label-width="80px">
-      <el-form-item label="资料名称" prop="title">
+      <el-form-item label="法规名称" prop="title">
         <el-input v-model="file.title" style="width:300px"></el-input>
       </el-form-item>
-      <el-form-item label="资料模块" prop="cateId">
-        <el-select v-model="file.cateId" placeholder="请选择资料模块">
+      <el-form-item label="法规分类" prop="cateId">
+        <el-select v-model="file.cateId" placeholder="请选择法规分类">
           <el-option
             v-for="item in cateData"
             :key="item.dictCode"
@@ -14,13 +14,13 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="资料级别" prop="level">
-        <el-select v-model="file.level" placeholder="请选择资料级别">
+      <el-form-item label="法规级别" prop="level">
+        <el-select v-model="file.level" placeholder="请选择法规级别">
           <el-option v-for="(item,index) in levels" :key="index" :label="item" :value="index+1"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="上传资料">
-        <Uploader v-on:getFile="getFileUrl(arguments)"></Uploader>
+      <el-form-item label="上传法规">
+        <Uploader v-on:getFile="getFileUrl(arguments)" :myFile="myFile"></Uploader>
       </el-form-item>
       <el-form-item label="发送人员">
         <el-input placeholder="输入关键字进行过滤" v-model="filterText" ></el-input>
@@ -67,17 +67,18 @@ export default {
         url: "http://www.rr.cc",
         readUrl: "http://www.rr.cc",
         userIds: [],
-        type:"regulatory_documents"
+        type:"regulatory_documents",
+        name:""
       },
       id: this.$route.query.id,
       rules: {
-        title: [{ required: true, message: "请输入资料名称", trigger: "blur" }],
+        title: [{ required: true, message: "请输入法规名称", trigger: "blur" }],
 
         cateId: [
-          { required: true, message: "请选择资料模块", trigger: "change" }
+          { required: true, message: "请选择法规分类", trigger: "change" }
         ],
         level: [
-          { required: true, message: "请选择资料级别", trigger: "change" }
+          { required: true, message: "请选择法规级别", trigger: "change" }
         ]
       },
       time: [],
@@ -85,7 +86,28 @@ export default {
         label: "name",
         children: "zones"
       },
-      levels: ["紧急事件", "重点关注事件", "一般事件"]
+      levels: ["紧急事件", "重点关注事件", "一般事件"],
+      myFile:{
+        aborted: false,
+allError: false,
+averageSpeed: 0,
+completed: true,
+currentSpeed: 0,
+error: false,
+fileType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+id: 3,
+isFolder: false,
+isRoot: false,
+name: "test2.docx",
+paused: false,
+relativePath: "test2.docx",
+size: 12015,
+uniqueIdentifier: "12015-test2docx",
+_lastProgressCallback: 1598459948966,
+_prevProgress: 0,
+_prevUploadedSize: 12015,
+_progeressId: 72,
+      }
     };
   },
   components: {
@@ -164,8 +186,9 @@ export default {
     },
     // 获取wFid和nFid
     getFileUrl(args) {
-      this.file.url = args[0];
-      this.file.readUrl = args[1];
+      this.file.url = args[1];
+      this.file.readUrl = args[2];
+      this.file.name = args[0];
     }
   },
   created() {

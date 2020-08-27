@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
-      <el-form-item label="文件名称">
-        <el-input placeholder="请输入文件名称" v-model="search.title" clearable size="small" />
+      <el-form-item label="法规名称">
+        <el-input placeholder="请输入法规名称" v-model="search.title" clearable size="small" />
       </el-form-item>
-      <el-form-item label="资料模块">
-        <el-select v-model="search.categoryId" placeholder="请选择资料模块">
+      <el-form-item label="法规分类">
+        <el-select v-model="search.categoryId" placeholder="请选择法规分类">
           <el-option
             v-for="item in cateData"
             :key="item.dictCode"
@@ -14,8 +14,8 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="资料级别" prop="level">
-        <el-select v-model="search.level" placeholder="请选择资料级别">
+      <el-form-item label="法规级别" prop="level">
+        <el-select v-model="search.level" placeholder="请选择法规级别">
           <el-option v-for="item in levels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </el-form-item>
@@ -28,19 +28,41 @@
       <el-table-column label="序号">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column prop="title" label="文件名称"></el-table-column>
-      <el-table-column prop="createTime" label="上传时间" width="180"></el-table-column>
-      <el-table-column prop="readTime" label="查阅时间" width="180"></el-table-column>
-      <el-table-column prop="categoryName" label="模块"></el-table-column>
-      <el-table-column label="操作" width="260">
+      <el-table-column prop="title" label="法规名称" width="130"></el-table-column>
+      <el-table-column prop="createTime" label="上传时间" width="160"></el-table-column>
+      <!-- <el-table-column prop="readTime" label="查阅时间" width="160"></el-table-column> -->
+      <el-table-column prop="categoryName" label="分类"></el-table-column>
+      <el-table-column label="查看状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.isRead" type="success" @click="lookHandle(scope.row )">已查看</el-tag>
-          <el-tag v-else type="warning" @click="lookHandle(scope.row )">未查看</el-tag>
-          <el-tag @click="downHandle(scope.row )">下载</el-tag>
-          <!-- <el-tag v-if="scope.row.isUpload" @click="downHandle(scope.row )">下载</el-tag> -->
-          <!-- <el-tag v-else type="danger" @click="downHandle(scope.row )">未下载</el-tag> -->
-          <el-tag type="info" v-if="scope.row.isDone">已落实</el-tag>
-          <el-tag type="danger" v-else @click="finishHandle(scope.row )">未落实</el-tag>
+          <span v-if="scope.row.isRead">已查看</span>
+          <span v-else>未查看</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="落实状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.isDone">已落实</span>
+          <span v-else>未落实</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="240">
+        <template slot-scope="scope">
+          <!-- v-if="scope.row.isRead"  -->
+          <el-button type="primary" plain size="mini" @click="downHandle(scope.row )">下载</el-button>
+          <el-button
+            type="info"
+            plain
+            size="mini"
+            v-if="scope.row.isDone"
+            @click="finishHandle(scope.row)"
+          >落实</el-button>
+          <el-button type="danger" v-else size="mini" plain @click="finishHandle(scope.row )">落实</el-button>
+          <el-button
+            type="success"
+            plain
+            size="mini"
+            @click="lookHandle(scope.row)"
+            v-if="scope.row.readUrl"
+          >查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -135,17 +157,30 @@ export default {
     downHandle(obj) {
       // 修改下载状态
       // downLoadFile({ id: obj.id }).then(res => {
-        window.open(obj.url);
-        //  this.getData();
+      window.open(obj.url);
+      //  this.getData();
       // });downHandle
     },
     // 落实
     finishHandle(obj) {
-      // 调用下载资料接口
-      finishFile({ id: obj.id }).then(res => {
-        // window.open(obj.url);
-         this.getData();
-      });
+      if (obj.isDone) {
+        this.$message({
+          message: '当前法规已落实',
+          type: 'warning'
+        });
+      } else {
+        this.$confirm("确认落实此法规，落实后无法恢复, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          // 调用下载资料接口
+          finishFile({ id: obj.id }).then(res => {
+            // window.open(obj.url);
+            this.getData();
+          });
+        });
+      }
     }
   },
   created() {

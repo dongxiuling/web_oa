@@ -18,6 +18,26 @@
         <el-form-item label="法规发布者">
           <b>{{detailInfo.userName}}</b>
         </el-form-item>
+        <el-form-item label="已查看：">
+          <span v-for="(user,index) in users" :key="index">
+            <el-tag v-if="user.isRead" type="success">{{user.deptName}}-{{user.userName}}</el-tag>
+          </span>
+        </el-form-item>
+        <el-form-item label="未查看：">
+          <span v-for="(user,index) in users" :key="index">
+            <el-tag v-if="!user.isRead" type="info">{{user.deptName}}-{{user.userName}}</el-tag>
+          </span>
+        </el-form-item>
+        <el-form-item label="已落实：">
+          <span v-for="(user,index) in users" :key="index">
+            <el-tag v-if="user.isRead" type="success">{{user.deptName}}-{{user.userName}}</el-tag>
+          </span>
+        </el-form-item>
+        <el-form-item label="未落实：">
+          <span v-for="(user,index) in users" :key="index">
+            <el-tag v-if="!user.isRead" type="info">{{user.deptName}}-{{user.userName}}</el-tag>
+          </span>
+        </el-form-item>
         <el-form-item label="操作">
           <el-button @click="openTabWin(detailInfo.readUrl,'view')" v-if="detailInfo.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button>
           <el-button @click="openTabWin(detailInfo.url,'download')" icon="el-icon-download" size="small" type="info">下载文件</el-button>
@@ -33,7 +53,7 @@
 
 <script>
 import { getCategory } from "@/api/tool/category.js";
-import { getFileById,readFile,downLoadFile,finishFile } from "@/api/file";
+import { getFileById,readFile,downLoadFile,finishFile,getResources } from "@/api/file";
 import { dateFormat } from "@/utils/format";
 export default {
   data() {
@@ -41,7 +61,8 @@ export default {
       loading:false,
       detailInfo: {},
       cateData: [],
-      levels: ["紧急事件", "重点关注事件", "一般事件"]
+      levels: ["紧急事件", "重点关注事件", "一般事件"],
+      users:[]//记录用户查看 落实状态
     };
   },
   methods: {
@@ -100,11 +121,19 @@ export default {
           resolve();
         });
       });
+    },
+    // 获取阅读详情
+    getReadDetail(id) {
+      getResources({ id }).then(res => {
+        this.users = res.data.users;
+        // console.log(res.data.users)
+      });
     }
   },
   //生命周期 - 创建完成（访问当前this实例）
   created() {
     this.initData(this.$route.params.id);
+    this.getReadDetail(this.$route.params.id);
   },
   //生命周期 - 挂载完成（访问DOM元素）
   mounted() {}
@@ -120,8 +149,8 @@ export default {
 .content {
   padding:20px;
   border-radius: 10px;
-  margin: 50px auto;
-  width: 50%;
+  margin: 20px auto;
+  width: 80%;
   background-color: #fff;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
