@@ -179,6 +179,7 @@ export default {
       this.dispatch(JSON.parse(event.data))
       if(this.noticeData.body && this.noticeData.body.content){
         let msgData = JSON.parse(this.noticeData.body.content)
+        this.$store.dispatch("checkMessage");//修改顶部铃铛消息状态
         this.$notify.info({
           title: '消息提醒',
           dangerouslyUseHTMLString: true,

@@ -200,6 +200,25 @@ export const constantRoutes = [{
     }]
   },
   {
+    path: '/files',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'detail/:id(\\d+)',
+        component: (resolve) => require(['@/views/file/detail/index'], resolve),
+        name: 'fileDetail',
+        meta: { title: '法规文件详情' }
+      },
+      {
+        path: 'mydetail/:id(\\d+)',
+        component: (resolve) => require(['@/views/file/detail/index1'], resolve),
+        name: 'mydetail',
+        meta: { title: '法规文件详情' }
+      }
+    ]
+  },
+  {
     path: '/plans',
     component: Layout,
     hidden: true,
@@ -228,3 +247,5 @@ export default new Router({
   }),
   routes: constantRoutes
 })
+
+

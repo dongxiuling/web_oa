@@ -7,6 +7,14 @@ export function getType(query) {
     params: query
   })
 }
+// 获取所有已读消息
+export function doneMessage(data) {
+  return request({
+    url: '/msg/selectReadMsg',
+    method: 'post',
+    data: data
+  })
+}
 // 获取未读取消息列表
 export function messageList(data) {
   return request({
