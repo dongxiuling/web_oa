@@ -25,7 +25,7 @@
       </el-form-item>
     </el-form>
     <el-table :data="fileList" style="width: 100%" v-loading="loading">
-      <el-table-column type="index" width="50" label="序号"></el-table-column>
+      <el-table-column type="index" width="50" label="序号" :index="(currentPage-1)*pageSize+1"></el-table-column>
       <el-table-column prop="title" label="法规名称" width="180"></el-table-column>
       <el-table-column prop="createTime" label="上传时间" width="160"></el-table-column>
       <el-table-column prop="readTime" label="查阅时间" width="160"></el-table-column>

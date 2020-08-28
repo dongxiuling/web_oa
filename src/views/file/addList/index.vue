@@ -43,7 +43,10 @@
     </el-row>-->
 
     <el-table :data="fileList" style="width: 100%" v-loading="loading" @row-click="openDetails">
-      <el-table-column type="index" width="50" label="序号"></el-table-column>
+      <!-- <el-table-column type="index" width="50" label="序号"></el-table-column> -->
+
+      <el-table-column type="index" width="50" label="序号" :index="(currentPage-1)*pageSize+1"></el-table-column>
+
       <el-table-column prop="title" label="法规名称" width="240"></el-table-column>
       <el-table-column prop="createTime" label="更新时间" width="200"></el-table-column>
       <el-table-column prop="categoryName" label="模块"></el-table-column>
