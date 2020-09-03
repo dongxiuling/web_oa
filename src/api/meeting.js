@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 添加会议
-export function meetingSave(data) {
+export function meetingSave(data = {}) {
     return request({
         url: '/meeting/save',
         method: 'post',
@@ -72,3 +72,10 @@ export function getMeetingList(data) {
         data: data
     })
 }
+
+// 获取会场列表
+export const getRoomListByDate = (data = {}) => request({
+    url: '/room/selectRoomByDate',
+    method: 'post',
+    data
+})
