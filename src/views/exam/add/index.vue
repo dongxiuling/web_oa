@@ -191,7 +191,7 @@ export default {
     },
     // 获取分类列表ç
     getCateList() {
-      getExamCategory({
+      getCategory({
         pageNum: 1,
         pageSize: 1000,
         dictType: "sys_module_name"
@@ -200,7 +200,7 @@ export default {
       });
     },
     submitForm(formName) {
-      console.log(11111);
+      // console.log(11111);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.addHandle();

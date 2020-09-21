@@ -5,7 +5,7 @@
         <el-input placeholder="请输入法规名称" v-model="search.title" clearable size="small" />
       </el-form-item>
       <el-form-item label="法规分类">
-        <el-select v-model="search.categoryId" placeholder="请选择法规分类">
+        <el-select v-model="search.cateId" placeholder="请选择法规分类">
           <el-option
             v-for="item in cateData"
             :key="item.dictCode"
@@ -69,7 +69,7 @@ export default {
       cateData: [],
       search: {
         title: "",
-        categoryId: 0,
+        cateId: 0,
         level: 0
       },
       total: 0, //分页总页数
@@ -89,7 +89,7 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         title: this.search.title,
-        cateId: this.search.categoryId,
+        cateId: this.search.cateId,
         level: this.search.level
       }).then(res => {
         this.fileList = res.data.records;
@@ -113,7 +113,7 @@ export default {
     },
     reSetHandle() {
       this.search.title = "";
-      this.search.categoryId = "";
+      this.search.cateId = 0;
       this.getData();
     },
     handleCurrentChange(value) {

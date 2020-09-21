@@ -7,7 +7,6 @@
           v-model="search.title"
           clearable
           size="small"
-          style="width: 240px"
         />
       </el-form-item>
       <el-form-item label="法规分类">
@@ -226,7 +225,7 @@ export default {
     },
     reSetHandle() {
       this.search.title = "";
-      this.search.categoryId = "";
+      this.search.cateId = 0;
       this.getData();
     },
     // 获取分类列表
