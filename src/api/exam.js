@@ -17,19 +17,19 @@ export function getCreatedExam(params) {
     })
 }
 // 修改考试
-export function updateExam(params) {
+export function updateExam(data) {
     return request({
         url: '/exam/update',
         method: 'post',
-        params
+        data:data
     })
 }
 // 添加考试
-export function createExam(params) {
+export function createExam(data) {
     return request({
         url: '/exam/create',
         method: 'post',
-        params
+        data:data
     })
 }
 // 删除考试

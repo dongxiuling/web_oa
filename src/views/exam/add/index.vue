@@ -219,7 +219,7 @@ export default {
         ...this.exam,
         startDate: this.time[0],
         endDate: this.time[1],
-        userIds: this.userIds.join(",")
+        userIds: this.userIds
       };
       createExam(params).then(res => {
         this.$message({
@@ -235,7 +235,7 @@ export default {
         ...this.exam,
         startDate: this.time[0],
         endDate: this.time[1],
-        userIds: this.userIds.join(",")
+        userIds: this.userIds
       };
       updateExam(params).then(res => {
         this.$message({
@@ -250,7 +250,7 @@ export default {
       getExamById({id}).then(res=>{
         this.exam = res.data;
         this.time = [res.data.startDate,res.data.endDate];
-        this.userIds = res.data.userIds.split(',');
+        this.userIds = res.data.userIds;
       })
     }
   },
