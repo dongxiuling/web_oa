@@ -120,8 +120,10 @@ export default {
     // 查看消息
     goDetail(type, id,detailId) {
       this.setStatus(id).then(res => {
-        if(type == 'regulatory_documents'){
+        if(type === 'regulatory_documents'){
           this.$router.push("/files/detail/"+detailId);
+        }else if(type === 'meeting_notice'){
+          this.$router.push(`/meetings/detail?id=${detailId}&type=1`)
         }
       });
     },

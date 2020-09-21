@@ -1,11 +1,11 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="loading">
     <el-form ref="meeting" :model="meeting" :rules="rules" label-width="80px">
       <el-form-item label="会议名称" prop="title">
         <el-input v-model="meeting.title" style="width:300px"></el-input>
       </el-form-item>
-      <el-form-item label="会议地点" prop="place">
-        <el-input v-model="meeting.place" style="width:300px"></el-input>
+      <el-form-item label="会议地点" prop="roomName">
+        <el-input disabled v-model="meeting.roomName" style="width:300px"></el-input>
       </el-form-item>
       <el-form-item label="会议内容" prop="content">
         <el-input
@@ -16,11 +16,11 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item label="开始时间" prop="meetingStart">
-        <el-date-picker v-model="bookConfig.start" type="datetime" placeholder="选择日期时间"></el-date-picker>
+      <el-form-item label="开始时间" prop="start">
+        <el-date-picker v-model="meeting.start" type="datetime" placeholder="选择日期时间"></el-date-picker>
       </el-form-item>
-      <el-form-item label="结束时间" prop="meetingEnd">
-        <el-date-picker v-model="bookConfig.end" type="datetime" placeholder="选择日期时间"></el-date-picker>
+      <el-form-item label="结束时间" prop="end">
+        <el-date-picker v-model="meeting.end" type="datetime" placeholder="选择日期时间"></el-date-picker>
       </el-form-item>
 
       <el-form-item label="参会人员">
@@ -35,8 +35,7 @@
         ></el-tree>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="$route.query.id" type="primary" @click="updateHandle('meeting')">确定修改</el-button>
-        <el-button v-else type="primary" @click="submitForm('meeting')">立即预订</el-button>
+        <el-button type="primary" @click="submitForm('meeting')">立即预订</el-button>
         <el-button @click="resetForm('meeting')">取消</el-button>
       </el-form-item>
     </el-form>
@@ -46,30 +45,41 @@
 <script>
 import { meetingSave, getMeetingById, updateMeeting } from "@/api/meeting";
 import { listUser, getTreeUser } from "@/api/system/user";
+import { dateFormat } from "@/utils/format";
+
 export default {
   props: {
-    bookConfig: Object
+    meeting: {
+      type: Object,
+      default: function () {
+        return { userIds: [] }
+      }
+    }
   },
   data() {
     return {
       deptTree: [],
-      meeting: {
-        title: "",
-        place: "",
-        content: "",
-        userIds: []
-      },
+      loading: false,
+      // meeting: {
+      //   title: "",
+      //   roomName: "",
+      //   roomId: "",
+      //   content: "",
+      //   userIds: []
+      // },
       date: "",
       time: "",
       id: this.$route.query.id,
       rules: {
         title: [{ required: true, message: "请输入会议名称", trigger: "blur" }],
-        place: [{ required: true, message: "请输入地点名称", trigger: "blur" }],
+        roomName: [{ required: true, message: "请输入地点名称", trigger: "blur" }],
         content: [
           { required: true, message: "请输入会议内容", trigger: "blur" }
         ],
-        meetingStart: [{ type: 'date', required: true, message: "请输入开始时间", trigger: "change" }],
-        meetingEnd: [{ type: 'date', required: true, message: "请输入结束时间", trigger: "change" }],
+        start: [{ required: true, message: "请输入会议开始时间" },
+        { validator: this.validateDate, trigger: ['blur', 'change'] }],
+        end: [{ required: true, message: "请输入会议结束时间" },
+        { validator: this.validateDate, trigger: ['blur', 'change'] }],
         userIds: [
           { required: true, message: "请选择参会人员", trigger: "change" }
         ]
@@ -91,11 +101,17 @@ export default {
     }
   },
   methods: {
+    validateDate(rule, value, callback) {
+      const { start, end } = this.meeting
+      if (new Date(start) >= new Date(end)) {
+        callback(new Error('会议开始时间必须早于结束时间'))
+      } else {
+        callback()
+      }
+    },
     //获取选中状态下的人员数据
     getCheckedNodes() {
-      this.meeting.userIds = this.$refs.tree.getCheckedNodes(true).map(item => {
-        return item.id;
-      });
+      this.meeting.userIds = this.$refs.tree.getCheckedNodes(true).map(item => item.id);
     },
     /** 查询部门树结构 */
     getDeptTreeselect() {
@@ -104,72 +120,64 @@ export default {
       });
     },
     submitForm(formName) {
+      this.loading = true
       this.$refs[formName].validate(valid => {
         if (valid) {
+          if (!this.meeting.userIds) {
+            this.$message({
+              message: "请选择参会人员",
+              type: "warning"
+            });
+            this.loading = false
+            return false
+          }
           this.addHandle();
         } else {
           console.log("error submit!!");
+          this.loading = false
           return false;
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.meeting.userIds = []
+      this.$emit('close-event')
     },
     // 添加会议
-    addHandle() {
-      meetingSave({
-        ...this.meeting,
-        startTime: this.startTime
-      }).then(res => {
+    async addHandle() {
+      this.meeting.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.meeting.start)
+      this.meeting.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.meeting.end)
+      // 消息提醒
+      this.meeting.type = 'meeting_notice'
+      // console.log(this.meeting);
+      const res = await meetingSave(this.meeting)
+      if (res && res.code === '200') {
         this.$message({
-          message: "添加成功",
+          message: "预定成功",
           type: "success"
         });
-        this.$router.push("/meeting/addlist");
-      });
+        this.$emit('book-success', this.meeting)
+      } else if (res && res.code === '20000') {
+        this.$message({
+          message: "预定失败，会议时间冲突，请重新选择",
+          type: "warning"
+        });
+      } else if (res && res.code === '50000') {
+        this.$message({
+          message: "预定失败",
+          type: "warning"
+        });
+      }
+      this.loading = false
     },
-    // 修改会议
-    updateHandle() {
-      updateMeeting({ ...this.meeting, startTime: this.startTime }).then(
-        res => {
-          this.$message({
-            message: "修改成功",
-            type: "success"
-          });
-          this.$router.push("/meeting/addlist");
-        }
-      );
-    },
-    // 修改考试获取信息
-    getMeetingById(id) {
-      getMeetingById({ id }).then(res => {
-        this.meeting = res.data;
-        let arr = res.data.startTime.split(" ");
-        this.date = arr[0];
-        this.time = arr[1].substring(0, arr[1].length - 3);
-      });
-    }
   },
-  created() {
+  mounted() {
     // 获取部门树形结构
     this.getDeptTreeselect();
     if (this.id) {
       this.getMeetingById(this.id);
     }
   },
-  beforeRouteUpdate(to, from, next) {
-    if (!to.query.id) {
-      this.meeting = {
-        title: "",
-        place: "",
-        content: "",
-        userIds: []
-      },
-        this.date = "";
-      this.time = "";
-    }
-    next();
-  }
 };
 </script>
