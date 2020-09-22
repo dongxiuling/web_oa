@@ -10,8 +10,8 @@
           style="width: 240px"
         />
       </el-form-item>
-      <el-form-item label="考试模块">
-        <el-select v-model="search.categoryId" placeholder="请选择考试模块">
+      <el-form-item label="考试类型">
+        <el-select v-model="search.categoryId" placeholder="请选择考试类型">
           <el-option
             v-for="item in cateData"
             :key="item.dictCode"
@@ -44,7 +44,7 @@
       <el-table-column prop="title" label="考试名称"></el-table-column>
       <el-table-column prop="startDate" label="开始时间" width="180"></el-table-column>
       <el-table-column prop="endDate" label="结束时间" width="180"></el-table-column>
-      <el-table-column prop="categoryName" label="模块"></el-table-column>
+      <el-table-column prop="categoryName" label="考试类型"></el-table-column>
       <el-table-column prop="duration" label="时长"></el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">

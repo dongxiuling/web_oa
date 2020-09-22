@@ -4,8 +4,8 @@
       <el-form-item label="考试名称" prop="title">
         <el-input v-model="exam.title" style="width:300px"></el-input>
       </el-form-item>
-      <el-form-item label="考试模块" prop="categoryId">
-        <el-select v-model="exam.categoryId" placeholder="请选择考试模块">
+      <el-form-item label="考试类型" prop="categoryId">
+        <el-select v-model="exam.categoryId" placeholder="请选择考试类型">
           <el-option
             v-for="item in cateData"
             :key="item.dictCode"
@@ -219,7 +219,8 @@ export default {
         ...this.exam,
         startDate: this.time[0],
         endDate: this.time[1],
-        userIds: this.userIds
+        userIds: this.userIds,
+        type: 'exam_notice'
       };
       createExam(params).then(res => {
         this.$message({

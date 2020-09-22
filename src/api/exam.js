@@ -36,7 +36,7 @@ export function createExam(data) {
 export function delExam(query) {
     return request({
         url: 'exam/delExamById/' + query.id,
-        method: 'post',
+        method: 'get',
     })
 }
 // 修改考试 根据id获取考试信息

@@ -2,7 +2,7 @@
   <div class="app-container"  v-loading.fullscreen.lock="fullscreenLoading" v-if="!fullscreenLoading">
     <el-form ref="form" :model="examDetail" label-width="100px" size="medium">
       <el-form-item label="考试名称：">{{examDetail.title}}</el-form-item>
-      <el-form-item label="考试模块：">司法考试</el-form-item>
+      <el-form-item label="考试类型：">司法考试</el-form-item>
       <el-form-item label="考试时间：">{{examDetail.startDate}} 至 {{examDetail.endDate}}</el-form-item>
       <el-form-item
         label="单选题："

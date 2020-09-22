@@ -10,8 +10,8 @@
           style="width: 240px"
         />
       </el-form-item>
-      <el-form-item label="考试模块">
-        <el-select v-model="search.categoryId" placeholder="请选择考试模块">
+      <el-form-item label="考试类型">
+        <el-select v-model="search.categoryId" placeholder="请选择考试类型">
           <el-option
             v-for="item in cateData"
             :key="item.dictCode"

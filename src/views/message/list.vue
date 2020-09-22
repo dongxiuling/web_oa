@@ -124,6 +124,8 @@ export default {
           this.$router.push("/files/detail/"+detailId);
         }else if(type === 'meeting_notice'){
           this.$router.push(`/meetings/detail?id=${detailId}&type=1`)
+        } else if(type === 'exam_notice'){
+          this.$router.push(`/exams/detail?id=${detailId}`)
         }
       });
     },
