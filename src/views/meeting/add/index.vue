@@ -198,10 +198,12 @@ export default {
         date: start
       })
       if (res && res.code === '200') {
-        const roomList = res.data
-        roomList.forEach(room => {
-          room.title = room.name
-          room.occupancy = room.num
+        const roomList = res.data.filter(room => {
+          if (room.status === 1) { // 可用
+            room.title = room.name
+            room.occupancy = room.num
+            return room
+          }
         })
         this.calendarOptions.resources = roomList
         return roomList
