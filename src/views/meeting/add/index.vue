@@ -65,6 +65,7 @@ export default {
       eventDetail: {
       },
       calendarOptions: {
+        schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
         locale: "zh-cn",
         plugins: [resourceTimelinePlugin, interactionPlugin],
         titleFormat: {
