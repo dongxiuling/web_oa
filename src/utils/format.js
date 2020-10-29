@@ -1,5 +1,6 @@
 export function dateFormat(fmt, _date) {
   let ret;
+//   _date = _date.split(" ")[0];
   let date = new Date(_date)
   const opt = {
       "Y+": date.getFullYear().toString(),        // 年

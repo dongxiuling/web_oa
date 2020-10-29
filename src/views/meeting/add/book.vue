@@ -146,8 +146,8 @@ export default {
     },
     // 添加会议
     async addHandle() {
-      this.meeting.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.meeting.start)
-      this.meeting.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.meeting.end)
+      this.meeting.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.meeting.start))
+      this.meeting.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.meeting.end))
       // 消息提醒
       this.meeting.type = 'meeting_notice'
       // console.log(this.meeting);
