@@ -264,7 +264,7 @@ export const constantRoutes = [{
         title: '工作详情'
       }
     }]
-  },
+  }
 ]
 
 export default new Router({
