@@ -238,6 +238,33 @@ export const constantRoutes = [{
       }
     }]
   },
+  {
+    path: '/todayworks',
+    component: Layout,
+    hidden: true,
+    children: [{
+      path: 'addCate',
+      component: () => import('@/views/todaywork/cate/add'),
+      name: 'AddTodayworkCate',
+      meta: {
+        title: '创建工作分类'
+      }
+    }, {
+      path: 'addCate/:id',
+      component: () => import('@/views/todaywork/cate/add'),
+      name: 'UpdateTodayworkCate',
+      meta: {
+        title: '修改工作分类'
+      }
+    }, , {
+      path: 'getCateDetail/:id',
+      component: () => import('@/views/todaywork/dateworklist/detail'),
+      name: 'TodayworkDetail',
+      meta: {
+        title: '工作详情'
+      }
+    }]
+  },
 ]
 
 export default new Router({
