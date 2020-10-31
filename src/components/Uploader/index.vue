@@ -35,7 +35,8 @@ export default {
   data() {
     return {
       options: {
-        target: "http://47.105.221.73:8808/upload/chunk", //上传地址
+        // target: "http://47.105.221.73:8808/upload/chunk", //上传地址
+        target: process.env.VUE_APP_BASE_API + "/upload/chunk", //上传地址
         fileParameterName: "file",
         testChunks: false,
         chunkSize: "2048000",
