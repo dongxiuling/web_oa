@@ -48,9 +48,22 @@ export const getTodaywork = (data = {}) => request({
     data
 })
 
-export const getTodayworkById = ({id}) => {
+export const getTodayworkById = id => {
     return request({
         url: `/todaywork/getWorkById/${id}`,
+        method: 'get'
+    })
+}
+
+export const updateTodaywork = (data = {}) => request({
+    url: '/todaywork/update',
+    method: 'post',
+    data
+})
+
+export const delTodaywork = id => {
+    return request({
+        url: `/todaywork/delById/${id}`,
         method: 'get'
     })
 }

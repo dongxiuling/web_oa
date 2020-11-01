@@ -30,7 +30,7 @@
 
       <el-form-item>
         <el-button
-          v-if="$route.query.id"
+          v-if="$route.params.id"
           type="primary"
           @click="updateHandle('todaywork')"
           >确定修改</el-button
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { getTodayworkCate, saveTodaywork } from "@/api/todaywork.js";
+import { getTodayworkCate, saveTodaywork, getTodayworkById, updateTodaywork } from "@/api/todaywork.js";
 import { listUser, getTreeUser } from "@/api/system/user";
 import Uploader from "@/components/Uploader";
 
@@ -90,7 +90,7 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.$router.push("/todaywork/dateworklist");
+      this.$router.push("/todaywork/alltodaywork");
     },
     // 添加法规
     async addHandle() {
@@ -100,18 +100,25 @@ export default {
           message: "添加成功",
           type: "success"
         });
-        this.$router.push("/todaywork/dateworklist");
+        this.$router.push("/todaywork/alltodaywork");
       }
     },
-    // 修改法规
-    updateHandle() {
-      updateFile({ ...this.file, type: "regulatory_documents" }).then(res => {
+    async updateHandle() {
+      const res = await updateTodaywork(this.todaywork)
+      //   console.log(res);
+      if (res && res.code === '200') {
         this.$message({
-          message: "修改成功",
-          type: "success"
-        });
-        this.$router.push("/file/myfile");
-      });
+          message: '修改成功',
+          type: 'success'
+        })
+        this.$router.go(-1)
+      } else {
+        this.$message({
+          message: '修改失败',
+          type: 'error'
+        })
+        console.error(res)
+      }
     },
     // 修改法规获取信息
     getFileById(id) {
@@ -120,7 +127,16 @@ export default {
       });
     },
   },
-  created() {
+  async mounted() {
+    const { id } = this.$route.params
+    if (id) { // 修改
+      const res = await getTodayworkById(id)
+      //   console.log(res)
+      if (res && res.code === '200') {
+        this.todaywork = res.data
+      }
+    }
+
     // 获取分类列表
     this.getCateList();
   }

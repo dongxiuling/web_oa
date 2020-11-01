@@ -32,6 +32,17 @@
         >
       </el-form-item>
     </el-form>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="$router.push('/todayworks/addTodaywork')"
+          >创建工作</el-button
+        >
+      </el-col>
+    </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
       <el-table-column
         type="index"
@@ -44,15 +55,46 @@
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
           <el-button
-            type="success"
-            plain
             size="mini"
+            type="text"
+            icon="el-icon-tickets"
             @click="lookHandle(scope.row)"
-            >查看</el-button
+            >查看详情</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="editHandle(scope.row)"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="delHandle(scope.row)"
+            >删除</el-button
           >
         </template>
       </el-table-column>
     </el-table>
+    <!-- 删除提示 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="
+        () => {
+          dialogVisible = false;
+        }
+      "
+    >
+      <span>确认删除吗</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="doDelHandle">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="page-box">
       <el-pagination
         style="width: 100%"
@@ -68,7 +110,7 @@
 </template>
 
 <script>
-import { getTodayworkCate, getTodaywork, getTodayworkById } from "@/api/todaywork.js";
+import { getTodayworkCate, getTodaywork, getTodayworkById, delTodaywork } from "@/api/todaywork.js";
 
 export default {
   data() {
@@ -82,7 +124,9 @@ export default {
         cateId: 0,
       },
       total: 0, //分页总页数
-      loading: true
+      loading: true,
+      dialogVisible: false,
+      id: null,
     };
   },
   methods: {
@@ -99,7 +143,6 @@ export default {
         this.total = res.data.total;
         this.loading = false;
       }
-
     },
     // 获取分类列表
     async getCateList() {
@@ -126,11 +169,28 @@ export default {
     lookHandle({ id }) {
       this.$router.push(`/todayworks/getCateDetail/${id}`)
     },
+    editHandle({ id }) {
+      this.$router.push(`/todayworks/addTodaywork/${id}`)
+    },
+    delHandle({ id }) {
+      this.dialogVisible = true
+      this.id = id
+    },
+    async doDelHandle() {
+      this.dialogVisible = false
+      const res = await delTodaywork(this.id)
+      this.$message({
+        message: '删除成功',
+        type: 'success'
+      })
+      this.getData()
+    },
   },
   created() {
     this.getData();
     this.getCateList();
-  }
+  },
+
 };
 </script>
 <style lang="scss" scoped>

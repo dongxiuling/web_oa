@@ -33,14 +33,14 @@ export default {
   },
   methods: {
     async getListDetail() {
-      console.log('wordId', this.wordId);
+      // console.log('wordId', this.wordId);
       // 查看我的会议详情
       const res = await getTodayworkById({
         id: this.wordId,
         current: this.currentPage,
         size: this.pageSize
       })
-      console.log(res);
+      // console.log(res);
       if (res.code === '200') {
         this.todaywork = res.data;
         this.total = res.data.total;
