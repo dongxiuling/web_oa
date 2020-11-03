@@ -26,259 +26,278 @@ import Layout from '@/layout'
 
 // 公共路由
 export const constantRoutes = [{
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: '/redirect/:path(.*)',
-      component: () => import('@/views/redirect')
-    }]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login'),
+  path: '/redirect',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: '/redirect/:path(.*)',
+    component: () => import('@/views/redirect')
+  }]
+},
+{
+  path: '/login',
+  component: () => import('@/views/login'),
+  hidden: true
+},
+{
+  path: '/404',
+  component: () => import('@/views/error/404'),
+  hidden: true
+},
+{
+  path: '/401',
+  component: () => import('@/views/error/401'),
+  hidden: true
+},
+{
+  path: '',
+  component: Layout,
+  redirect: 'index',
+  children: [{
+    path: 'index',
+    component: () => import('@/views/index'),
+    name: '首页',
+    meta: {
+      title: '首页',
+      icon: 'dashboard',
+      noCache: true,
+      affix: true
+    }
+  }]
+},
+{
+  path: '/exams',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'add',
+    component: () => import('@/views/exam/add'),
+    // name: '发布考试',
+    meta: {
+      title: '发布考试',
+      icon: 'edit',
+      noCache: true,
+      affix: true
+    },
     hidden: true
   },
   {
-    path: '/404',
-    component: () => import('@/views/error/404'),
+    path: 'detail',
+    component: () => import('@/views/exam/addList/detail'),
+    name: '我的发布详情',
+    meta: {
+      title: '我的发布详情',
+      icon: 'build',
+      noCache: true,
+      affix: true
+    },
     hidden: true
   },
   {
-    path: '/401',
-    component: () => import('@/views/error/401'),
+    path: 'single',
+    component: () => import('@/views/exam/test/single'),
+    // name: '单选题',
+    meta: {
+      title: '单选题',
+      icon: 'monitor',
+      noCache: true
+    },
     hidden: true
   },
   {
-    path: '',
-    component: Layout,
-    redirect: 'index',
-    children: [{
-      path: 'index',
-      component: () => import('@/views/index'),
-      name: '首页',
-      meta: {
-        title: '首页',
-        icon: 'dashboard',
-        noCache: true,
-        affix: true
-      }
-    }]
-  },
-  {
-    path: '/exams',
-    component: Layout,
-    hidden: true,
-    children: [{
-        path: 'add',
-        component: () => import('@/views/exam/add'),
-        // name: '发布考试',
-        meta: {
-          title: '发布考试',
-          icon: 'edit',
-          noCache: true,
-          affix: true
-        },
-        hidden: true
-      },
-      {
-        path: 'detail',
-        component: () => import('@/views/exam/addList/detail'),
-        name: '我的发布详情',
-        meta: {
-          title: '我的发布详情',
-          icon: 'build',
-          noCache: true,
-          affix: true
-        },
-        hidden: true
-      },
-      {
-        path: 'single',
-        component: () => import('@/views/exam/test/single'),
-        // name: '单选题',
-        meta: {
-          title: '单选题',
-          icon: 'monitor',
-          noCache: true
-        },
-        hidden: true
-      },
-      {
-        path: 'analytic',
-        component: () => import('@/views/exam/test/analytic'),
-        // name: '判断题',
-        meta: {
-          title: '考试结果',
-          icon: 'monitor',
-          noCache: true
-        },
-        hidden: true
-      }
-    ]
-  },
-  {
-    path: '/user',
-    component: Layout,
-    hidden: true,
-    redirect: 'noredirect',
-    children: [{
-      path: 'profile',
-      component: () => import('@/views/system/user/profile/index'),
-      name: 'Profile',
-      meta: {
-        title: '个人中心',
-        icon: 'user'
-      }
-    }]
-  },
-  {
-    path: '/dict',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'type/data/:dictId(\\d+)',
-      component: () => import('@/views/system/dict/data'),
-      name: 'Data',
-      meta: {
-        title: '字典数据',
-        icon: ''
-      }
-    }]
-  },
-  {
-    path: '/job',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'log',
-      component: () => import('@/views/monitor/job/log'),
-      name: 'JobLog',
-      meta: {
-        title: '调度日志'
-      }
-    }]
-  },
-  {
-    path: '/gen',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'edit',
-      component: () => import('@/views/tool/gen/editTable'),
-      name: 'GenEdit',
-      meta: {
-        title: '修改生成配置'
-      }
-    }]
-  },
-  {
-    path: '/meetings',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'detail',
-      component: () => import('@/views/meeting/addList/detail'),
-      meta: {
-        title: '会议详情',
-        icon: 'monitor',
-        noCache: true,
-        affix: true
-      },
-      // hidden: true,
-    }]
-  },
-  {
-    path: '/questions',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'test',
-      component: () => import('@/views/questionnaire/add/test'),
-      // meta: { title: '会议详情', icon: 'monitor', noCache: true, affix: true },
-      hidden: true,
-    }]
-  },
-  {
-    path: '/files',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'detail/:id(\\d+)',
-        component: (resolve) => require(['@/views/file/detail/index'], resolve),
-        name: 'fileDetail',
-        meta: { title: '法规文件详情' }
-      },
-      {
-        path: 'mydetail/:id(\\d+)',
-        component: (resolve) => require(['@/views/file/detail/index1'], resolve),
-        name: 'mydetail',
-        meta: { title: '法规文件详情' }
-      }
-    ]
-  },
-  {
-    path: '/plans',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'addWork',
-      component: () => import('@/views/plan/add/work'),
-      name: 'AddWork',
-      meta: {
-        title: '创建工作计划'
-      }
-    }, {
-      path: 'addStudy',
-      component: () => import('@/views/plan/add/study'),
-      name: 'AddStudy',
-      meta: {
-        title: '创建学习计划'
-      }
-    }]
-  },
-  {
-    path: '/todayworks',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: 'addCate',
-      component: () => import('@/views/todaywork/cate/add'),
-      name: 'AddTodayworkCate',
-      meta: {
-        title: '创建工作分类'
-      }
-    }, {
-      path: 'addCate/:id',
-      component: () => import('@/views/todaywork/cate/add'),
-      name: 'UpdateTodayworkCate',
-      meta: {
-        title: '修改工作分类'
-      }
-    },{
-      path: 'getCateDetail/:id',
-      component: () => import('@/views/todaywork/dateworklist/detail'),
-      name: 'TodayworkDetail',
-      meta: {
-        title: '工作详情'
-      }
-    }, {
-      path: 'addTodaywork',
-      component: () => import('@/views/todaywork/add'),
-      name: 'AddTodaywork',
-      meta: {
-        title: '创建工作'
-      }
-    }, {
-      path: 'addTodaywork/:id',
-      component: () => import('@/views/todaywork/add'),
-      name: 'UpdateTodaywork',
-      meta: {
-        title: '修改工作'
-      }
-    }]
+    path: 'analytic',
+    component: () => import('@/views/exam/test/analytic'),
+    // name: '判断题',
+    meta: {
+      title: '考试结果',
+      icon: 'monitor',
+      noCache: true
+    },
+    hidden: true
   }
+  ]
+},
+{
+  path: '/user',
+  component: Layout,
+  hidden: true,
+  redirect: 'noredirect',
+  children: [{
+    path: 'profile',
+    component: () => import('@/views/system/user/profile/index'),
+    name: 'Profile',
+    meta: {
+      title: '个人中心',
+      icon: 'user'
+    }
+  }]
+},
+{
+  path: '/dict',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'type/data/:dictId(\\d+)',
+    component: () => import('@/views/system/dict/data'),
+    name: 'Data',
+    meta: {
+      title: '字典数据',
+      icon: ''
+    }
+  }]
+},
+{
+  path: '/job',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'log',
+    component: () => import('@/views/monitor/job/log'),
+    name: 'JobLog',
+    meta: {
+      title: '调度日志'
+    }
+  }]
+},
+{
+  path: '/gen',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'edit',
+    component: () => import('@/views/tool/gen/editTable'),
+    name: 'GenEdit',
+    meta: {
+      title: '修改生成配置'
+    }
+  }]
+},
+{
+  path: '/meetings',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail',
+    component: () => import('@/views/meeting/addList/detail'),
+    meta: {
+      title: '会议详情',
+      icon: 'monitor',
+      noCache: true,
+      affix: true
+    },
+  }, {
+    path: 'detail',
+    component: () => import('@/views/meeting/list/detail'),
+    name: 'meeting',
+    meta: { title: '会议列表' }
+  }, {
+    path: 'addRoom',
+    component: () => import('@/views/meeting/room/add'),
+    name: 'AddRoom',
+    meta: { title: '添加会场' }
+  }, {
+    path: 'addRoom/:id',
+    component: () => import('@/views/meeting/room/add'),
+    name: 'UpdateRoom',
+    meta: { title: '修改会场' }
+  }, {
+    path: 'detailRoom/:id',
+    component: () => import('@/views/meeting/room/detail'),
+    name: 'DetailRoom',
+    meta: { title: '会场详情' }
+  }]
+},
+{
+  path: '/questions',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'test',
+    component: () => import('@/views/questionnaire/add/test'),
+    // meta: { title: '会议详情', icon: 'monitor', noCache: true, affix: true },
+    hidden: true,
+  }]
+},
+{
+  path: '/files',
+  component: Layout,
+  hidden: true,
+  children: [
+    {
+      path: 'detail/:id(\\d+)',
+      component: (resolve) => require(['@/views/file/detail/index'], resolve),
+      name: 'fileDetail',
+      meta: { title: '法规文件详情' }
+    },
+    {
+      path: 'mydetail/:id(\\d+)',
+      component: (resolve) => require(['@/views/file/detail/index1'], resolve),
+      name: 'mydetail',
+      meta: { title: '法规文件详情' }
+    }
+  ]
+},
+{
+  path: '/plans',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addWork',
+    component: () => import('@/views/plan/add/work'),
+    name: 'AddWork',
+    meta: {
+      title: '创建工作计划'
+    }
+  }, {
+    path: 'addStudy',
+    component: () => import('@/views/plan/add/study'),
+    name: 'AddStudy',
+    meta: {
+      title: '创建学习计划'
+    }
+  }]
+},
+{
+  path: '/todayworks',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addCate',
+    component: () => import('@/views/todaywork/cate/add'),
+    name: 'AddTodayworkCate',
+    meta: {
+      title: '创建工作分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/todaywork/cate/add'),
+    name: 'UpdateTodayworkCate',
+    meta: {
+      title: '修改工作分类'
+    }
+  }, {
+    path: 'getCateDetail/:id',
+    component: () => import('@/views/todaywork/dateworklist/detail'),
+    name: 'TodayworkDetail',
+    meta: {
+      title: '工作详情'
+    }
+  }, {
+    path: 'addTodaywork',
+    component: () => import('@/views/todaywork/add'),
+    name: 'AddTodaywork',
+    meta: {
+      title: '创建工作'
+    }
+  }, {
+    path: 'addTodaywork/:id',
+    component: () => import('@/views/todaywork/add'),
+    name: 'UpdateTodaywork',
+    meta: {
+      title: '修改工作'
+    }
+  }]
+}
 ]
 
 export default new Router({
