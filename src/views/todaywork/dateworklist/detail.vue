@@ -34,12 +34,7 @@ export default {
   methods: {
     async getListDetail() {
       // console.log('wordId', this.wordId);
-      // 查看我的会议详情
-      const res = await getTodayworkById({
-        id: this.wordId,
-        current: this.currentPage,
-        size: this.pageSize
-      })
+      const res = await getTodayworkById(this.wordId)
       // console.log(res);
       if (res.code === '200') {
         this.todaywork = res.data;
