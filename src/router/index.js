@@ -234,6 +234,26 @@ export const constantRoutes = [{
       component: (resolve) => require(['@/views/file/detail/index1'], resolve),
       name: 'mydetail',
       meta: { title: '法规文件详情' }
+    }, {
+      path: 'addMain',
+      component: (resolve) => require(['@/views/file/cate/addMain'], resolve),
+      name: 'fileDetail',
+      meta: { title: '增加主分类' }
+    },{
+      path: 'addMain/:id',
+      component: (resolve) => require(['@/views/file/cate/addMain'], resolve),
+      name: 'fileDetail',
+      meta: { title: '修改主分类' }
+    }, {
+      path: 'addSub/:mainId',
+      component: (resolve) => require(['@/views/file/cate/addSub'], resolve),
+      name: 'fileDetail',
+      meta: { title: '增加子分类' }
+    }, {
+      path: 'subCate/:mainId',
+      component: (resolve) => require(['@/views/file/cate/subCate'], resolve),
+      name: 'fileDetail',
+      meta: { title: '查看子分类' }
     }
   ]
 },
