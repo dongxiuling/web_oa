@@ -108,6 +108,7 @@ import { getMainCate, getSubCate } from "@/api/file";
 import { fileSave, getFileById, updateFile, downLoadFile, readFile } from "@/api/file";
 import { listUser, getTreeUser } from "@/api/system/user";
 import Uploader from "@/components/Uploader";
+import { dateFormat } from "@/utils/format";
 
 export default {
   data() {
@@ -168,9 +169,13 @@ export default {
   methods: {
     //获取选中状态下的人员数据
     getCheckedNodes() {
-      this.file.userIds = this.$refs.tree.getCheckedNodes(true).map(item => {
-        return item.id;
+      const userIds = []
+      this.$refs.tree.getCheckedNodes(true).forEach(item => {
+        if(item.id.toString().length > 4){
+          userIds.push(item.id)
+        }
       });
+      this.file.userIds = userIds
     },
     /** 查询部门树结构 */
     getDeptTreeselect() {
@@ -207,6 +212,7 @@ export default {
     addHandle() {
       // 验证 是否上传文件
       if (this.file.name) {
+        this.file.finishTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.file.finishTime))
         fileSave(this.file).then(res => {
           this.$message({
             message: "添加成功",
@@ -252,9 +258,10 @@ export default {
     },
     async selectChanged() {
       this.subCateData = []
-      if(!this.id){
-        this.file.cateId = ''
-      }
+      // console.log(this.file.cateId);
+      // if(!this.id){
+      this.file.cateId = ''
+      // }
       const res = await getSubCate({ mainId: this.file.firstCateId })
       // console.log(res)
       if (res && res.code === '200') {
