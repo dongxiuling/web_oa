@@ -231,7 +231,7 @@ export const constantRoutes = [{
     },
     {
       path: 'mydetail/:id(\\d+)',
-      component: (resolve) => require(['@/views/file/detail/index1'], resolve),
+      component: (resolve) => require(['@/views/file/detail/index'], resolve),
       name: 'mydetail',
       meta: { title: '法规文件详情' }
     }, {

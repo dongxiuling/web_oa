@@ -90,7 +90,7 @@ export default {
     const { id } = this.$route.params
     if (id) { // 修改
       const res = await getCateById(id)
-      console.log(res)
+      // console.log(res)
       if (res && res.code === '200') {
         this.cate = res.data
       }

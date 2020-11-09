@@ -1,31 +1,81 @@
 <template>
   <div class="app-container">
-    <el-form ref="file" :model="file" :rules="rules" label-width="80px">
+    <el-form ref="file" :model="file" :rules="rules" label-width="120px">
       <el-form-item label="法规名称" prop="title">
-        <el-input v-model="file.title" style="width:300px"></el-input>
+        <el-input v-model="file.title" style="width: 300px"></el-input>
       </el-form-item>
-      <el-form-item label="法规分类" prop="cateId">
-        <el-select v-model="file.cateId" placeholder="请选择法规分类">
+      <el-form-item label="法规主分类" prop="firstCateId">
+        <el-select
+          v-model="file.firstCateId"
+          placeholder="请选择法规主分类"
+          style="width: 300px"
+          @change="selectChanged"
+        >
           <el-option
             v-for="item in cateData"
-            :key="item.dictCode"
-            :label="item.dictLabel"
-            :value="item.dictCode"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="法规级别" prop="level">
+      <el-form-item label="法规子分类" prop="cateId">
+        <el-select
+          v-model="file.cateId"
+          placeholder="请选择法规子分类"
+          style="width: 300px"
+        >
+          <el-option
+            v-for="item in subCateData"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="法规内容" prop="content">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 8 }"
+          placeholder="请输入法规内容"
+          v-model="file.content"
+          style="width: 300px"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="落实截止时间" prop="finishTime">
+        <el-date-picker
+          v-model="file.finishTime"
+          type="datetime"
+          placeholder="请选择落实截止时间"
+          style="width: 300px"
+        ></el-date-picker>
+      </el-form-item>
+      <!-- <el-form-item label="法规级别" prop="level">
         <el-select v-model="file.level" placeholder="请选择法规级别">
           <el-option v-for="(item,index) in levels" :key="index" :label="item" :value="index+1"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="上传法规">
-        <Uploader v-on:getFile="getFileUrl(arguments)" :change="isChange" :name="file.name"></Uploader>
+        <Uploader
+          v-on:getFile="getFileUrl(arguments)"
+          :change="isChange"
+          :name="file.name"
+        ></Uploader>
         <!-- <el-button @click="openTabWin(file.readUrl,'view')" v-if="file.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button> -->
-        <el-button v-if="id" @click="openTabWin(file.url,'download')" icon="el-icon-download" size="small" type="success">下载文件</el-button>
+        <el-button
+          v-if="id"
+          @click="openTabWin(file.url, 'download')"
+          icon="el-icon-download"
+          size="small"
+          type="success"
+          >下载文件</el-button
+        >
       </el-form-item>
       <el-form-item label="发送人员">
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="filterText"
+        ></el-input>
         <el-tree
           :data="deptTree"
           show-checkbox
@@ -38,8 +88,15 @@
         ></el-tree>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="$route.query.id" type="primary" @click="updateHandle('file')">确定修改</el-button>
-        <el-button v-else type="primary" @click="submitForm('file')">立即创建</el-button>
+        <el-button
+          v-if="$route.query.id"
+          type="primary"
+          @click="updateHandle('file')"
+          >确定修改</el-button
+        >
+        <el-button v-else type="primary" @click="submitForm('file')"
+          >立即创建</el-button
+        >
         <el-button @click="resetForm('file')">取消</el-button>
       </el-form-item>
     </el-form>
@@ -47,8 +104,8 @@
 </template>
 
 <script>
-import { getCategory } from "@/api/tool/category.js";
-import { fileSave, getFileById, updateFile ,downLoadFile,readFile} from "@/api/file";
+import { getMainCate, getSubCate } from "@/api/file";
+import { fileSave, getFileById, updateFile, downLoadFile, readFile } from "@/api/file";
 import { listUser, getTreeUser } from "@/api/system/user";
 import Uploader from "@/components/Uploader";
 
@@ -56,6 +113,7 @@ export default {
   data() {
     return {
       cateData: [],
+      subCateData: [],
       deptTree: [],
       defaultProps: {
         children: "children",
@@ -65,6 +123,7 @@ export default {
       filterText: "",
       file: {
         title: "",
+        firstCateId: '',
         cateId: "",
         url: "http://www.rr.cc",
         readUrl: "http://www.rr.cc",
@@ -76,20 +135,26 @@ export default {
       id: this.$route.query.id,
       rules: {
         title: [{ required: true, message: "请输入法规名称", trigger: "blur" }],
-
-        cateId: [
-          { required: true, message: "请选择法规分类", trigger: "change" }
+        firstCateId: [
+          { required: true, message: "请选择法规主分类", trigger: "change" }
         ],
-        level: [
-          { required: true, message: "请选择法规级别", trigger: "change" }
+        cateId: [
+          { required: true, message: "请选择法规子分类", trigger: "change" }
+        ],
+        content: [{ required: true, message: "请输入法规内容", trigger: "blur" }],
+        finishTime: [
+          { required: true, message: '请选择日期', trigger: ['blur', 'change'] }
         ]
+        // level: [
+        //   { required: true, message: "请选择法规级别", trigger: "change" }
+        // ]
       },
       time: [],
       props: {
         label: "name",
         children: "zones"
       },
-      levels: ["紧急事件", "重点关注事件", "一般事件"]
+      // levels: ["紧急事件", "重点关注事件", "一般事件"]
     };
   },
   components: {
@@ -118,14 +183,12 @@ export default {
       return data.label.indexOf(value) !== -1;
     },
     // 获取分类列表ç
-    getCateList() {
-      getCategory({
-        pageNum: 1,
-        pageSize: 1000,
-        dictType: "file_module_status"
-      }).then(res => {
-        this.cateData = res.rows;
-      });
+    async getCateList() {
+      const res = await getMainCate();
+      // console.log(res);
+      if (res && res.code === '200') {
+        this.cateData = res.data;
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -151,13 +214,13 @@ export default {
           });
           this.$router.push("/file/myfile");
         });
-      }else{
+      } else {
         this.$message.error('请选择上传文件');
       }
     },
     // 修改法规
     updateHandle() {
-      updateFile({...this.file,type:"regulatory_documents"}).then(res => {
+      updateFile({ ...this.file, type: "regulatory_documents" }).then(res => {
         this.$message({
           message: "修改成功",
           type: "success"
@@ -166,10 +229,10 @@ export default {
       });
     },
     // 修改法规获取信息
-    getFileById(id) {
-      getFileById({ id }).then(res => {
-        this.file = res.data;
-      });
+    async getFileById(id) {
+      const res = await getFileById({ id })
+      this.file = res.data;
+      await this.selectChanged()
     },
     // 获取wFid和nFid
     getFileUrl(args) {
@@ -179,14 +242,25 @@ export default {
       this.isChange = true;
     },
     // 下载或预览操作
-    async openTabWin(url,type){
-      if(type=="view"){
-        await readFile({id:this.file.id})
-      }else if(type="download"){
-        await downLoadFile({id:this.file.id})
+    async openTabWin(url, type) {
+      if (type == "view") {
+        await readFile({ id: this.file.id })
+      } else if (type = "download") {
+        await downLoadFile({ id: this.file.id })
       }
-      window.open(url,"_blank");
+      window.open(url, "_blank");
     },
+    async selectChanged() {
+      this.subCateData = []
+      if(!this.id){
+        this.file.cateId = ''
+      }
+      const res = await getSubCate({ mainId: this.file.firstCateId })
+      // console.log(res)
+      if (res && res.code === '200') {
+        this.subCateData = res.data
+      }
+    }
   },
   created() {
     // 获取分类列表

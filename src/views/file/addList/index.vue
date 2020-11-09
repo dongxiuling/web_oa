@@ -9,7 +9,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="法规分类">
+      <!-- <el-form-item label="法规分类">
         <el-select v-model="search.categoryId" placeholder="请选择法规分类">
           <el-option
             v-for="item in cateData"
@@ -18,12 +18,12 @@
             :value="item.dictCode"
           ></el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="法规级别" prop="level">
+      </el-form-item> -->
+      <!-- <el-form-item label="法规级别" prop="level">
         <el-select v-model="search.level" placeholder="请选择法规级别">
           <el-option v-for="item in levels" :key="item.id" :label="item.name" :value="item.id"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
@@ -48,18 +48,19 @@
 
       <el-table-column prop="title" label="法规名称" width="240"></el-table-column>
       <el-table-column prop="createTime" label="更新时间" width="200"></el-table-column>
-      <el-table-column prop="categoryName" label="模块"></el-table-column>
+      <el-table-column prop="categoryName" label="法规分类"></el-table-column>
+      <el-table-column prop="content" label="法规内容"></el-table-column>
       <el-table-column label="操作" width="350">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-view" @click.stop="detailHandle(scope.row)" >详情</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click.stop="delHandle(scope.row)">删除</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click.stop="editHandle(scope.row)">修改</el-button>
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click.stop="afreshHandle(scope.row)"
-          >再次提醒</el-button>
+          >再次提醒</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -127,12 +128,12 @@ export default {
       fileList: [],
       loading: true,
       total: 0,
-      levels: [
-        { id: 0, name: "全部事件" },
-        { id: 1, name: "紧急事件" },
-        { id: 2, name: "重点关注事件" },
-        { id: 3, name: "一般事件" }
-      ],
+      // levels: [
+      //   { id: 0, name: "全部事件" },
+      //   { id: 1, name: "紧急事件" },
+      //   { id: 2, name: "重点关注事件" },
+      //   { id: 3, name: "一般事件" }
+      // ],
       outerVisible: false,
       // 重新派发数据
       file: {
@@ -180,7 +181,7 @@ export default {
     },
     /** 删除按钮操作 */
     delHandle(_data) {
-      this.$confirm("此操作将永久删除考试题且无法恢复, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除且无法恢复, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
