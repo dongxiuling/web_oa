@@ -155,6 +155,7 @@ export default {
         label: "name",
         children: "zones"
       },
+      isFirstUpdate: false
       // levels: ["紧急事件", "重点关注事件", "一般事件"]
     };
   },
@@ -171,7 +172,7 @@ export default {
     getCheckedNodes() {
       const userIds = []
       this.$refs.tree.getCheckedNodes(true).forEach(item => {
-        if(item.id.toString().length > 4){
+        if (item.id.toString().length > 4) {
           userIds.push(item.id)
         }
       });
@@ -258,10 +259,12 @@ export default {
     },
     async selectChanged() {
       this.subCateData = []
-      // console.log(this.file.cateId);
-      // if(!this.id){
-      this.file.cateId = ''
-      // }
+      // console.log(this.isFirstUpdate);
+      if (!this.isFirstUpdate) {
+        this.file.cateId = ''
+      } else {
+        this.isFirstUpdate = false
+      }
       const res = await getSubCate({ mainId: this.file.firstCateId })
       // console.log(res)
       if (res && res.code === '200') {
@@ -278,6 +281,7 @@ export default {
       this.getFileById(this.id);
       // 修改upload 状态 false添加 true修改
       this.isChange = true;
+      this.isFirstUpdate = true
     }
   }
 };
