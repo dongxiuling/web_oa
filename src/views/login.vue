@@ -143,7 +143,7 @@ export default {
                 this.loading = false;
                 // this.getCode();
               } else {
-                this.$router.push({ path: this.redirect || "/" });
+                this.$router.push("/");
               }
             })
             .catch(() => {
