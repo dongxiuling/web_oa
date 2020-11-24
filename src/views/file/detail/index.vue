@@ -15,6 +15,12 @@
         <el-form-item label="法规内容">
           <b>{{ detailInfo.content }}</b>
         </el-form-item>
+        <el-form-item label="周期类型">
+          <b>{{ detailInfo.cycleType }}</b>
+        </el-form-item>
+        <el-form-item label="周期提醒截止时间">
+          <b>{{ detailInfo.endTime }}</b>
+        </el-form-item>
         <el-form-item label="落实截止时间">
           <b>{{ detailInfo.finishTime }}</b>
         </el-form-item>
@@ -135,7 +141,17 @@ export default {
     async getReadDetail() {
       const res = await getResources({ id: this.id })
       // console.log(res);
-      this.detailInfo = res.data
+      let cycleType = (res.data.cycle).toString();
+      console.log(cycleType)
+
+      switch(cycleType){
+        case "1":cycleType="仅提醒一次";break;
+        case "2":cycleType="每周提醒";break;
+        case "3":cycleType="每月提醒";break;
+        case "4":cycleType="每季度提醒";break;
+      }
+      this.detailInfo = res.data;
+      this.detailInfo.cycleType = cycleType;
       this.users = res.data.users;
     }
   },

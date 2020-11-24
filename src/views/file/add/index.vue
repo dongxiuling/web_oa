@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form ref="file" :model="file" :rules="rules" label-width="120px">
+    <el-form ref="file" :model="file" :rules="rules" label-width="160px">
       <el-form-item label="法规名称" prop="title">
         <el-input v-model="file.title" style="width: 300px"></el-input>
       </el-form-item>
@@ -42,7 +42,24 @@
           style="width: 300px"
         ></el-input>
       </el-form-item>
-      <el-form-item label="落实截止时间" prop="finishTime">
+      <!-- 1:一次性 2:周 3:月 4:季度 -->
+      <el-form-item label="周期类型" prop="cycle">
+        <el-select v-model="file.cycle" placeholder="请选择周期类型">
+          <el-option :value="1" label="仅提醒一次"></el-option>
+          <el-option :value="2" label="每周提醒"></el-option>
+          <el-option :value="3" label="每月提醒"></el-option>
+          <el-option :value="4" label="每季度提醒"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="file.cycle!=1" label="周期性提醒截止时间">
+        <el-date-picker
+          v-model="file.endTime"
+          type="datetime"
+          placeholder="请选择周期性提醒截止时间"
+          style="width: 300px"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item  label="落实截止时间" prop="finishTime">
         <el-date-picker
           v-model="file.finishTime"
           type="datetime"
@@ -50,6 +67,7 @@
           style="width: 300px"
         ></el-date-picker>
       </el-form-item>
+      
       <!-- <el-form-item label="法规级别" prop="level">
         <el-select v-model="file.level" placeholder="请选择法规级别">
           <el-option v-for="(item,index) in levels" :key="index" :label="item" :value="index+1"></el-option>
@@ -145,6 +163,9 @@ export default {
         content: [{ required: true, message: "请输入法规内容", trigger: "blur" }],
         finishTime: [
           { required: true, message: '请选择日期', trigger: ['blur', 'change'] }
+        ],
+        cycle: [
+          { required: true, message: '请选周期类型', trigger: ['blur', 'change'] }
         ]
         // level: [
         //   { required: true, message: "请选择法规级别", trigger: "change" }
@@ -214,6 +235,7 @@ export default {
       // 验证 是否上传文件
       if (this.file.name) {
         this.file.finishTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.file.finishTime))
+        this.file.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.file.endTime))
         fileSave(this.file).then(res => {
           this.$message({
             message: "添加成功",
