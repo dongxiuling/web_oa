@@ -107,11 +107,13 @@ export default {
       const username = Cookies.get("username");
       const password = Cookies.get("password");
       const rememberMe = Cookies.get("rememberMe");
+      const type = Cookies.get("type");
       this.loginForm = {
         username: username === undefined ? this.loginForm.username : username,
         password:
           password === undefined ? this.loginForm.password : decrypt(password),
-        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
+        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe),
+        type: type || 1
       };
     },
     handleLogin() {
@@ -126,10 +128,14 @@ export default {
             Cookies.set("rememberMe", this.loginForm.rememberMe, {
               expires: 30
             });
+            Cookies.set("type", '1', {
+              expires: 30
+            });
           } else {
             Cookies.remove("username");
             Cookies.remove("password");
             Cookies.remove("rememberMe");
+            Cookies.remove("type");
           }
           this.$store
             .dispatch("Login", this.loginForm)

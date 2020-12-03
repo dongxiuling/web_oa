@@ -317,6 +317,48 @@ export const constantRoutes = [{
       title: '修改工作'
     }
   }]
+}, {
+  path: '/worklists',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addInspect',
+    component: () => import('@/views/worklist/inspect/add'),
+    name: 'AddInspect',
+    meta: {
+      title: '创建检查类工作'
+    }
+  }, 
+  // {
+  //   path: 'addCate/:id',
+  //   component: () => import('@/views/todaywork/cate/add'),
+  //   name: 'UpdateTodayworkCate',
+  //   meta: {
+  //     title: '修改工作分类'
+  //   }
+  // }, {
+  //   path: 'getCateDetail/:id',
+  //   component: () => import('@/views/todaywork/dateworklist/detail'),
+  //   name: 'TodayworkDetail',
+  //   meta: {
+  //     title: '工作详情'
+  //   }
+  // }, {
+  //   path: 'addTodaywork',
+  //   component: () => import('@/views/todaywork/add'),
+  //   name: 'AddTodaywork',
+  //   meta: {
+  //     title: '创建工作'
+  //   }
+  // }, {
+  //   path: 'addTodaywork/:id',
+  //   component: () => import('@/views/todaywork/add'),
+  //   name: 'UpdateTodaywork',
+  //   meta: {
+  //     title: '修改工作'
+  //   }
+  // }
+]
 }
 ]
 
