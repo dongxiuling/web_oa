@@ -1,252 +1,104 @@
 <template>
-  <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
-    <textarea :id="tinymceId" class="tinymce-textarea" />
-    <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
-    </div>
+  <div class="tinymce-editor">
+    <editor v-model="myValue"
+      :init="init"
+      :disabled="disabled"
+      @onClick="onClick">
+    </editor>
   </div>
 </template>
-
 <script>
-/**
- * docs:
- * https://panjiachen.github.io/vue-element-admin-site/feature/component/rich-editor.html#tinymce
- */
-import editorImage from './components/EditorImage'
-import plugins from './plugins'
-import toolbar from './toolbar'
-import load from './dynamicLoadScript'
-// import tinymceCDN from './tinymce/js/tinymce/tinymce.min.js'
-// import tinymceCDN from './tinymce/tinymce'
-// import tinymceCDN from 'tinymce'
+import tinymce from 'tinymce/tinymce'
+import Editor from '@tinymce/tinymce-vue'
 
+import 'tinymce/themes/silver'
 
-// why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
-const tinymceCDN = 'http://47.92.82.13/tinymce/tinymce.min.js?sign=79727b31bc2c547d9e3d18acac3c0bba&t=1606558965'
+import 'tinymce/plugins/image'// 插入上传图片插件
+import 'tinymce/plugins/media'// 插入视频插件
+import 'tinymce/plugins/table'// 插入表格插件
+import 'tinymce/plugins/lists'// 列表插件
+import 'tinymce/plugins/wordcount'// 字数统计插件
+import 'tinymce/plugins/searchreplace'
 
 export default {
-  name: 'Tinymce',
-  components: { editorImage },
+  components: {
+    Editor
+  },
   props: {
-    tinyType:{
-      type:String,
-      default:"none"
-    },
-    id: {
-      type: String,
-      default: function() {
-        return 'vue-tinymce-' + +new Date() + ((Math.random() * 1000).toFixed(0) + '')
-      }
-    },
     value: {
       type: String,
       default: ''
     },
-    toolbar: {
-      type: Array,
-      required: false,
-      default() {
-        return []
+    // 基本路径，默认为空根目录，如果你的项目发布后的地址为目录形式，
+    // 即abc.com/tinymce，baseUrl需要配置成tinymce，不然发布后资源会找不到
+    baseUrl: {
+      type: String,
+      default: ()=>{
+          return window.location.origin
       }
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     menubar: {
-      type: String,
-      default: 'file edit insert view format table'
+      type: Boolean,
+      default: true
     },
-    height: {
-      type: [Number, String],
-      required: false,
-      default: 360
+    plugins: {
+      type: [String, Array],
+      default: 'searchreplace lists image media table wordcount'
     },
-    width: {
-      type: [Number, String],
-      required: false,
-      default: 'auto'
+    toolbar: {
+      type: [String, Array],
+      default: 'searchreplace undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image media table | removeformat'
     }
   },
-  data() {
+  data () {
     return {
-      hasChange: false,
-      hasInit: false,
-      tinymceId: this.id,
-      fullscreen: false,
-      languageTypeList: {
-        'zh': 'zh_CN'
-      }
+      init: {
+        language_url: `/tinymce/langs/zh_CN.js`,
+        language: 'zh_CN',
+        skin_url: `/tinymce/skins/ui/oxide`,
+        content_css: `/tinymce/skins/content/default/content.css`,
+        // skin_url: `${this.baseUrl}/tinymce/skins/ui/oxide-dark`, // 暗色系
+        // content_css: `${this.baseUrl}/tinymce/skins/content/dark/content.css`, // 暗色系
+        height: 300,
+        menubar: this.menubar,
+         plugins: this.plugins,
+        toolbar: this.toolbar,
+        branding: false,
+        // 此处为图片上传处理函数，这个直接用了base64的图片形式上传图片，
+        // 如需ajax上传可参考https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_handler
+        images_upload_handler: (blobInfo, success, failure) => {
+          const img = 'data:image/jpeg;base64,' + blobInfo.base64()
+          success(img)
+        }
+      },
+      myValue: this.value
     }
   },
-  computed: {
-    containerWidth() {
-      const width = this.width
-      if (/^[\d]+(\.[\d]+)?$/.test(width)) { // matches `100`, `'100'`
-        return `${width}px`
-      }
-      return width
+  mounted () {
+    tinymce.init({})
+  },
+  methods: {
+    // 添加相关的事件，可用的事件参照文档=> https://github.com/tinymce/tinymce-vue => All available events
+    // 需要什么事件可以自己增加
+    onClick (e) {
+      this.$emit('onClick', e, tinymce)
+    },
+    // 可以添加一些自己的自定义事件，如清空内容
+    clear () {
+      this.myValue = ''
     }
   },
   watch: {
-    value(val) {
-      if (!this.hasChange && this.hasInit) {
-        this.$nextTick(() =>
-          window.tinymce.get(this.tinymceId).setContent(val || ''))
-      }
-    }
-  },
-  mounted() {
-    this.init()
-  },
-  activated() {
-    if (window.tinymce) {
-      this.initTinymce()
-    }
-  },
-  deactivated() {
-    this.destroyTinymce()
-  },
-  destroyed() {
-    this.destroyTinymce()
-  },
-  methods: {
-    init() {
-      // dynamic load tinymce from cdn
-      load(tinymceCDN, (err) => {
-        if (err) {
-          this.$message.error(err.message)
-          return
-        }
-        this.initTinymce()
-      })
+    value (newValue) {
+      this.myValue = newValue
     },
-    initTinymce() {
-      const _this = this
-      window.tinymce.init({
-        selector: `#${this.tinymceId}`,
-        language: this.languageTypeList['zh'],
-        height: this.height,
-        body_class: 'panel-body ',
-        object_resizing: false,
-        toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
-        menubar: this.menubar,
-        plugins: plugins,
-        end_container_on_empty_block: true,
-        powerpaste_word_import: 'clean',
-        code_dialog_height: 450,
-        code_dialog_width: 1000,
-        advlist_bullet_styles: 'square',
-        advlist_number_styles: 'default',
-        imagetools_cors_hosts: ['www.tinymce.com', 'codepen.io'],
-        default_link_target: '_blank',
-        link_title: false,
-        nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
-        init_instance_callback: editor => {
-          if (_this.value) {
-            editor.setContent(_this.value)
-          }
-          _this.hasInit = true
-          editor.on('NodeChange Change KeyUp SetContent', () => {
-            this.hasChange = true
-            this.$emit('input', editor.getContent())
-          })
-        },
-        setup(editor) {
-          editor.on('FullscreenStateChanged', (e) => {
-            _this.fullscreen = e.state
-          })
-        },
-        // it will try to keep these URLs intact
-        // https://www.tiny.cloud/docs-3x/reference/configuration/Configuration3x@convert_urls/
-        // https://stackoverflow.com/questions/5196205/disable-tinymce-absolute-to-relative-url-conversions
-        convert_urls: false
-        // 整合七牛上传
-        // images_dataimg_filter(img) {
-        //   setTimeout(() => {
-        //     const $image = $(img);
-        //     $image.removeAttr('width');
-        //     $image.removeAttr('height');
-        //     if ($image[0].height && $image[0].width) {
-        //       $image.attr('data-wscntype', 'image');
-        //       $image.attr('data-wscnh', $image[0].height);
-        //       $image.attr('data-wscnw', $image[0].width);
-        //       $image.addClass('wscnph');
-        //     }
-        //   }, 0);
-        //   return img
-        // },
-        // images_upload_handler(blobInfo, success, failure, progress) {
-        //   progress(0);
-        //   const token = _this.$store.getters.token;
-        //   getToken(token).then(response => {
-        //     const url = response.data.qiniu_url;
-        //     const formData = new FormData();
-        //     formData.append('token', response.data.qiniu_token);
-        //     formData.append('key', response.data.qiniu_key);
-        //     formData.append('file', blobInfo.blob(), url);
-        //     upload(formData).then(() => {
-        //       success(url);
-        //       progress(100);
-        //     })
-        //   }).catch(err => {
-        //     failure('出现未知问题，刷新页面，或者联系程序员')
-        //     console.log(err);
-        //   });
-        // },
-      })
-    },
-    destroyTinymce() {
-      const tinymce = window.tinymce.get(this.tinymceId)
-      if (this.fullscreen) {
-        tinymce.execCommand('mceFullScreen')
-      }
-
-      if (tinymce) {
-        tinymce.destroy()
-      }
-    },
-    setContent(value) {
-      window.tinymce.get(this.tinymceId).setContent(value)
-    },
-    getContent() {
-      window.tinymce.get(this.tinymceId).getContent()
-    },
-    imageSuccessCBK(arr) {
-      arr.forEach(v => window.tinymce.get(this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`))
+    myValue (newValue) {
+      this.$emit('input', newValue)
     }
   }
-}
+};
 </script>
-
-<style lang="scss" scoped>
-.tinymce-container {
-  position: relative;
-  line-height: normal;
-}
-
-.tinymce-container {
-  ::v-deep {
-    .mce-fullscreen {
-      z-index: 10000;
-    }
-  }
-}
-
-.tinymce-textarea {
-  visibility: hidden;
-  z-index: -1;
-}
-
-.editor-custom-btn-container {
-  position: absolute;
-  right: 4px;
-  top: 4px;
-  /*z-index: 2005;*/
-}
-
-.fullscreen .editor-custom-btn-container {
-  z-index: 10000;
-  position: fixed;
-}
-
-.editor-upload-btn {
-  display: inline-block;
-}
-</style>

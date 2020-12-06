@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="app-container">
-        <tinymce v-if="content" v-model="content" menubar="" :toolbar="['searchreplace']" tinyType="contentType" :height="500" />
+        <tinymce v-if="content" v-model="content" :menubar="false" :toolbar="['searchreplace']" tinyType="contentType" :height="500" />
     </div>
   </div>
 </template>
