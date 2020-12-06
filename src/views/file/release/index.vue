@@ -64,7 +64,9 @@ export default {
         name:this.form.title,
         content:encode(this.form.content)
       }).then((res)=>{
-        console.log(res);
+        this.$router.push({
+        path: "/lawlist",
+      });
       })
     }
   },

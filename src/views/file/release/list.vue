@@ -7,13 +7,12 @@
         label="法规名称"
         
       ></el-table-column>
-      <!-- <el-table-column
+      <el-table-column
         prop="createTime"
         label="添加时间"
-        width="200"
       ></el-table-column>
-      <el-table-column prop="content" label="法规简介"></el-table-column> -->
-      <el-table-column label="操作" width="350">
+      <el-table-column prop="remark" label="法规简介"></el-table-column>
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -54,9 +53,13 @@ export default {
     getList() {
       this.loading = true;
       getRawList().then((res) => {
+        let thisData = []
         this.loading = false;
-        console.log(res);
-        this.dataList = res.data;
+        thisData = res.data.map((item)=>{
+          item.createTime = item.createTime.split(" ")[0]
+          return item
+        })
+        this.dataList = thisData;
       });
     },
     /** 删除按钮操作 */
