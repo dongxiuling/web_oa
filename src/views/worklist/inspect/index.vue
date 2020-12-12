@@ -21,12 +21,25 @@
       </el-form-item>
       <el-form-item label="可用状态">
         <el-select v-model="search.status">
-          <el-option v-for="item in statusList" :key="item.id" :label="item.name" :value="item.id"></el-option>
+          <el-option
+            v-for="item in statusList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="onSearch">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="onReset">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="onSearch"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="onReset"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -37,7 +50,8 @@
           icon="el-icon-plus"
           size="mini"
           @click="$router.push('/worklists/addInspect')"
-        >添加检查类工作</el-button>
+          >添加检查类工作</el-button
+        >
       </el-col>
     </el-row>
 
@@ -52,15 +66,21 @@
       <el-table-column align="center" label="序号" width="50px" type="index">
         <!-- <template slot-scope="scope">{{ scope.row.id }}</template> -->
       </el-table-column>
-      <el-table-column align="center" prop="no" label="会场号"></el-table-column>
-      <el-table-column align="center" prop="name" label="会场名称"></el-table-column>
-      <el-table-column align="center" prop="num" label="可容纳人数"></el-table-column>
-      <el-table-column align="center" prop="status" label="可用状态">
-        <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.status === 1">可用</el-tag>
-          <el-tag type="danger" v-if="scope.row.status === 2">停用</el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column
+        align="center"
+        prop="name"
+        label="工作名称"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="createTime"
+        label="创建时间"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="remark"
+        label="工作内容"
+      ></el-table-column>
       <el-table-column label="操作" width="260" align="center">
         <template slot-scope="scope">
           <el-button
@@ -68,9 +88,29 @@
             type="text"
             icon="el-icon-tickets"
             @click="detailHandle(scope.row)"
-          >查看详情</el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="editHandle(scope.row)">修改</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
+            >查看详情</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="editStepHandle(scope.row)"
+            >设置工作进度</el-button
+          >
+          <!-- <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="editHandle(scope.row)"
+            >修改</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="delHandle(scope.row)"
+            >删除</el-button
+          > -->
         </template>
       </el-table-column>
     </el-table>
@@ -80,7 +120,11 @@
       title="提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="() => {dialogVisible = false}"
+      :before-close="
+        () => {
+          dialogVisible = false;
+        }
+      "
     >
       <span>确认删除该会场吗</span>
       <span slot="footer" class="dialog-footer">
@@ -93,9 +137,10 @@
 
 <script>
 import {
-  getRoomList,
-  delRoom
-} from '@/api/meeting'
+  selectInspect,
+  delInspectById
+} from '@/api/worklist'
+
 export default {
   data() {
     return {
@@ -116,13 +161,13 @@ export default {
     };
   },
   methods: {
-    async getRoomList(data = { status: 0 }) {
+    async selectInspect(data = { status: 0 }) {
       this.loading = true
-      const res = await getRoomList(data)
+      const res = await selectInspect(data)
       // console.log(res)
       if (res && res.code === '200') {
-        const { data: { records } } = res
-        this.roomList = records
+        const { data } = res
+        this.roomList = data
       }
       this.loading = false
     },
@@ -132,12 +177,12 @@ export default {
     },
     async doDelHandle() {
       this.dialogVisible = false
-      const res = await delRoom(this.id)
+      const res = await delInspectById(this.id)
       this.$message({
-          message: '删除成功',
-          type: 'success'
-        })
-      this.getRoomList()
+        message: '删除成功',
+        type: 'success'
+      })
+      this.selectInspect()
     },
     onReset() {
       this.search = {
@@ -145,23 +190,26 @@ export default {
         name: '',
         status: 0
       }
-      this.getRoomList()
+      this.selectInspect()
     },
     onSearch() {
       // console.log(this.search);
-      this.getRoomList(this.search)
+      this.selectInspect(this.search)
     },
     detailHandle({ id }) {
       this.$router.push(`/meetings/detailRoom/${id}`)
     },
     editHandle({ id }) {
       this.$router.push(`/meetings/addRoom/${id}`)
+    },
+    editStepHandle({ id }) {
+
     }
   },
   created() {
     // 类型默认选中全部
     this.search.status = this.statusList[0].id
-    this.getRoomList()
+    this.selectInspect()
   },
 };
 </script>
