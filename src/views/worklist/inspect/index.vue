@@ -231,7 +231,9 @@ export default {
         }))
       })
       console.log(stepsTemp);
-      const res = await updateStep(stepsTemp)
+      const res = await updateStep({
+        steps: stepsTemp
+      })
       console.log(res);
       if (res && res.code === '200') {
         this.stepDialogVisible = false
