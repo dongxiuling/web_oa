@@ -94,6 +94,7 @@
                   type="info"
                   icon="el-icon-delete"
                   class="special-del"
+                  @click="delSpecialItem(index)"
                 ></el-button>
               </el-tooltip>
               <Uploader
@@ -160,9 +161,9 @@
       :before-close="handleClose"
     >
       <el-form ref="step" :model="step" :rules="stepRules" label-width="110px">
-        <el-form-item label="步骤名称" prop="name">
+        <el-form-item label="步骤名称" prop="stepName">
           <el-input
-            v-model="step.name"
+            v-model="step.stepName"
             style="width: 300px"
             placeholder="请输入步骤名称"
           ></el-input>
@@ -202,7 +203,7 @@ export default {
         isLeaf: "leaf"
       },
       step: {
-        name: '',
+        stepName: '',
         finishTime: ''
       },
       worklist: {
@@ -225,7 +226,7 @@ export default {
         steps: [{ required: true, message: "请添加工作步骤", trigger: "blur" }],
       },
       stepRules: {
-        name: [{ required: true, message: "请输入步骤名称", trigger: "blur" }],
+        stepName: [{ required: true, message: "请输入步骤名称", trigger: "blur" }],
         finishTime: [{ required: true, message: "请输入步骤完成时间", trigger: "blur" }],
       },
       props: {
@@ -299,13 +300,13 @@ export default {
         })
         this.worklist.special = specialTemp
         console.log(this.worklist);
-        // saveInspect(this.worklist).then(res => {
-        //   this.$message({
-        //     message: "添加成功",
-        //     type: "success"
-        //   });
-        //   this.$router.push("/worklist/inspect");
-        // });
+        saveInspect(this.worklist).then(res => {
+          this.$message({
+            message: "添加成功",
+            type: "success"
+          });
+          this.$router.push("/worklist/inspect");
+        });
       }
     },
     updateHandle() {
@@ -381,11 +382,11 @@ export default {
 
     addStep() {
       this.worklist.steps.push({
-        name: this.step.name,
+        stepName: this.step.stepName,
         finishTime: dateFormat("YYYY-mm-dd HH:MM:SS", this.step.finishTime)
       })
       this.step = {
-        name: '',
+        stepName: '',
         finishTime: ''
       }
     },
@@ -400,6 +401,16 @@ export default {
         specialTableData: []
       })
       // this.specialUserIdsArr.push([])
+    },
+    delSpecialItem(index) {
+      // specialArr: [], // 特殊检查项的数组，里面每个对象是一个特殊检查项
+      // specialTable: [], // 保存特殊检查项表格数据的数组，里面每个对象包括tableData和columns
+      // specialUserIdsArr: [], // 特殊检查项用户组成的数组，里面每个成员也是个数组表示每个检查项的关联连队
+      // specialUrlArr: [], // 特殊检查项文件url组成的数组，里面每个成员是个string，表示每个检查项关联的文件url
+      this.specialArr.splice(index, 1)
+      this.specialTable.splice(index, 1)
+      this.specialUserIdsArr.splice(index, 1)
+      this.specialUrlArr.splice(index, 1)
     }
   },
   created() {

@@ -8,12 +8,11 @@ export const saveInspect = (data = {}) => request({
     data
 })
 
-export const selectInspect = () => {
-    return request({
-        url: `/special/list`,
-        method: 'get'
-    })
-}
+export const selectInspect = (data = {}) => request({
+    url: '/special/list',
+    method: 'post',
+    data
+})
 
 export const delInspectById = id => {
     return request({
@@ -25,6 +24,32 @@ export const delInspectById = id => {
 export const filePreview = ({ ip, port, fid }) => {
     return request({
         url: `/special/preview/${ip}/${port}/${fid}`,
+        method: 'get'
+    })
+}
+
+export const getStep = (id) => {
+    return request({
+        url: `/special/getStep/${id}`,
+        method: 'get'
+    })
+}
+export const updateStep = (data = {}) => request({
+    url: '/special/updateStep',
+    method: 'post',
+    data
+})
+
+export const selectAcitvity = () => {
+    return request({
+        url: `/special/list`,
+        method: 'get'
+    })
+}
+
+export const delAcitvityById = id => {
+    return request({
+        url: `/weather/delWeatherById/${id}`,
         method: 'get'
     })
 }

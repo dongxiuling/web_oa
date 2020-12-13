@@ -1,33 +1,14 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
-      <el-form-item label="会场号" prop="no">
-        <el-input
-          v-model="search.no"
-          placeholder="请输入会场号"
-          clearable
-          size="small"
-          style="width: 240px"
-        />
-      </el-form-item>
-      <el-form-item label="会场名称" prop="name">
+      <el-form-item label="工作名称" prop="name">
         <el-input
           v-model="search.name"
-          placeholder="请输入会场名称"
+          placeholder="请输入工作名称"
           clearable
           size="small"
           style="width: 240px"
         />
-      </el-form-item>
-      <el-form-item label="可用状态">
-        <el-select v-model="search.status">
-          <el-option
-            v-for="item in statusList"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          ></el-option>
-        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -58,7 +39,7 @@
     <el-table
       v-loading="loading"
       ref="multipleTable"
-      :data="roomList"
+      :data="workList"
       tooltip-effect="dark"
       style="width: 100%"
     >
@@ -81,7 +62,7 @@
         prop="remark"
         label="工作内容"
       ></el-table-column>
-      <el-table-column label="操作" width="260" align="center">
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -95,7 +76,7 @@
             type="text"
             icon="el-icon-edit"
             @click="editStepHandle(scope.row)"
-            >设置工作进度</el-button
+            >修改工作步骤</el-button
           >
           <!-- <el-button
             size="mini"
@@ -103,14 +84,14 @@
             icon="el-icon-edit"
             @click="editHandle(scope.row)"
             >修改</el-button
-          >
+          >-->
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="delHandle(scope.row)"
-            >删除</el-button
-          > -->
+            >删除工作</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -126,10 +107,42 @@
         }
       "
     >
-      <span>确认删除该会场吗</span>
+      <span>确认删除该项工作吗？删除后无法恢复。</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="doDelHandle">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      title="修改步骤"
+      :visible.sync="stepDialogVisible"
+      width="500px"
+      :before-close="handleClose"
+    >
+      <el-form ref="stepsForm" :inline="true">
+        <el-form-item
+          v-for="(step, index) in steps"
+          :key="index"
+          :label="index + 1 + ''"
+          prop="step"
+        >
+          <el-input
+            v-model="step.stepName"
+            placeholder="请输入工作名称"
+            style="width: 120px"
+          />
+          <el-date-picker
+            v-model="step.finishTime"
+            type="datetime"
+            placeholder="请选择步骤完成时间"
+            style="width: 240px"
+          ></el-date-picker>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="stepDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateStep">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -138,26 +151,24 @@
 <script>
 import {
   selectInspect,
-  delInspectById
+  delInspectById,
+  getStep,
+  updateStep
 } from '@/api/worklist'
+import { dateFormat } from "@/utils/format";
 
 export default {
   data() {
     return {
-      roomList: [],
+      workList: [],
       search: {
-        no: '',
         name: '',
-        status: 0
       },
-      statusList: [
-        { id: 0, name: "全部" },
-        { id: 1, name: "可用" },
-        { id: 2, name: "停用" },
-      ],
       dialogVisible: false,
       id: null,
-      loading: false
+      loading: false,
+      stepDialogVisible: false, // 添加步骤dialog
+      steps: []
     };
   },
   methods: {
@@ -167,7 +178,7 @@ export default {
       // console.log(res)
       if (res && res.code === '200') {
         const { data } = res
-        this.roomList = data
+        this.workList = data
       }
       this.loading = false
     },
@@ -176,24 +187,22 @@ export default {
       this.id = id
     },
     async doDelHandle() {
-      this.dialogVisible = false
-      const res = await delInspectById(this.id)
-      this.$message({
-        message: '删除成功',
-        type: 'success'
-      })
-      this.selectInspect()
+      console.log('doDelHandle');
+      // this.dialogVisible = false
+      // const res = await delInspectById(this.id)
+      // this.$message({
+      //   message: '删除成功',
+      //   type: 'success'
+      // })
+      // this.selectInspect()
     },
     onReset() {
       this.search = {
-        no: '',
         name: '',
-        status: 0
       }
       this.selectInspect()
     },
     onSearch() {
-      // console.log(this.search);
       this.selectInspect(this.search)
     },
     detailHandle({ id }) {
@@ -202,13 +211,39 @@ export default {
     editHandle({ id }) {
       this.$router.push(`/meetings/addRoom/${id}`)
     },
-    editStepHandle({ id }) {
-
+    async editStepHandle({ id }) {
+      this.stepDialogVisible = true
+      const res = await getStep(id)
+      if (res && res.code && res.code === '200') {
+        this.steps = res.data
+      }
+    },
+    handleClose() {
+      this.stepDialogVisible = false
+      // this.worklist.step = ''
+    },
+    async updateStep() {
+      const stepsTemp = []
+      this.steps.forEach(item => {
+        stepsTemp.push(Object.assign(item, {
+          stepName: item.stepName,
+          finishTime: dateFormat("YYYY-mm-dd HH:MM:SS", item.finishTime)
+        }))
+      })
+      console.log(stepsTemp);
+      const res = await updateStep(stepsTemp)
+      console.log(res);
+      if (res && res.code === '200') {
+        this.stepDialogVisible = false
+        this.$message({
+          message: "修改成功",
+          type: "success"
+        });
+        this.$router.push("/worklist/inspect");
+      }
     }
   },
   created() {
-    // 类型默认选中全部
-    this.search.status = this.statusList[0].id
     this.selectInspect()
   },
 };
