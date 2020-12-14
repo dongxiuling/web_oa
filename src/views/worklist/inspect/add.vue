@@ -17,7 +17,7 @@
         <el-steps style="width: 600px" id="step-container">
           <el-step
             v-for="(item, index) in worklist.steps"
-            :title="item.name"
+            :title="item.stepName"
             :key="index"
             status="finish"
             :description="item.finishTime"
@@ -150,7 +150,9 @@
         <el-button v-else type="primary" @click="submitForm('worklist')"
           >立即创建</el-button
         >
-        <el-button @click="resetForm('worklist')">取消</el-button>
+        <el-button @click="$router.go(-1)">返回</el-button>
+
+        <!-- <el-button @click="resetForm('worklist')">取消</el-button> -->
       </el-form-item>
     </el-form>
 
@@ -179,7 +181,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="stepDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addStep">确 定</el-button>
+        <el-button type="primary" @click="addStep('step')">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -380,19 +382,31 @@ export default {
       window.open(url, "_blank");
     },
 
-    addStep() {
-      this.worklist.steps.push({
-        stepName: this.step.stepName,
-        finishTime: dateFormat("YYYY-mm-dd HH:MM:SS", this.step.finishTime)
-      })
+   addStep(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(this.step);
+          this.worklist.steps.push({
+            stepName: this.step.stepName,
+            finishTime: dateFormat("YYYY-mm-dd HH:MM:SS", this.step.finishTime)
+          })
+          this.step = {
+            stepName: '',
+            finishTime: ''
+          }
+        } else {
+          this.$message.error('请检查工作步骤是否填写完整');
+          return false;
+        }
+      });
+    },
+    handleClose() {
+      this.stepDialogVisible = false
+      // this.worklist.step = ''
       this.step = {
         stepName: '',
         finishTime: ''
       }
-    },
-    handleClose() {
-      this.stepDialogVisible = false
-      this.worklist.step = ''
     },
     addSpecial() {
       this.specialArr.push({})
