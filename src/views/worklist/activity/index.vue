@@ -30,7 +30,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="$router.push('/worklists/addAcitvity')"
+          @click="$router.push('/worklists/addActivity')"
           >添加活动类工作</el-button
         >
       </el-col>

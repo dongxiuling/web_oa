@@ -172,9 +172,9 @@ export default {
     };
   },
   methods: {
-    async selectInspect(data = { status: 0 }) {
+    async selectInspect(searchData = {}) {
       this.loading = true
-      const res = await selectInspect(data)
+      const res = await selectInspect(searchData)
       // console.log(res)
       if (res && res.code === '200') {
         const { data } = res
@@ -187,14 +187,14 @@ export default {
       this.id = id
     },
     async doDelHandle() {
-      console.log('doDelHandle');
-      // this.dialogVisible = false
-      // const res = await delInspectById(this.id)
-      // this.$message({
-      //   message: '删除成功',
-      //   type: 'success'
-      // })
-      // this.selectInspect()
+      // console.log('doDelHandle');
+      this.dialogVisible = false
+      const res = await delInspectById(this.id)
+      this.$message({
+        message: '删除成功',
+        type: 'success'
+      })
+      this.selectInspect(this.search)
     },
     onReset() {
       this.search = {
@@ -206,7 +206,7 @@ export default {
       this.selectInspect(this.search)
     },
     detailHandle({ id }) {
-      this.$router.push(`/meetings/detailRoom/${id}`)
+      this.$router.push(`/worklists/getInspectDetail/${id}`)
     },
     editHandle({ id }) {
       this.$router.push(`/meetings/addRoom/${id}`)
@@ -230,11 +230,11 @@ export default {
           finishTime: dateFormat("YYYY-mm-dd HH:MM:SS", item.finishTime)
         }))
       })
-      console.log(stepsTemp);
+      // console.log(stepsTemp);
       const res = await updateStep({
         steps: stepsTemp
       })
-      console.log(res);
+      // console.log(res);
       if (res && res.code === '200') {
         this.stepDialogVisible = false
         this.$message({

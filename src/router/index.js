@@ -239,7 +239,7 @@ export const constantRoutes = [{
       component: (resolve) => require(['@/views/file/cate/addMain'], resolve),
       name: 'fileDetail',
       meta: { title: '增加主分类' }
-    },{
+    }, {
       path: 'addMain/:id',
       component: (resolve) => require(['@/views/file/cate/addMain'], resolve),
       name: 'fileDetail',
@@ -328,37 +328,44 @@ export const constantRoutes = [{
     meta: {
       title: '创建检查类工作'
     }
-  }, 
-  // {
-  //   path: 'addCate/:id',
-  //   component: () => import('@/views/todaywork/cate/add'),
-  //   name: 'UpdateTodayworkCate',
-  //   meta: {
-  //     title: '修改工作分类'
-  //   }
-  // }, {
-  //   path: 'getCateDetail/:id',
-  //   component: () => import('@/views/todaywork/dateworklist/detail'),
-  //   name: 'TodayworkDetail',
-  //   meta: {
-  //     title: '工作详情'
-  //   }
-  // }, {
-  //   path: 'addTodaywork',
-  //   component: () => import('@/views/todaywork/add'),
-  //   name: 'AddTodaywork',
-  //   meta: {
-  //     title: '创建工作'
-  //   }
-  // }, {
-  //   path: 'addTodaywork/:id',
-  //   component: () => import('@/views/todaywork/add'),
-  //   name: 'UpdateTodaywork',
-  //   meta: {
-  //     title: '修改工作'
-  //   }
-  // }
-]
+  }, {
+    path: 'getInspectDetail/:id',
+    component: () => import('@/views/worklist/inspect/detail'),
+    name: 'InspectWorklistDetail',
+    meta: {
+      title: '专项工作详情'
+    }
+  },{
+    path: 'addActivity',
+    component: () => import('@/views/worklist/activity/add'),
+    name: 'AddActivity',
+    meta: {
+      title: '创建活动类工作'
+    }
+  }
+    // {
+    //   path: 'addCate/:id',
+    //   component: () => import('@/views/todaywork/cate/add'),
+    //   name: 'UpdateTodayworkCate',
+    //   meta: {
+    //     title: '修改工作分类'
+    //   }
+    // }, {
+    //   path: 'addTodaywork',
+    //   component: () => import('@/views/todaywork/add'),
+    //   name: 'AddTodaywork',
+    //   meta: {
+    //     title: '创建工作'
+    //   }
+    // }, {
+    //   path: 'addTodaywork/:id',
+    //   component: () => import('@/views/todaywork/add'),
+    //   name: 'UpdateTodaywork',
+    //   meta: {
+    //     title: '修改工作'
+    //   }
+    // }
+  ]
 }
 ]
 

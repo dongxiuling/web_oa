@@ -16,7 +16,7 @@ export const selectInspect = (data = {}) => request({
 
 export const delInspectById = id => {
     return request({
-        url: `/weather/delWeatherById/${id}`,
+        url: `/special/delById/${id}`,
         method: 'get'
     })
 }
@@ -40,12 +40,18 @@ export const updateStep = (data = {}) => request({
     data
 })
 
-export const selectAcitvity = () => {
+export const getInspectById = id => {
     return request({
-        url: `/special/list`,
+        url: `/special/get/${id}`,
         method: 'get'
     })
 }
+
+export const selectAcitvity = (data = {}) => request({
+    url: '/special/save',
+    method: 'post',
+    data
+})
 
 export const delAcitvityById = id => {
     return request({
