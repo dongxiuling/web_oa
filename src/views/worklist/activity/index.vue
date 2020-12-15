@@ -91,7 +91,7 @@
             icon="el-icon-delete"
             @click="delHandle(scope.row)"
             >删除工作</el-button
-          > 
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -113,15 +113,49 @@
         <el-button type="primary" @click="doDelHandle">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="修改步骤"
+      :visible.sync="stepDialogVisible"
+      width="500px"
+      :before-close="handleClose"
+    >
+      <el-form ref="stepsForm" :inline="true">
+        <el-form-item
+          v-for="(step, index) in steps"
+          :key="index"
+          :label="index + 1 + ''"
+          prop="step"
+        >
+          <el-input
+            v-model="step.stepName"
+            placeholder="请输入工作名称"
+            style="width: 120px"
+          />
+          <el-date-picker
+            v-model="step.finishTime"
+            type="datetime"
+            placeholder="请选择步骤完成时间"
+            style="width: 240px"
+          ></el-date-picker>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="stepDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateStep">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
   selectAcitvity,
-  delAcitvityById
+  delWorklistById,
+  getStep,
+  updateStep
 } from '@/api/worklist'
-
+import { dateFormat } from "@/utils/format";
 export default {
   data() {
     return {
@@ -131,7 +165,9 @@ export default {
       },
       dialogVisible: false,
       id: null,
-      loading: false
+      loading: false,
+      stepDialogVisible: false, // 添加步骤dialog
+      steps: []
     };
   },
   methods: {
@@ -150,14 +186,13 @@ export default {
       this.id = id
     },
     async doDelHandle() {
-      console.log('doDelHandle');
-      // this.dialogVisible = false
-      // const res = await delAcitvityById(this.id)
-      // this.$message({
-      //   message: '删除成功',
-      //   type: 'success'
-      // })
-      // this.selectAcitvity()
+      this.dialogVisible = false
+      const res = await delWorklistById(this.id)
+      this.$message({
+        message: '删除成功',
+        type: 'success'
+      })
+      this.selectAcitvity()
     },
     onReset() {
       this.search = {
@@ -169,13 +204,42 @@ export default {
       this.selectAcitvity(this.search)
     },
     detailHandle({ id }) {
-      this.$router.push(`/meetings/detailRoom/${id}`)
+      this.$router.push(`/worklists/getActivityDetail/${id}`)
     },
     editHandle({ id }) {
       this.$router.push(`/meetings/addRoom/${id}`)
     },
-    editStepHandle({ id }) {
-
+    async editStepHandle({ id }) {
+      this.stepDialogVisible = true
+      const res = await getStep(id)
+      if (res && res.code && res.code === '200') {
+        this.steps = res.data
+      }
+    },
+    handleClose() {
+      this.stepDialogVisible = false
+    },
+    async updateStep() {
+      const stepsTemp = []
+      this.steps.forEach(item => {
+        stepsTemp.push(Object.assign(item, {
+          stepName: item.stepName,
+          finishTime: dateFormat("YYYY-mm-dd HH:MM:SS", item.finishTime)
+        }))
+      })
+      // console.log(stepsTemp);
+      const res = await updateStep({
+        steps: stepsTemp
+      })
+      // console.log(res);
+      if (res && res.code === '200') {
+        this.stepDialogVisible = false
+        this.$message({
+          message: "修改成功",
+          type: "success"
+        });
+        this.$router.push("/worklist/activity");
+      }
     }
   },
   created() {

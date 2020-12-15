@@ -11,10 +11,13 @@ export const saveInspect = (data = {}) => request({
 export const selectInspect = (data = {}) => request({
     url: '/special/list',
     method: 'post',
-    data
+    data: {
+        ...data,
+        type: 0
+    }
 })
 
-export const delInspectById = id => {
+export const delWorklistById = id => {
     return request({
         url: `/special/delById/${id}`,
         method: 'get'
@@ -48,14 +51,23 @@ export const getInspectById = id => {
 }
 
 export const selectAcitvity = (data = {}) => request({
-    url: '/special/save',
+    url: '/special/list',
+    method: 'post',
+    data: {
+        ...data,
+        type: 1
+    }
+})
+
+export const saveActivity = (data = {}) => request({
+    url: '/special/saveActivity',
     method: 'post',
     data
 })
 
-export const delAcitvityById = id => {
+export const getActivityById = id => {
     return request({
-        url: `/weather/delWeatherById/${id}`,
+        url: `/special/getActivity/${id}`,
         method: 'get'
     })
 }

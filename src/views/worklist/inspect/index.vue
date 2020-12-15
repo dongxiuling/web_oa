@@ -151,7 +151,7 @@
 <script>
 import {
   selectInspect,
-  delInspectById,
+  delWorklistById,
   getStep,
   updateStep
 } from '@/api/worklist'
@@ -189,7 +189,7 @@ export default {
     async doDelHandle() {
       // console.log('doDelHandle');
       this.dialogVisible = false
-      const res = await delInspectById(this.id)
+      const res = await delWorklistById(this.id)
       this.$message({
         message: '删除成功',
         type: 'success'

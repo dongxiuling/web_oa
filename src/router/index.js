@@ -345,12 +345,19 @@ export const constantRoutes = [{
     meta: {
       title: '专项工作详情'
     }
-  },{
+  }, {
     path: 'addActivity',
     component: () => import('@/views/worklist/activity/add'),
     name: 'AddActivity',
     meta: {
       title: '创建活动类工作'
+    }
+  }, {
+    path: 'getActivityDetail/:id',
+    component: () => import('@/views/worklist/activity/detail'),
+    name: 'ActivityWorklistDetail',
+    meta: {
+      title: '专项工作详情'
     }
   }
     // {
