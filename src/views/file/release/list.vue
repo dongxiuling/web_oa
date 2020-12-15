@@ -1,21 +1,14 @@
 <template>
   <div class="app-container">
-    <div class="main-tabs">
-      <ul class="main-tabs-right">
-        <li class="search-box">
-          <el-input
-            v-model="searchText"
-            size="medium"
-            clearable
-            @clear="clearInp"
-            placeholder="请输入搜索内容"
-          >
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
-          </el-input>
-        </li>
-        <li class="export-btn" @click="searchTitle">搜索</li>
-      </ul>
-    </div>
+    <el-form ref="queryForm" :inline="true">
+      <el-form-item label="法规名称">
+        <el-input placeholder="请输入法规名称" v-model="searchText" @clear="clearInp" clearable size="small" />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="searchTitle">搜索</el-button>
+      </el-form-item>
+    </el-form>
+    
     <div class="content">
       <el-table
         @row-click="checkLine"
@@ -92,7 +85,7 @@ export default {
     //单行选中
     checkLine(row) {
       this.$router.push({
-        path: "/lawdetail/" + row.id,
+        path: "/release/lawdetail/" + row.id,
       });
     },
     // 获取法规列表数据
@@ -136,7 +129,7 @@ export default {
     // 查看详情
     showDetail(_data) {
       this.$router.push({
-        path: "/lawdetail/" + _data.id,
+        path: "/release/lawdetail/" + _data.id,
       });
     },
   },
