@@ -125,6 +125,7 @@
                 >
                 </el-table-column>
               </el-table>
+              <div>关联连队：</div>
               <el-tree
                 :data="deptTree"
                 show-checkbox

@@ -40,13 +40,18 @@
         <el-tabs type="border-card" style="width: 920px">
           <el-tab-pane label="普通检查项">
             <!-- 文件预览 -->
-            <el-table :data="commonTableData" fit stripe style="width: 100%">
+            <el-table
+              :data="commonTableData"
+              fit
+              stripe
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column
                 v-for="(item, index) in commonColumns"
                 :key="index"
                 :prop="item.enName"
                 :label="item.cnName"
-                width="180"
               >
               </el-table-column>
             </el-table>
@@ -101,19 +106,31 @@ export default {
     return {
       worklist: {},
       commonTableData: [],
-      commonColumns: []
+      commonColumns: [],
+      loading: false
     }
   },
   async mounted() {
+    this.loading = true
     const id = this.$route.params.id
     const res = await getInspectById(id)
     if (res && res.code === '200') {
       this.worklist = res.data
-      const { values, columns } = JSON.parse(res.data.commonJson)
-      //   console.log(commonJson);
-      this.commonTableData = values
-      this.commonColumns = columns
+      // 普通检查项
+      if (res.data && res.data.commonJson) {
+        const { values, columns } = JSON.parse(res.data.commonJson)
+        this.commonTableData = values
+        this.commonColumns = columns
+      }
 
+
+      // 特殊检查项
+      if (res.data && res.data.specialFiles && res.data.specialFiles.length) {
+
+      }
+
+
+      this.loading = false
     }
     console.log(res);
   }

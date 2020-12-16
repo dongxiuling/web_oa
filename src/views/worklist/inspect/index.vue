@@ -42,6 +42,7 @@
       :data="workList"
       tooltip-effect="dark"
       style="width: 100%"
+      @row-click="detailHandle"
     >
       <!-- <el-table-column type="selection" width="55"></el-table-column> -->
       <el-table-column align="center" label="序号" width="50px" type="index">
@@ -62,21 +63,28 @@
         prop="remark"
         label="工作内容"
       ></el-table-column>
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="340px">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-tickets"
-            @click="detailHandle(scope.row)"
+            @click.stop="detailHandle(scope.row)"
             >查看详情</el-button
           >
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-s-tools"
+            @click.stop="queryScore(scope.row)"
+            >结果录入</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
-            @click="editStepHandle(scope.row)"
-            >修改工作步骤</el-button
+            @click.stop="editStepHandle(scope.row)"
+            >修改步骤</el-button
           >
           <!-- <el-button
             size="mini"
@@ -89,7 +97,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click="delHandle(scope.row)"
+            @click.stop="delHandle(scope.row)"
             >删除工作</el-button
           >
         </template>
@@ -243,6 +251,9 @@ export default {
         });
         this.$router.push("/worklist/inspect");
       }
+    },
+    queryScore({ id }) {
+      this.$router.push(`/worklist/score/${id}`);
     }
   },
   created() {

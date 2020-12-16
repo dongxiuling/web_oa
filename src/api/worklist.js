@@ -50,6 +50,12 @@ export const getInspectById = id => {
     })
 }
 
+export const queryScore = (data = {}) => request({
+    url: '/special/queryScore',
+    method: 'post',
+    data
+})
+
 export const selectAcitvity = (data = {}) => request({
     url: '/special/list',
     method: 'post',

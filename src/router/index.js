@@ -359,6 +359,13 @@ export const constantRoutes = [{
     meta: {
       title: '专项工作详情'
     }
+  }, {
+    path: '/worklist/score/:id',
+    component: () => import('@/views/worklist/inspect/score'),
+    name: 'InspectWorklistScore',
+    meta: {
+      title: '结果录入'
+    }
   }
     // {
     //   path: 'addCate/:id',
