@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-tabs type="border-card" style="width: 920px">
+    <el-tabs type="border-card" style="width: 1080px">
       <el-tab-pane
         :label="item.deptName"
         v-for="(item, index) in this.detail"
@@ -13,28 +13,36 @@
           fit
           stripe
           style="width: 100%"
-          v-loading="loading"
+          v-loading="loading">
         >
           <el-table-column
             v-for="(item, columnsIndex) in common[index].columns"
             :key="columnsIndex"
             :prop="item.enName"
             :label="item.cnName"
+            align="center"
           >
           </el-table-column>
-          <el-table-column label="状态" width="180" align="center">
+          <el-table-column label="状态" width="180" align="center" fixed="right">
             <template slot-scope="scope">
+              <!-- v-model="commonScore[(index* common[index].values.length + scope.$index)].status" -->
+              <!-- :active-text="
+                  '合格' + common[index].commonScore[scope.$index].status
+                " -->
               <el-switch
-                v-model="status"
+                v-model="common[index].commonScore[scope.$index].status"
                 active-text="合格"
                 inactive-text="不合格"
               >
               </el-switch>
             </template>
           </el-table-column>
-          <el-table-column label="备注" width="180" align="center">
+          <el-table-column label="备注" width="220" align="center" fixed="right">
             <template slot-scope="scope">
-              <el-input></el-input>
+              <!-- v-model="commonScore[(index* common[index].values.length + scope.$index)].remark" -->
+              <el-input
+                v-model="common[index].commonScore[scope.$index].remark"
+              ></el-input>
             </template>
           </el-table-column>
         </el-table>
@@ -56,28 +64,31 @@
               :key="columnsIndex"
               :prop="item.enName"
               :label="item.cnName"
+              align="center"
             >
             </el-table-column>
             <el-table-column label="状态" width="180" align="center">
               <template slot-scope="scope">
+                <!-- :active-text="'合格'+ spec.specialScore[scope.$index].status" -->
                 <el-switch
-                  v-model="status"
+                  v-model="spec.specialScore[scope.$index].status"
                   active-text="合格"
                   inactive-text="不合格"
                 >
                 </el-switch>
               </template>
             </el-table-column>
-            <el-table-column label="备注" width="180" align="center">
+            <el-table-column label="备注" width="220" align="center">
               <template slot-scope="scope">
-                <el-input></el-input>
+                <el-input v-model="spec.specialScore[scope.$index].remark"></el-input>
               </template>
             </el-table-column>
           </el-table>
         </div>
-        <div v-else style="margin: 10px 0;">无</div>
-
-        <el-button type="primary" @click="submitResult()"
+        <div v-else style="margin: 10px 0">无</div>
+        <el-button
+          type="primary"
+          @click="submitResult(item, common[index], special[index])"
           >提交该连队结果</el-button
         >
         <el-button @click="$router.go(-1)">返回上个页面</el-button>
@@ -98,39 +109,61 @@ export default {
       detail: [],
       common: [],
       special: [],
-      status: true
+      status: true,
+      commonScore: []
     }
   },
   methods: {
     async queryScoreHandler() {
       this.loading = true
       const res = await queryScore({ specialWorkId: this.id })
-      console.log(res);
+      // console.log(res);
       if (res && res.code === '200') {
         this.detail = res.data
-        res.data.forEach(item => {
+        res.data.forEach((item, index) => {
           const { columns: commonColumns, values: commonValues } = JSON.parse(item.commonJson)
+          const commonScore = []
+          commonValues.forEach(item => {
+            commonScore.push({
+              status: true,
+              remark: ''
+            })
+          })
+
           this.common.push({
             columns: commonColumns,
-            values: commonValues
+            values: commonValues,
+            commonScore
           })
+
           const { specialFiles } = item
           const s = []
           specialFiles.forEach(item => {
             const { columns: specialColumns, values: specialValues } = JSON.parse(item.specialJson)
+            const specialScore = []
+            specialValues.forEach(item => {
+              specialScore.push({
+                status: true,
+                remark: ''
+              })
+            })
             s.push({
               columns: specialColumns,
-              values: specialValues
+              values: specialValues,
+              specialScore
             })
           })
           this.special.push(s)
         })
-        console.log(this.special);
+        console.log(this.detail);
+        // console.log(this.special);
       }
       this.loading = false
     },
-    submitResult() {
-
+    submitResult(item, common, special) {
+      console.log(item);
+      console.log(common);
+      console.log(special);
     }
   },
   async mounted() {
