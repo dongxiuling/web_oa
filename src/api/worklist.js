@@ -56,6 +56,12 @@ export const queryScore = (data = {}) => request({
     data
 })
 
+export const makeScore = (data = {}) => request({
+    url: '/special/makeScore',
+    method: 'post',
+    data
+})
+
 export const selectAcitvity = (data = {}) => request({
     url: '/special/list',
     method: 'post',
