@@ -37,57 +37,110 @@
       </el-form-item>
 
       <el-form-item label="工作检查项" prop="content">
-        <el-tabs type="border-card" style="width: 920px">
-          <el-tab-pane label="普通检查项">
-            <!-- 文件预览 -->
+        <el-tabs type="border-card" style="width: 1080px">
+          <el-tab-pane
+            :label="item.deptName"
+            v-for="(item, index) in this.detail"
+            :key="index"
+          >
+            <div style="margin-bottom: 10px">普通检查项</div>
             <el-table
-              :data="commonTableData"
+              v-if="common && common[index]"
+              :data="common[index].values"
               fit
               stripe
               style="width: 100%"
               v-loading="loading"
             >
+              >
               <el-table-column
-                v-for="(item, index) in commonColumns"
-                :key="index"
+                v-for="(item, columnsIndex) in common[index].columns"
+                :key="columnsIndex"
                 :prop="item.enName"
                 :label="item.cnName"
+                align="center"
               >
               </el-table-column>
+              <el-table-column
+                label="状态"
+                width="180"
+                align="center"
+                fixed="right"
+              >
+                <template slot-scope="scope">
+                  <!-- v-model="commonScore[(index* common[index].values.length + scope.$index)].status" -->
+                  <!-- :active-text="
+                  '合格' + common[index].commonScore[scope.$index].status
+                " -->
+                  <el-switch
+                    v-model="common[index].commonScore[scope.$index].status"
+                    active-text="合格"
+                    inactive-text="不合格"
+                    disabled
+                  >
+                  </el-switch>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="备注"
+                width="220"
+                align="center"
+                fixed="right"
+              >
+                <template slot-scope="scope">
+                  <!-- v-model="commonScore[(index* common[index].values.length + scope.$index)].remark" -->
+                  <el-input
+                    v-model="common[index].commonScore[scope.$index].remark"
+                    disabled
+                  ></el-input>
+                </template>
+              </el-table-column>
             </el-table>
-          </el-tab-pane>
-          <!-- <el-tab-pane label="特殊检查项">
-            <el-card
-              v-for="(item, index) in specialArr"
-              :key="index"
-              class="special-card"
-            >
+
+            <div style="margin: 10px 0">特殊检查项</div>
+
+            <div v-if="special && special[index] && special[index].length > 0">
               <el-table
-                :data="specialTable[index].specialTableData"
+                v-for="(spec, specIndex) in special[index]"
+                :key="specIndex"
+                :data="spec.values"
                 fit
                 stripe
-                style="width: 100%"
+                style="width: 100%; margin-bottom: 10px"
+                v-loading="loading"
               >
                 <el-table-column
-                  v-for="(sItem, sIndex) in specialTable[index].specialColumns"
-                  :key="sIndex"
-                  :prop="sItem.enName"
-                  :label="sItem.cnName"
+                  v-for="(item, columnsIndex) in spec.columns"
+                  :key="columnsIndex"
+                  :prop="item.enName"
+                  :label="item.cnName"
+                  align="center"
                 >
                 </el-table-column>
+                <el-table-column label="状态" width="180" align="center">
+                  <template slot-scope="scope">
+                    <!-- :active-text="'合格'+ spec.specialScore[scope.$index].status" -->
+                    <el-switch
+                      v-model="spec.specialScore[scope.$index].status"
+                      active-text="合格"
+                      inactive-text="不合格"
+                      disabled
+                    >
+                    </el-switch>
+                  </template>
+                </el-table-column>
+                <el-table-column label="备注" width="220" align="center">
+                  <template slot-scope="scope">
+                    <el-input
+                      v-model="spec.specialScore[scope.$index].remark"
+                      disabled
+                    ></el-input>
+                  </template>
+                </el-table-column>
               </el-table>
-              <el-tree
-                :data="deptTree"
-                show-checkbox
-                node-key="id"
-                :ref="'tree' + index"
-                :props="defaultProps"
-                @check="getCheckedNodes(index)"
-                :default-checked-keys="specialUserIdsArr[index]"
-                :filter-node-method="filterNode"
-              ></el-tree>
-            </el-card>
-          </el-tab-pane> -->
+            </div>
+            <div v-else style="margin: 10px 0">无</div>
+          </el-tab-pane>
         </el-tabs>
       </el-form-item>
       <el-form-item>
@@ -99,40 +152,99 @@
 
 <script>
 import {
-  getInspectById
+  getInspectById,
+  queryScore
 } from '@/api/worklist'
 export default {
   data() {
     return {
+      id: null,
       worklist: {},
       commonTableData: [],
       commonColumns: [],
-      loading: false
+      loading: false,
+      detail: [],
+      common: [],
+      special: []
     }
+  },
+  methods: {
+    async queryScoreHandler() {
+      this.common = []
+      this.special = []
+      const res = await queryScore({ specialWorkId: this.id })
+      if (res && res.code === '200') {
+        this.detail = res.data
+        res.data.forEach((item, index) => {
+          const { columns: commonColumns, values: commonValues } = JSON.parse(item.commonJson)
+          const commonScore = []
+          commonValues.forEach((cv, index) => {
+            // 如果已经打过分，直接读取
+            if (item.commonScores && item.commonScores.length > 0) {
+              commonScore.push({
+                status: item.commonScores[index].colStatusValue == '合格' ? true : false,
+                remark: item.commonScores[index].colRemarkValue
+              })
+            } else {
+              commonScore.push({
+                status: true,
+                remark: ''
+              })
+            }
+          })
+          this.common.push({
+            columns: commonColumns,
+            values: commonValues,
+            commonScore
+          })
+
+          const { specialFiles } = item
+          const s = []
+          specialFiles.forEach(sf => {
+            const { columns: specialColumns, values: specialValues } = JSON.parse(sf.specialJson)
+            const specialScore = []
+            specialValues.forEach((sv, index) => {
+              if (sf.scores && sf.scores.length > 0) {
+                specialScore.push({
+                  status: sf.scores[index].colStatusValue == '合格' ? true : false,
+                  remark: sf.scores[index].colRemarkValue
+                })
+              } else {
+                specialScore.push({
+                  status: true,
+                  remark: ''
+                })
+              }
+            })
+            s.push({
+              columns: specialColumns,
+              values: specialValues,
+              specialScore
+            })
+          })
+          this.special.push(s)
+        })
+        // console.log(this.detail);
+      }
+    },
   },
   async mounted() {
     this.loading = true
-    const id = this.$route.params.id
-    const res = await getInspectById(id)
-    if (res && res.code === '200') {
-      this.worklist = res.data
-      // 普通检查项
-      if (res.data && res.data.commonJson) {
-        const { values, columns } = JSON.parse(res.data.commonJson)
-        this.commonTableData = values
-        this.commonColumns = columns
+    this.id = this.$route.params.id
+    if (this.id) {
+      const res = await getInspectById(this.id)
+      if (res && res.code === '200') {
+        this.worklist = res.data
       }
-
-
-      // 特殊检查项
-      if (res.data && res.data.specialFiles && res.data.specialFiles.length) {
-
-      }
-
-
-      this.loading = false
+      await this.queryScoreHandler()
+    } else {
+      this.$message({
+        message: "读取失败",
+        type: "error"
+      });
     }
-    console.log(res);
+
+    this.loading = false
   }
 }
 </script>
