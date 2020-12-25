@@ -367,29 +367,27 @@ export const constantRoutes = [{
       title: '结果录入'
     }
   }
-    // {
-    //   path: 'addCate/:id',
-    //   component: () => import('@/views/todaywork/cate/add'),
-    //   name: 'UpdateTodayworkCate',
-    //   meta: {
-    //     title: '修改工作分类'
-    //   }
-    // }, {
-    //   path: 'addTodaywork',
-    //   component: () => import('@/views/todaywork/add'),
-    //   name: 'AddTodaywork',
-    //   meta: {
-    //     title: '创建工作'
-    //   }
-    // }, {
-    //   path: 'addTodaywork/:id',
-    //   component: () => import('@/views/todaywork/add'),
-    //   name: 'UpdateTodaywork',
-    //   meta: {
-    //     title: '修改工作'
-    //   }
-    // }
+
   ]
+}, {
+  path: '/outsiders',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addOutsider',
+    component: () => import('@/views/outsider/add'),
+    name: 'AddOutsider',
+    meta: {
+      title: '外来人员登记'
+    }
+  }, {
+    path: 'addOutsider/:id',
+    component: () => import('@/views/outsider/add'),
+    name: 'UpdateOutsider',
+    meta: {
+      title: '修改登记信息'
+    }
+  }]
 }
 ]
 
