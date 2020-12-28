@@ -387,6 +387,13 @@ export const constantRoutes = [{
     meta: {
       title: '修改登记信息'
     }
+  }, {
+    path: 'getOutsiderDetail/:id',
+    component: () => import('@/views/outsider/list/detail'),
+    name: 'TodayworkDetail',
+    meta: {
+      title: '外来人员信息详情'
+    }
   }]
 }
 ]

@@ -40,9 +40,18 @@
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
       <el-table-column prop="title" label="来访事由"></el-table-column>
-      <el-table-column prop="persons" label="来访人"></el-table-column>
+      <el-table-column prop="name" label="来访人"></el-table-column>
       <el-table-column prop="contacts" label="对接人"></el-table-column>
-      <el-table-column prop="time" label="来访时段"></el-table-column>
+      <el-table-column
+        prop="time"
+        width="180"
+        label="来访时段"
+      ></el-table-column>
+      <el-table-column
+        prop="createTime"
+        width="180"
+        label="创建时间"
+      ></el-table-column>
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
           <el-button
@@ -128,11 +137,8 @@ export default {
       // console.log(res);
       if (res.code === '200' && res.data) {
         this.list = res.data.records;
-        res.data.records.map((item, index) => {
+        res.data.records && res.data.records.map((item, index) => {
           this.list[index].time = item.startTime + ' 至 ' + item.endTime
-          item.persons.map(p => {
-            this.list[index].persons = p.name + ' '
-          })
         })
 
         this.total = res.data.total;
@@ -143,8 +149,7 @@ export default {
       this.getData();
     },
     reSetHandle() {
-      this.search.title = "";
-      this.search.cateId = 0;
+      this.search.name = "";
       this.getData();
     },
     handleCurrentChange(value) {
@@ -152,7 +157,7 @@ export default {
       this.getData();
     },
     lookHandle({ id }) {
-      this.$router.push(`/todayworks/getCateDetail/${id}`)
+      this.$router.push(`/outsiders/getOutsiderDetail/${id}`)
     },
     editHandle({ id }) {
       this.$router.push(`/todayworks/addTodaywork/${id}`)
@@ -164,11 +169,20 @@ export default {
     async doDelHandle() {
       this.dialogVisible = false
       const res = await delOutsiderById(this.id)
-      this.$message({
-        message: '删除成功',
-        type: 'success'
-      })
-      this.getData()
+      console.log(res);
+      if (res.code == 200) {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getData()
+      } else {
+        this.$message({
+          message: '删除失败',
+          type: 'error'
+        })
+      }
+
     },
   },
   mounted() {

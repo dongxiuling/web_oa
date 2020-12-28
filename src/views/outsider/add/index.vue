@@ -240,6 +240,7 @@ export default {
           name: "",
           isChange: false,
         },
+        url: ''
       })
     },
     addCarInfo() {
@@ -261,6 +262,7 @@ export default {
         name: args[0],
         isChange: true
       }
+      this.outsider.persons[index].url = args[1]
     },
     // 下载或预览操作
     async openTabWin(url, type) {
