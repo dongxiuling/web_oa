@@ -51,7 +51,7 @@
           <el-option :value="4" label="每季度提醒"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item v-if="file.cycle!=1" label="周期性提醒截止时间">
+      <el-form-item v-if="file.cycle != 1" label="周期性提醒截止时间">
         <el-date-picker
           v-model="file.endTime"
           type="datetime"
@@ -59,7 +59,7 @@
           style="width: 300px"
         ></el-date-picker>
       </el-form-item>
-      <el-form-item  label="落实截止时间" prop="finishTime">
+      <el-form-item label="落实截止时间" prop="finishTime">
         <el-date-picker
           v-model="file.finishTime"
           type="datetime"
@@ -67,7 +67,7 @@
           style="width: 300px"
         ></el-date-picker>
       </el-form-item>
-      
+
       <!-- <el-form-item label="法规级别" prop="level">
         <el-select v-model="file.level" placeholder="请选择法规级别">
           <el-option v-for="(item,index) in levels" :key="index" :label="item" :value="index+1"></el-option>
@@ -235,7 +235,9 @@ export default {
       // 验证 是否上传文件
       if (this.file.name) {
         this.file.finishTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.file.finishTime))
-        this.file.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.file.endTime))
+        if (this.file.endTime) {
+          this.file.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.file.endTime))
+        }
         fileSave(this.file).then(res => {
           this.$message({
             message: "添加成功",
