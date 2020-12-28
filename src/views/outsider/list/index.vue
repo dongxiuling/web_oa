@@ -59,7 +59,7 @@
             type="text"
             icon="el-icon-tickets"
             @click="lookHandle(scope.row)"
-            >查看详情</el-button
+            >来访详情</el-button
           >
           <el-button
             size="mini"
@@ -160,7 +160,7 @@ export default {
       this.$router.push(`/outsiders/getOutsiderDetail/${id}`)
     },
     editHandle({ id }) {
-      this.$router.push(`/todayworks/addTodaywork/${id}`)
+      this.$router.push(`/outsiders/addOutsider/${id}`)
     },
     delHandle({ id }) {
       this.dialogVisible = true

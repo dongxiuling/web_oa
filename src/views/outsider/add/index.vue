@@ -58,12 +58,21 @@
               </el-row>
             </div>
             <el-form-item label="附件">
+              <!-- :change="item.file.isChange" -->
+              <!-- :name="item.file.name" -->
+
               <Uploader
                 v-on:getFile="getFileUrl(arguments, index)"
-                :change="item.file.isChange"
-                :name="item.file.name"
                 style="width: 94%"
               ></Uploader>
+              <el-button
+                @click="openTabWin(item.url, 'view')"
+                v-if="id"
+                icon="el-icon-view"
+                size="small"
+                type="primary"
+                >预览文件</el-button
+              >
             </el-form-item>
 
             <el-tooltip
@@ -143,7 +152,7 @@
         <el-button v-else type="primary" @click="submitForm('outsider')"
           >立即创建</el-button
         >
-        <el-button @click="resetForm('outsider')">取消</el-button>
+        <el-button @click="$router.go(-1)">返回</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -157,7 +166,7 @@ import { dateFormat } from "@/utils/format";
 export default {
   data() {
     return {
-      id: this.$route.query.id,
+      id: null,
       outsider: {
         time: '',
         title: '',
@@ -223,11 +232,6 @@ export default {
         console.error(res)
       }
     },
-    getFileById(id) {
-      getFileById({ id }).then(res => {
-        this.file = res.data;
-      });
-    },
     addPeopleInfo() {
       this.outsider.persons.push({
         name: '',
@@ -238,7 +242,7 @@ export default {
           readUrl: "http://www.rr.cc",
           type: "regulatory_documents",
           name: "",
-          isChange: false,
+          // isChange: false,
         },
         url: ''
       })
@@ -260,27 +264,28 @@ export default {
         url: args[1],
         readUrl: args[2],
         name: args[0],
-        isChange: true
+        // isChange: true
       }
       this.outsider.persons[index].url = args[1]
     },
     // 下载或预览操作
     async openTabWin(url, type) {
-      if (type == "view") {
-        await readFile({ id: this.file.id })
-      } else if (type = "download") {
-        await downLoadFile({ id: this.file.id })
-      }
+      // if (type == "view") {
+      //   await readFile({ id: this.file.id })
+      // } else if (type = "download") {
+      //   await downLoadFile({ id: this.file.id })
+      // }
       window.open(url, "_blank");
     },
   },
   async mounted() {
-    const { id } = this.$route.params
-    if (id) { // 修改
-      const res = await getOutsiderById(id)
-      //   console.log(res)
+    this.id = this.$route.params.id
+    if (this.id) { // 修改
+      const res = await getOutsiderById(this.id)
+      console.log(res)
       if (res && res.code === '200') {
         this.outsider = res.data
+        this.outsider.time = [this.outsider.startTime, this.outsider.endTime]
       }
     }
 

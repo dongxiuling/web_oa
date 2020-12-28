@@ -390,7 +390,7 @@ export const constantRoutes = [{
   }, {
     path: 'getOutsiderDetail/:id',
     component: () => import('@/views/outsider/list/detail'),
-    name: 'TodayworkDetail',
+    name: 'OutsiderDetail',
     meta: {
       title: '外来人员信息详情'
     }

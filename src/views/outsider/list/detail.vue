@@ -8,19 +8,19 @@
       >
         <el-form
           ref="form"
-          :model="todaywork"
+          :model="outsider"
           label-width="100px"
           size="medium"
         >
-          <el-form-item label="联系人：">{{ todaywork.contacts }}</el-form-item>
-          <el-form-item label="来访事由：">{{ todaywork.title }}</el-form-item>
+          <el-form-item label="联系人：">{{ outsider.contacts }}</el-form-item>
+          <el-form-item label="来访事由：">{{ outsider.title }}</el-form-item>
           <el-form-item label="来访时段"
-            >{{ todaywork.startTime }} 至 {{ todaywork.endTime }}</el-form-item
+            >{{ outsider.startTime }} 至 {{ outsider.endTime }}</el-form-item
           >
           <el-form-item label="来访人员：">
             <div
               class="out-item"
-              v-for="(obj, index) in todaywork.persons"
+              v-for="(obj, index) in outsider.persons"
               :key="index"
             >
               姓名：{{
@@ -44,15 +44,15 @@
           <el-form-item label="来访车辆：">
             <span
               class="out-item"
-              v-for="(obj, index) in todaywork.cars"
+              v-for="(obj, index) in outsider.cars"
               :key="index"
               >{{ obj.carNum }}</span
             >
           </el-form-item>
-          <el-form-item label="备注:">{{ todaywork.remark }}</el-form-item>
+          <el-form-item label="备注:">{{ outsider.remark }}</el-form-item>
 
           <el-form-item label="来访记录:">
-            <div v-for="(item, index) in todaywork.records" :key="index">
+            <div v-for="(item, index) in outsider.records" :key="index">
               <span v-if="item.type == 1">
                 <el-tag type="danger">进入</el-tag>
               </span>
@@ -87,7 +87,7 @@ export default {
     async getListDetail() {
       const res = await getOutsiderById(this.id);
       if (res.code === "200") {
-        this.todaywork = res.data;
+        this.outsider = res.data;
         this.fullscreenLoading = false;
       }
     },
