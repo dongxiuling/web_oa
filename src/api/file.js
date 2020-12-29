@@ -11,8 +11,11 @@ export function addContent(data) {
 // 根据法规名称获取法规列表
 export function getByTitle(title) {
     return request({
-        url: '/rawrule/getRaw/'+title,
-        method: 'get'
+        url: '/rawrule/getRaw',
+        method: 'post',
+        data:{
+            name:title
+        }
     })
 }
 // 获取法规列表
