@@ -263,7 +263,8 @@ export default {
           userIds.push(item.id)
         }
       });
-      this.specialUserIdsArr.push(userIds)
+      // this.specialUserIdsArr.push(userIds)
+      this.specialUserIdsArr[index] = userIds
     },
     /** 查询部门树结构 */
     getDeptTreeselect() {
@@ -344,10 +345,15 @@ export default {
       }
     },
     async getFileUrlSpecial(args, index) {
-      this.specialUrlArr.push({
+      // this.specialUrlArr.push({
+      //   fileUrl: args[1],
+      //   isChangeSpecial: true
+      // })
+      this.specialUrlArr[index] = {
         fileUrl: args[1],
         isChangeSpecial: true
-      })
+      }
+
 
       // this.worklist.specialFileUrl = args[1];
       // this.worklist.readUrlSpecial = args[2];
@@ -383,7 +389,7 @@ export default {
       window.open(url, "_blank");
     },
 
-   addStep(formName) {
+    addStep(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this.step);
