@@ -15,7 +15,8 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="法规内容" prop="title">
-        <tinymce v-model="form.content" :height="300" />
+        <!-- <tinymce v-model="form.content" :height="300" /> -->
+        <VueUeditorWrap :config="myConfig" v-model="form.content" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')"
@@ -28,13 +29,26 @@
 </template>
 
 <script>
-import Tinymce from "@/components/Tinymce/index";
+// import Tinymce from "@/components/Tinymce/index";
+import VueUeditorWrap from "vue-ueditor-wrap";
 import { addContent } from "@/api/file";
 import { encode, decode } from 'js-base64';
 export default {
   data() {
     return {
       form: {},
+      myConfig: {
+        elementPathEnabled: false,
+        wordCount: false, //是否开启字数统计
+        // 初始容器高度
+        initialFrameHeight: 380,
+        // 初始容器宽度
+        initialFrameWidth: "100%",
+        // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
+        serverUrl: "http://www.gxxmglzx.com/tender/ueditor/controller.php",
+        // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
+        UEDITOR_HOME_URL: process.env.BASE_URL + "UEditor/"
+      },
       rules: {
         title: [{ required: true, message: "请输入法规名称", trigger: "blur" }],
         desc: [{ required: true, message: "请输入法规简介", trigger: "blur" }],
@@ -72,7 +86,10 @@ export default {
   },
   //生命周期 - 创建完成（访问当前this实例）
   mounted() {},
-  components: { Tinymce },
+  components: { 
+    // Tinymce,
+    VueUeditorWrap 
+    },
 };
 </script>
 <style scoped>
