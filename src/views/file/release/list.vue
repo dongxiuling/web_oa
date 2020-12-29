@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
-      <el-form-item label="法规名称">
-        <el-input placeholder="请输入法规名称" v-model="searchText" @clear="clearInp" clearable size="small" />
+      <el-form-item label="搜索内容">
+        <el-input placeholder="可根据名称及简介搜索" v-model="searchText" @clear="clearInp" clearable size="small" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="searchTitle">搜索</el-button>

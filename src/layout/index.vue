@@ -12,12 +12,12 @@
         <settings />
       </right-panel>
     </div>
-    <MsgSocket/>
+    <!-- <MsgSocket/> -->
   </div>
 </template>
 
 <script>
-import MsgSocket from '@/components/WebSocket'
+// import MsgSocket from '@/components/WebSocket'
 import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
@@ -35,7 +35,7 @@ export default {
     Settings,
     Sidebar,
     TagsView,
-    MsgSocket
+    // MsgSocket
   },
   mixins: [ResizeMixin],
   computed: {
