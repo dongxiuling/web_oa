@@ -72,13 +72,16 @@
                   <!-- :active-text="
                   '合格' + common[index].commonScore[scope.$index].status
                 " -->
-                  <el-switch
+                  <!-- <el-switch
                     v-model="common[index].commonScore[scope.$index].status"
                     active-text="合格"
                     inactive-text="不合格"
                     disabled
                   >
-                  </el-switch>
+                  </el-switch> -->
+                  <el-tag v-if="common[index].commonScore[scope.$index].status == '合格'" type="success">合格</el-tag>
+                  <el-tag v-else-if="common[index].commonScore[scope.$index].status == '不合格'" type="danger">不合格</el-tag>
+                  <el-tag  v-else type="info">未评分</el-tag>
                 </template>
               </el-table-column>
               <el-table-column
@@ -120,13 +123,16 @@
                 <el-table-column label="状态" width="180" align="center">
                   <template slot-scope="scope">
                     <!-- :active-text="'合格'+ spec.specialScore[scope.$index].status" -->
-                    <el-switch
+                    <!-- <el-switch
                       v-model="spec.specialScore[scope.$index].status"
                       active-text="合格"
                       inactive-text="不合格"
                       disabled
                     >
-                    </el-switch>
+                    </el-switch> -->
+                      <el-tag v-if="spec.specialScore[scope.$index].status == '合格'" type="success">合格</el-tag>
+                      <el-tag v-else-if="spec.specialScore[scope.$index].status == '不合格'" type="danger">不合格</el-tag>
+                      <el-tag  v-else type="info">未评分</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column label="备注" width="220" align="center">
@@ -182,12 +188,12 @@ export default {
             // 如果已经打过分，直接读取
             if (item.commonScores && item.commonScores.length > 0) {
               commonScore.push({
-                status: item.commonScores[index].colStatusValue == '合格' ? true : false,
+                status: item.commonScores[index].colStatusValue,
                 remark: item.commonScores[index].colRemarkValue
               })
             } else {
               commonScore.push({
-                status: true,
+                status: '未评分',
                 remark: ''
               })
             }
@@ -206,12 +212,12 @@ export default {
             specialValues.forEach((sv, index) => {
               if (sf.scores && sf.scores.length > 0) {
                 specialScore.push({
-                  status: sf.scores[index].colStatusValue == '合格' ? true : false,
+                  status: sf.scores[index].colStatusValue,
                   remark: sf.scores[index].colRemarkValue
                 })
               } else {
                 specialScore.push({
-                  status: true,
+                  status: '未评分',
                   remark: ''
                 })
               }
