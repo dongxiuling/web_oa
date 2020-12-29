@@ -391,6 +391,7 @@ export default {
             stepName: this.step.stepName,
             finishTime: dateFormat("YYYY-mm-dd HH:MM:SS", this.step.finishTime)
           })
+          this.stepDialogVisible = false
           this.step = {
             stepName: '',
             finishTime: ''

@@ -216,6 +216,9 @@ export default {
       }
     },
     async updateHandle() {
+      console.log(this.outsider);
+      this.outsider.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.outsider.time[0])
+      this.outsider.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.outsider.time[1])
       const res = await updateOutsider(this.outsider)
       //   console.log(res);
       if (res && res.code === '200') {
@@ -276,7 +279,7 @@ export default {
       //   await downLoadFile({ id: this.file.id })
       // }
       window.open(url, "_blank");
-    },
+    }
   },
   async mounted() {
     this.id = this.$route.params.id
@@ -285,10 +288,9 @@ export default {
       console.log(res)
       if (res && res.code === '200') {
         this.outsider = res.data
-        this.outsider.time = [this.outsider.startTime, this.outsider.endTime]
+        this.$set(this.outsider, "time", [this.outsider.startTime, this.outsider.endTime]);
       }
     }
-
   }
 };
 </script>

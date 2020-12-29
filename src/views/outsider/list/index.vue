@@ -47,11 +47,11 @@
         width="180"
         label="来访时段"
       ></el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="createTime"
         width="180"
         label="创建时间"
-      ></el-table-column>
+      ></el-table-column> -->
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
           <el-button
