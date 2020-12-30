@@ -67,7 +67,7 @@
               ></Uploader>
               <el-button
                 @click="openTabWin(item.url, 'view')"
-                v-if="id"
+                v-if="item.url"
                 icon="el-icon-view"
                 size="small"
                 type="primary"
