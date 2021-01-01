@@ -7,7 +7,7 @@ export const saveOutsider = (data = {}) => request({
 })
 
 export const selectOutsider = (data = {}) => request({
-    url: '/in/selectIn',
+    url: '/in/selectInLeader',
     method: 'post',
     data
 })

@@ -290,6 +290,10 @@ export default {
       this.$refs[formName].resetFields();
     },
     addHandle() {
+      if(!this.worklist.commonFileUrl){
+        this.$message.error('请上传普通检查项表格');
+        return
+      }
       // 验证 是否上传文件
       if (this.specialUserIdsArr.length != this.specialUrlArr.length) {
         this.$message.error('请检查特殊检查项是否填写完整');
