@@ -6,7 +6,13 @@
         <span style="color: gray; font-size: 14px">{{ remark }}</span>
       </div>
       <div class="control-bar">
-        <el-button @click="printTest" size="small" type="text" icon="el-icon-printer">打印</el-button>
+        <el-button
+          @click="printTest"
+          size="small"
+          type="text"
+          icon="el-icon-printer"
+          >打印</el-button
+        >
       </div>
     </div>
     <div class="app-container">
@@ -66,7 +72,7 @@ export default {
   methods: {
     //打印功能
     printTest() {
-      var newWindow=window.open("","_blank");
+      var newWindow = window.open("", "_blank");
       var docStr = this.htmlContent;
       newWindow.document.write(docStr);
       newWindow.document.close();
@@ -108,10 +114,9 @@ export default {
         let end = 0;
         start = first - 20 > 0 ? first - 20 : first;
         end = first + 20 < non_html.length ? first + 20 : first + all.length;
-        res = `<span data-ref="a${indexArr[i++]}">${non_html.substring(
-          start,
-          end
-        )}</span>`;
+        res = `<span style="display:block" data-ref="a${
+          indexArr[i++]
+        }">${non_html.substring(start, end)}</span>`;
         let reg2 = new RegExp(all, "g");
         res = res.replace(
           reg2,
@@ -131,9 +136,11 @@ export default {
     },
     // 测试滚动
     testScroll(event) {
-      let thisRef = event.target.dataset.ref;
-      let thisTop = document.getElementById(thisRef).offsetTop;
-      this.$refs.textContent.scrollTo(0, thisTop - 230);
+      if (event.target.dataset.ref) {
+        let thisRef = event.target.dataset.ref;
+        let thisTop = document.getElementById(thisRef).offsetTop;
+        this.$refs.textContent.scrollTo(0, thisTop - 230);
+      }
     },
     // 获取法规列表数据
     getList() {
@@ -258,13 +265,13 @@ h3 {
   display: inline-block;
   margin-bottom: 5px;
 }
-.control-bar{
+.control-bar {
   position: absolute;
   top: 10px;
   right: 20px;
   color: #999;
 }
-.control-bar span{
+.control-bar span {
   cursor: pointer;
 }
 </style>
