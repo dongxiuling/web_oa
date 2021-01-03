@@ -3,7 +3,8 @@ import request from '@/utils/request'
 // 添加法规文件内容
 export function addContent(data) {
     return request({
-        url: '/rawrule/store',
+        // url: '/rawrule/store',
+        url: '/rawrule/storeByFileurl',
         method: 'post',
         data: data
     })

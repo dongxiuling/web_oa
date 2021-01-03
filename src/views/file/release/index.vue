@@ -1,7 +1,7 @@
 <!-- 发布法规 -->
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="130px">
       <el-form-item label="法规名称" prop="title">
         <el-input v-model="form.title" style="width: 300px"></el-input>
       </el-form-item>
@@ -14,9 +14,14 @@
           style="width: 300px"
         ></el-input>
       </el-form-item>
-      <el-form-item label="法规内容" prop="title">
+      <el-form-item label="法规文件上传(请上传word文件)" prop="title">
         <!-- <tinymce v-model="form.content" :height="300" /> -->
-        <VueUeditorWrap :config="myConfig" v-model="form.content" />
+        <!-- <VueUeditorWrap :config="myConfig" v-model="form.content" /> -->
+        <Uploader
+          v-on:getFile="getFileUrl(arguments)"
+          :change="isChange"
+          :name="file.name"
+        ></Uploader>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm('form')"
@@ -30,9 +35,11 @@
 
 <script>
 // import Tinymce from "@/components/Tinymce/index";
-import VueUeditorWrap from "vue-ueditor-wrap";
+// import VueUeditorWrap from "vue-ueditor-wrap";
 import { addContent } from "@/api/file";
 import { encode, decode } from 'js-base64';
+import Uploader from "@/components/Uploader";
+
 export default {
   data() {
     return {
@@ -53,6 +60,14 @@ export default {
         title: [{ required: true, message: "请输入法规名称", trigger: "blur" }],
         desc: [{ required: true, message: "请输入法规简介", trigger: "blur" }],
       },
+      file: {
+        title: "",
+        url: "http://www.rr.cc",
+        readUrl: "http://www.rr.cc",
+        type: "regulatory_documents",
+        name: ""
+      },
+      isChange: false, //false添加 true修改
     };
   },
   methods: {
@@ -72,24 +87,44 @@ export default {
       this.$refs[formName].resetFields();
     },
     // 添加法规内容
-    addHandle(){
+    addHandle() {
+      if(!this.file.url){
+        this.$message.error('请上传法规word文件');
+        return
+      }
+      console.log(this.file);
+      const url = this.file.url.slice(7)
+      console.log(url);
+      const urlArr = url.split('/')
+      
       addContent({
-        remark:this.form.desc,
-        name:this.form.title,
-        content:encode(this.form.content)
-      }).then((res)=>{
+        remark: this.form.desc,
+        name: this.form.title,
+        // content: encode(this.form.content)
+        content: '',
+        fid: urlArr[1],
+        ip: urlArr[0].split(':')[0],
+        port: urlArr[0].split(':')[1]
+      }).then((res) => {
         this.$router.push({
-        path: "/lawlist",
-      });
+          path: "/lawlist",
+        });
       })
-    }
+    },
+    getFileUrl(args) {
+      this.file.url = args[1];
+      this.file.readUrl = args[2];
+      this.file.name = args[0];
+      this.isChange = true;
+    },
   },
   //生命周期 - 创建完成（访问当前this实例）
-  mounted() {},
-  components: { 
+  mounted() { },
+  components: {
     // Tinymce,
-    VueUeditorWrap 
-    },
+    // VueUeditorWrap 
+    Uploader
+  },
 };
 </script>
 <style scoped>
