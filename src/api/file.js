@@ -10,13 +10,11 @@ export function addContent(data) {
     })
 }
 // 根据法规名称获取法规列表
-export function getByTitle(title) {
+export function getByTitle(data) {
     return request({
         url: '/rawrule/getRaw',
         method: 'post',
-        data:{
-            name:title
-        }
+        data
     })
 }
 // 获取法规列表

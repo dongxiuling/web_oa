@@ -2,13 +2,25 @@
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
       <el-form-item label="搜索内容">
-        <el-input placeholder="可根据名称及简介搜索" v-model="searchText" @clear="clearInp" clearable size="small" />
+        <el-input
+          placeholder="可根据名称及简介搜索"
+          v-model="searchText"
+          @clear="clearInp"
+          clearable
+          size="small"
+        />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="searchTitle">搜索</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="searchTitle"
+          >搜索</el-button
+        >
       </el-form-item>
     </el-form>
-    
+
     <div class="content">
       <el-table
         @row-click="checkLine"
@@ -49,17 +61,31 @@
           </template>
         </el-table-column>
       </el-table>
+      <div class="page-box">
+        <el-pagination
+          style="width: 100%"
+          background
+          layout="prev, pager, next"
+          :total="total"
+          :current-page.sync="currentPage"
+          :page-size="pageSize"
+          @current-change="handleCurrentChange"
+        ></el-pagination>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import { getRawList, delLaw,getByTitle } from "@/api/file";
+import { getRawList, delLaw, getByTitle } from "@/api/file";
 export default {
   data() {
     return {
       searchText: "",
       dataList: [],
       loading: false,
+      currentPage: 1,
+      pageSize: 10,
+      total: 0, //分页总页数
     };
   },
   methods: {
@@ -71,7 +97,11 @@ export default {
     //按标题搜索
     searchTitle() {
       this.loading = true;
-      getByTitle(this.searchText).then((res)=>{
+      getByTitle({
+        current: this.currentPage,
+        size: this.pageSize,
+        name: this.searchText
+      }).then((res) => {
         let thisData = [];
         this.loading = false;
         thisData = res.data.map((item) => {
@@ -132,6 +162,10 @@ export default {
         path: "/release/lawdetail/" + _data.id,
       });
     },
+    handleCurrentChange(value) {
+      this.currentPage = value;
+      this.getList();
+    },
   },
   created() {
     this.getList();
@@ -175,5 +209,9 @@ ul {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+.page-box {
+  text-align: right;
+  margin-top: 20px;
 }
 </style>
