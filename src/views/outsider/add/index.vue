@@ -202,6 +202,13 @@ export default {
       //   this.$router.push("/todaywork/alltodaywork");
     },
     async addHandle() {
+      if(this.outsider.persons.length == 0 || this.outsider.persons[0].name.trim() == ''){
+        this.$message({
+          message: '请填写来访人员信息',
+          type: 'error'
+        })
+        return
+      }
       this.outsider.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.outsider.time[0])
       this.outsider.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.outsider.time[1])
       console.log(this.outsider);

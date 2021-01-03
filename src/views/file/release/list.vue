@@ -121,10 +121,14 @@ export default {
     // 获取法规列表数据
     getList() {
       this.loading = true;
-      getRawList().then((res) => {
+      getRawList({
+        current: this.currentPage,
+        size: this.pageSize,
+      }).then((res) => {
         let thisData = [];
         this.loading = false;
-        thisData = res.data.map((item) => {
+        this.total = res.data.total
+        thisData = res.data.records.map((item) => {
           item.createTime = item.createTime.split(" ")[0];
           return item;
         });

@@ -18,9 +18,9 @@ export function getByTitle(data) {
     })
 }
 // 获取法规列表
-export function getRawList() {
+export function getRawList({current, size}) {
     return request({
-        url: '/rawrule/raw/list',
+        url: `/rawrule/raw/list/${current}/${size}`,
         method: 'get'
     })
 }
