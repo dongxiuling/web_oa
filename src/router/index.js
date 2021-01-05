@@ -81,18 +81,18 @@ export const constantRoutes = [{
     },
     hidden: true
   },
-  {
-    path: 'detail',
-    component: () => import('@/views/exam/addList/detail'),
-    name: '我的发布详情',
-    meta: {
-      title: '我的发布详情',
-      icon: 'build',
-      noCache: true,
-      affix: true
-    },
-    hidden: true
-  },
+  // {
+  //   path: 'detail',
+  //   component: () => import('@/views/exam/addList/detail'),
+  //   name: '我的发布详情',
+  //   meta: {
+  //     title: '我的发布详情',
+  //     icon: 'build',
+  //     noCache: true,
+  //     affix: true
+  //   },
+  //   hidden: true
+  // },
   {
     path: 'single',
     component: () => import('@/views/exam/test/single'),
