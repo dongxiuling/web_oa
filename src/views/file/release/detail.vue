@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-loading="loading">
+  <div class="container law-detail-xf" v-loading="loading">
     <div class="control-content">
       <div class="search-form">
         <h3>{{ title }}</h3>
@@ -179,7 +179,7 @@ export default {
 <style lang="scss">
 .law-detail-xf{
 .textContent > div{
-  width: 100px !important;
+  width: unset !important;
   margin-bottom: 0 !important;
   margin-top: 0 !important;
   margin-left: 0 !important;
@@ -187,7 +187,7 @@ export default {
 }
 h3 {
   font-size: 30px;
-  margin:20px 0;
+  margin: 20px 0;
 }
 .control-content {
   position: relative;
@@ -207,22 +207,23 @@ h3 {
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
 }
 .textContent {
-  width: calc(100% - 400px);
-  height: calc(100vh - 320px);
-  padding:20px;
-  box-sizing: border-box;
-  background-color: #f3f4fa;
+  background-color: #f0f2f5;
+  width: calc(100% - 320px);
+  /* height: 500px; */
   position: absolute;
+  bottom: 20px;
   top: 160px;
   overflow: scroll;
+  padding:20px;
+  box-sizing: border-box;
 }
 .href-link {
   width: 280px;
   padding: 30px;
   position: fixed;
-  right: 30px;
+  right: 0;
   top: 220px;
-  height: calc(100vh - 270px);
+  bottom: 0px;
   overflow-y: scroll;
   background-color: #fff;
   box-shadow: -3px 0 3 rgba(0, 0, 0, 0.3);
@@ -236,22 +237,23 @@ h3 {
   border-bottom: 1px solid #f3f4fa;
   cursor: pointer;
 }
-.search-content{
-  height: 80px;
-  padding-top:20px;
+.search-content {
+  height: 60px;
+  padding-top: 20px;
   background-color: #fff;
   position: fixed;
   z-index: 1000;
-  top:210px;
-  right: 25px;
+  top: 210px;
+  right: 0;
+  height: 80px;
 }
-.control-content{
+.control-content {
   height: 140px;
   overflow: hidden;
 }
-.empty-list{
+.empty-list {
   position: absolute;
-  top:50%;
+  top: 50%;
   left: 0;
   transform: translateY(-50%);
   width: 100%;
@@ -267,7 +269,6 @@ h3 {
 .list-content {
   margin-top: 20px;
   overflow: hidden;
-  margin-left: -3px;
 }
 .list-content span {
   font-size: 13px;
@@ -275,29 +276,14 @@ h3 {
   display: inline-block;
   margin-bottom: 5px;
 }
-.table-content {
-  background-color: #fff;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-}
-.content{
-  padding:20px;
-  background-color: #fff;
-  /* position: absolute;
-  width: 100%;
-  top:120px;
-  bottom: 10px; */
-  min-height: calc(100vh - 160px);
-  border-radius: 5px;
-}
-.control-bar{
+.control-bar {
   position: absolute;
   top: 10px;
   right: 20px;
   color: #999;
 }
-.control-bar span{
+.control-bar span {
   cursor: pointer;
 }
 }
-
 </style>
