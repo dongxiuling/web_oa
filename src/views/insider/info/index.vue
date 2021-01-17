@@ -31,13 +31,22 @@
           @click="exportInfo"
           >人员信息导出</el-button
         >
-        <el-button
-          type="primary"
-          icon="el-icon-upload2"
-          size="mini"
-          @click="dialogVisible = true"
-          >人员信息导入</el-button
-        >
+        <el-tooltip placement="right" effect="light">
+          <div slot="content">
+            上传人员信息表格注意事项： <br />
+            （1）上传表格必须是系统导出的人员信息表格文件<br />
+            （2）删除标志：只有需要删除的人员需要选‘是’，其他都选‘否’<br />
+            （3）人员编码：新增加人员的编码为空<br />
+            （4）部门名称：部门名称必须与导出人员表格中sheet2中部门信息名称一致<br />
+          </div>
+          <el-button
+            type="primary"
+            icon="el-icon-upload2"
+            size="mini"
+            @click="dialogVisible = true"
+            >人员信息导入</el-button
+          >
+        </el-tooltip>
       </el-col>
     </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
@@ -302,14 +311,14 @@ export default {
     },
     handleClose() {
       this.dialogVisible = false
-       this.file = {
-          title: "",
-          url: "",
-          readUrl: "",
-          type: "regulatory_documents",
-          name: ""
-        }
-        this.isChange = false
+      this.file = {
+        title: "",
+        url: "",
+        readUrl: "",
+        type: "regulatory_documents",
+        name: ""
+      }
+      this.isChange = false
     },
     // 获取wFid和nFid
     getFileUrl(args) {
