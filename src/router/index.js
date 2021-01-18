@@ -367,7 +367,6 @@ export const constantRoutes = [{
       title: '结果录入'
     }
   }
-
   ]
 }, {
   path: '/outsiders',
@@ -393,6 +392,32 @@ export const constantRoutes = [{
     name: 'OutsiderDetail',
     meta: {
       title: '外来人员信息详情'
+    }
+  }]
+}, {
+  path: '/insiders',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addInfo',
+    component: () => import('@/views/insider/info/add'),
+    name: 'AddInsider',
+    meta: {
+      title: '添加人员信息'
+    }
+  }, {
+    path: 'addInfo/:id',
+    component: () => import('@/views/insider/info/add'),
+    name: 'UpdateInsiderInfo',
+    meta: {
+      title: '修改人员信息'
+    }
+  }, {
+    path: 'getInsiderDetail/:id',
+    component: () => import('@/views/insider/info/detail'),
+    name: 'InsiderDetail',
+    meta: {
+      title: '人员信息详情'
     }
   }]
 }

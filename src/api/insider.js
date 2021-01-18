@@ -15,3 +15,35 @@ export const importPersonInfo = ({ ip, port, fid }) => {
         method: 'get'
     })
 }
+
+export const selectPerson = (data = {}) => {
+    return request({
+        url: '/person/selectPerson',
+        method: 'post',
+        data
+    })
+}
+
+export const savePerson = (data = {}) => request({
+    url: '/person/save',
+    method: 'post',
+    data
+})
+
+export const getPersonById = id => request({
+    url: `/person/getPersonById/${id}`,
+    method: 'get'
+})
+
+export const updatePerson = (data = {}) => request({
+    url: '/person/updatePerson',
+    method: 'post',
+    data
+})
+
+export const delPerson = id => {
+    return request({
+        url: `/person/delPersonById/${id}`,
+        method: 'get'
+    })
+}

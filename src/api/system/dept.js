@@ -58,3 +58,10 @@ export function delDept(deptId) {
     method: 'delete'
   })
 }
+
+export function lastDept() {
+  return request({
+    url: '/system/dept/lastDept',
+    method: 'get',
+  })
+}

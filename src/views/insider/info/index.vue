@@ -1,6 +1,16 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :inline="true">
+    <el-form ref="所属连队" :inline="true">
+      <el-form-item label="所属连队">
+        <el-select v-model="search.deptId" placeholder="请选择所属连队">
+          <el-option
+            v-for="item in deptList"
+            :key="item.deptId"
+            :label="item.deptName"
+            :value="item.deptId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="姓名">
         <el-input
           placeholder="请输入搜索姓名"
@@ -32,12 +42,12 @@
           >人员信息导出</el-button
         >
         <el-tooltip placement="right" effect="light">
-          <div slot="content">
+          <div slot="content" class="tooltip-content">
             上传人员信息表格注意事项： <br />
-            （1）上传表格必须是系统导出的人员信息表格文件<br />
-            （2）删除标志：只有需要删除的人员需要选‘是’，其他都选‘否’<br />
-            （3）人员编码：新增加人员的编码为空<br />
-            （4）部门名称：部门名称必须与导出人员表格中sheet2中部门信息名称一致<br />
+            （1）上传表格必须是本系统导出的人员信息表格文件<br />
+            （2）人员编码：新增加人员的编码为空，修改及删除不要修改人员编码<br />
+            （3）部门名称：部门名称必须与导出人员表格中sheet2中部门信息名称一致<br />
+            （4）删除标志：只有需要删除的人员需要选‘是’，其他都选‘否’<br />
           </div>
           <el-button
             type="primary"
@@ -47,6 +57,13 @@
             >人员信息导入</el-button
           >
         </el-tooltip>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="$router.push('/insiders/addInfo')"
+          >添加人员信息</el-button
+        >
       </el-col>
     </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
@@ -55,28 +72,20 @@
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="title" label="来访事由"></el-table-column>
-      <el-table-column prop="name" label="来访人"></el-table-column>
-      <el-table-column prop="contacts" label="对接人"></el-table-column>
-      <el-table-column
-        prop="time"
-        width="180"
-        label="来访时段"
-      ></el-table-column>
-      <!-- <el-table-column
-        prop="createTime"
-        width="180"
-        label="创建时间"
-      ></el-table-column> -->
+      <el-table-column prop="deptId" label="所属连队"></el-table-column>
+      <el-table-column prop="name" label="姓名"></el-table-column>
+      <el-table-column prop="idCard" label="身份证号码"></el-table-column>
+      <el-table-column prop="jobName" label="职级"></el-table-column>
+      <el-table-column prop="jobTypeName" label="身份"></el-table-column>
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-tickets"
             @click="lookHandle(scope.row)"
-            >来访详情</el-button
-          >
+            >详情</el-button
+          > -->
           <el-button
             size="mini"
             type="text"
@@ -144,6 +153,14 @@
         type="success"
         >下载文件</el-button
       >
+      <!-- <el-divider></el-divider> -->
+      <div class="dialog-content">
+        上传人员信息表格注意事项： <br />
+        （1）上传表格必须是本系统导出的人员信息表格文件<br />
+        （2）人员编码：新增加人员的编码为空，修改及删除不要修改人员编码<br />
+        （3）部门名称：部门名称必须与导出人员表格中sheet2中部门信息名称一致<br />
+        （4）删除标志：只有需要删除的人员需要选‘是’，其他都选‘否’<br />
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="importInfo">确 定</el-button>
@@ -153,9 +170,9 @@
 </template>
 
 <script>
-import { selectOutsider, getOutsiderById, delOutsiderById } from "@/api/outsider.js";
-import { exportPersonInfo, importPersonInfo } from "@/api/insider.js";
+import { exportPersonInfo, importPersonInfo, selectPerson, delPerson } from "@/api/insider.js";
 import Uploader from "@/components/Uploader";
+import { lastDept } from "@/api/system/dept";
 
 export default {
   data() {
@@ -164,7 +181,8 @@ export default {
       currentPage: 1,
       pageSize: 10,
       search: {
-        name: ""
+        name: "",
+        deptId: 0
       },
       total: 0, //分页总页数
       loading: true,
@@ -179,7 +197,8 @@ export default {
       },
       isChange: false, //false添加 true修改
       id: this.$route.query.id,
-      delDialogVisible: false
+      delDialogVisible: false,
+      deptList: []
     };
   },
   components: {
@@ -187,17 +206,29 @@ export default {
   },
   methods: {
     async getData() {
-      const res = await selectOutsider({
+      const res = await selectPerson({
         current: this.currentPage,
         size: this.pageSize,
-        name: this.search.name
+        name: this.search.name,
+        deptId: this.search.deptId
       })
-      // console.log(res);
       if (res.code === '200' && res.data) {
-        this.list = res.data.records;
-        res.data.records && res.data.records.map((item, index) => {
-          this.list[index].time = item.startTime + ' 至 ' + item.endTime
+        res.data.records.map(item => {
+          switch (item.jobType) {
+            case '1':
+              item.jobTypeName = '主官'
+              break
+            case '2':
+              item.jobTypeName = '干部'
+              break
+            case '3':
+              item.jobTypeName = '义务兵'
+              break
+            default:
+              item.jobTypeName = '义务兵'
+          }
         })
+        this.list = res.data.records
 
         this.total = res.data.total;
         this.loading = false;
@@ -207,7 +238,8 @@ export default {
       this.getData();
     },
     reSetHandle() {
-      this.search.name = "";
+      this.search.name = ''
+      this.search.deptId = 0
       this.getData();
     },
     handleCurrentChange(value) {
@@ -218,7 +250,7 @@ export default {
       this.$router.push(`/outsiders/getOutsiderDetail/${id}`)
     },
     editHandle({ id }) {
-      this.$router.push(`/outsiders/addOutsider/${id}`)
+      this.$router.push(`/insiders/addInfo/${id}`)
     },
     delHandle({ id }) {
       this.dialogVisible = true
@@ -226,7 +258,7 @@ export default {
     },
     async doDelHandle() {
       this.dialogVisible = false
-      const res = await delOutsiderById(this.id)
+      const res = await delPerson(this.id)
       console.log(res);
       if (res.code == 200) {
         this.$message({
@@ -287,7 +319,6 @@ export default {
 
       //   console.log(ip, port, fid);
       const res = await importPersonInfo({ ip, port, fid })
-      console.log(res)
       if (res && res.code === '200') {
         this.dialogVisible = false
         this.file = {
@@ -336,8 +367,16 @@ export default {
       //   }
       window.open(url, "_blank");
     },
+    async getDeptList() {
+      const res = await lastDept()
+      if (res && res.code == 200 && res.data) {
+        this.deptList = res.data
+        this.deptList.unshift({ deptId: 0, deptName: "全部连队" });
+      }
+    },
   },
   mounted() {
+    this.getDeptList()
     this.getData();
   },
 
@@ -350,5 +389,14 @@ export default {
 }
 .el-tag {
   cursor: pointer;
+}
+.tooltip-content {
+  line-height: 1.8;
+}
+.dialog-content {
+  font-size: 12px;
+  color: #606266;
+  line-height: 1.8;
+  margin-top: 40px;
 }
 </style>
