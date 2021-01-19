@@ -80,3 +80,18 @@ export const delOutType = id => {
         method: 'get'
     })
 }
+
+// 在岗标准
+export const selectStandard = (data = {}) => {
+    return request({
+        url: '/standard/select',
+        method: 'post',
+        data
+    })
+}
+
+export const updateStandard = (data = {}) => request({
+    url: '/standard/update',
+    method: 'post',
+    data
+})
