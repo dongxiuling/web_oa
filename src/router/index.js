@@ -419,6 +419,20 @@ export const constantRoutes = [{
     meta: {
       title: '人员信息详情'
     }
+  },{
+    path: 'addType',
+    component: () => import('@/views/insider/type/add'),
+    name: 'AddOutType',
+    meta: {
+      title: '添加外出类型'
+    }
+  }, {
+    path: 'addType/:id',
+    component: () => import('@/views/insider/type/add'),
+    name: 'UpdateOutType',
+    meta: {
+      title: '修改外出类型'
+    }
   }]
 }
 ]

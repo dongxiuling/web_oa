@@ -47,3 +47,36 @@ export const delPerson = id => {
         method: 'get'
     })
 }
+
+// 外出类型
+export const selectOutType = (data = {}) => {
+    return request({
+        url: '/personout/select',
+        method: 'post',
+        data
+    })
+}
+
+export const saveOutType = (data = {}) => request({
+    url: '/personout/save',
+    method: 'post',
+    data
+})
+
+export const updateOutType = (data = {}) => request({
+    url: '/personout/update',
+    method: 'post',
+    data
+})
+
+export const getOutTypeById = id => request({
+    url: `/personout/getPersonOutById/${id}`,
+    method: 'get'
+})
+
+export const delOutType = id => {
+    return request({
+        url: `/personout/delById/${id}`,
+        method: 'get'
+    })
+}

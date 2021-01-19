@@ -6,7 +6,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="$router.push('/files/addMain')"
+          @click="$router.push('/insiders/addType')"
           >添加外出类型</el-button
         >
       </el-col>
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { getMainCate, delCate } from "@/api/file";
+import { selectOutType, delOutType } from "@/api/insider";
 
 export default {
   data() {
@@ -74,22 +74,17 @@ export default {
   },
   methods: {
     handleUpdate() { },
-    getData() {
-      getMainCate({
-        ...this.search,
-        size: 100
-      }).then(res => {
-        // console.log(res);
-        this.list = res.data;
-        // this.total = res.data;
-        this.loading = false;
-      });
+    async getData() {
+      const res = await selectOutType()
+      // console.log(res);
+      this.list = res.data;
+      this.loading = false;
     },
     searchHandle() {
       this.getData();
     },
     editHandle({ id }) {
-      this.$router.push(`/files/addMain/${id}`)
+      this.$router.push(`/insiders/addType/${id}`)
     },
     delHandle({ id }) {
       this.dialogVisible = true
@@ -97,7 +92,7 @@ export default {
     },
     async doDelHandle() {
       this.dialogVisible = false
-      const res = await delCate(this.id)
+      const res = await delOutType(this.id)
       this.$message({
         message: '删除成功',
         type: 'success'
