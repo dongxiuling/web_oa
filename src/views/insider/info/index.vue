@@ -72,7 +72,7 @@
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="deptId" label="所属连队"></el-table-column>
+      <el-table-column prop="deptName" label="所属连队"></el-table-column>
       <el-table-column prop="name" label="姓名"></el-table-column>
       <el-table-column prop="idCard" label="身份证号码"></el-table-column>
       <el-table-column prop="jobName" label="职级"></el-table-column>
@@ -253,13 +253,13 @@ export default {
       this.$router.push(`/insiders/addInfo/${id}`)
     },
     delHandle({ id }) {
-      this.dialogVisible = true
+      this.delDialogVisible = true
       this.id = id
     },
     async doDelHandle() {
-      this.dialogVisible = false
+      this.delDialogVisible = false
       const res = await delPerson(this.id)
-      console.log(res);
+      // console.log(res);
       if (res.code == 200) {
         this.$message({
           message: '删除成功',
