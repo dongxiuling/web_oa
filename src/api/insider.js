@@ -51,32 +51,32 @@ export const delPerson = id => {
 // 外出类型
 export const selectOutType = (data = {}) => {
     return request({
-        url: '/personout/select',
+        url: '/persontype/select',
         method: 'post',
         data
     })
 }
 
 export const saveOutType = (data = {}) => request({
-    url: '/personout/save',
+    url: '/persontype/save',
     method: 'post',
     data
 })
 
 export const updateOutType = (data = {}) => request({
-    url: '/personout/update',
+    url: '/persontype/update',
     method: 'post',
     data
 })
 
 export const getOutTypeById = id => request({
-    url: `/personout/getPersonOutById/${id}`,
+    url: `/persontype/getPersonOutById/${id}`,
     method: 'get'
 })
 
 export const delOutType = id => {
     return request({
-        url: `/personout/delById/${id}`,
+        url: `/persontype/delById/${id}`,
         method: 'get'
     })
 }

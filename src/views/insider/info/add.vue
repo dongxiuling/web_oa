@@ -33,11 +33,11 @@
         <el-radio v-model="info.sex" label="男">男</el-radio>
         <el-radio v-model="info.sex" label="女">女</el-radio>
       </el-form-item>
-      <el-form-item label="职级" prop="jobName">
+      <el-form-item label="部职别" prop="jobName">
         <el-input
           v-model="info.jobName"
           style="width: 300px"
-          placeholder="请输入职级"
+          placeholder="请输入部职别"
         ></el-input>
       </el-form-item>
       <el-form-item label="身份" prop="jobType">
@@ -56,7 +56,15 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="备注" prop="remark1">
+      <el-form-item label="军衔" prop="remark1">
+        <el-input
+          v-model="info.remark1"
+          style="width: 300px"
+          placeholder="请输入军衔"
+        ></el-input>
+      </el-form-item>
+
+      <!-- <el-form-item label="备注" prop="remark1">
         <el-input
           type="textarea"
           style="width: 300px"
@@ -64,7 +72,7 @@
           placeholder="请输入备注"
           v-model="info.remark1"
         ></el-input>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item>
         <el-button
@@ -115,7 +123,8 @@ export default {
       rules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         idCard: [{ required: true, message: "请输入身份证号码", trigger: "blur" }],
-        jobName: [{ required: true, message: "请输入职级", trigger: "blur" }],
+        jobName: [{ required: true, message: "请输入部职别", trigger: "blur" }],
+        remark1: [{ required: true, message: "请输入军衔", trigger: "blur" }],
         deptId: [
           { required: true, message: "请选择所属连队", trigger: "change" }
         ],
