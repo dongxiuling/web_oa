@@ -16,7 +16,6 @@
           placeholder="请输入搜索姓名"
           v-model="search.name"
           clearable
-          size="small"
         />
       </el-form-item>
       <el-form-item>
@@ -74,7 +73,7 @@
       ></el-table-column>
       <el-table-column prop="deptName" label="所属连队"></el-table-column>
       <el-table-column prop="name" label="姓名"></el-table-column>
-      <el-table-column prop="idCard" label="身份证号码"></el-table-column>
+      <el-table-column prop="idCard" width="180" label="身份证号码"></el-table-column>
       <el-table-column prop="jobName" label="部职别"></el-table-column>
       <el-table-column prop="jobTypeName" label="身份"></el-table-column>
       <el-table-column prop="remark1" label="军衔"></el-table-column>

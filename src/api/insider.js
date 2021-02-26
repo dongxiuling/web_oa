@@ -95,3 +95,9 @@ export const updateStandard = (data = {}) => request({
     method: 'post',
     data
 })
+
+export const selectPersonOut = (data = {}) => request({
+    url: '/personout/selectPersonOut',
+    method: 'post',
+    data
+})
