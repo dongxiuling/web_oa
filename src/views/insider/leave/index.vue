@@ -24,7 +24,7 @@
       <el-form-item label="姓名">
         <el-input
           placeholder="请输入搜索姓名"
-          v-model="search.name"
+          v-model="search.userName"
           clearable
         />
       </el-form-item>
@@ -36,7 +36,7 @@
           @click="selectPerson()"
           >搜索</el-button
         >
-        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()"
+        <el-button icon="el-icon-refresh" size="mini" @click="resetHandle()"
           >重置</el-button
         >
       </el-form-item>
@@ -76,7 +76,7 @@
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="status"
+        prop="statusStr"
         label="审批状态"
       ></el-table-column>
       <el-table-column label="操作" width="220" align="center">
@@ -86,26 +86,55 @@
             type="text"
             icon="el-icon-edit"
             @click="update(scope.row)"
+            v-if="scope.row.status == 1"
             >审批</el-button
           >
         </template>
       </el-table-column>
     </el-table>
-    <!-- <div class="page-box">
-        <el-pagination
-          layout="total, prev, pager, next, jumper"
-          :total="total"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
-      </div> -->
+    <el-dialog
+      title="外出审批"
+      :visible.sync="dialogVisible"
+      width="40%"
+      :before-close="
+        () => {
+          dialogVisible = false;
+        }
+      "
+    >
+      <!-- 审批 -->
+      <el-form ref="approve" :model="approve" label-width="110px">
+        <el-form-item label="是否通过：" prop="status">
+          <el-radio v-model="approve.status" :label="2">通过</el-radio>
+          <el-radio v-model="approve.status" :label="3">未通过</el-radio>
+        </el-form-item>
+        <el-form-item label="备注：" prop="remark">
+          <el-input type="textarea" v-model="approve.remark"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="doHandle">确 定</el-button>
+      </span>
+    </el-dialog>
+    <div class="page-box">
+      <el-pagination
+        style="width: 100%"
+        background
+        layout="prev, pager, next"
+        :total="total"
+        :current-page.sync="currentPage"
+        :page-size="pageSize"
+        @current-change="handleCurrentChange"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
 import { lastDept } from "@/api/system/dept";
-import { selectPersonOut } from "@/api/insider.js";
+import { selectPersonOut, updateStatus } from "@/api/insider.js";
 
 export default {
   data() {
@@ -116,7 +145,7 @@ export default {
       pageSize: 10,
       total: 0, //总页数
       search: {
-        name: '',
+        userName: '',
         deptId: 0,
         status: 0
       },
@@ -133,7 +162,13 @@ export default {
       }, {
         id: 3,
         name: '未通过'
-      }]
+      }],
+      dialogVisible: false,
+      approve: {
+        id: null,
+        status: 1,
+        remark: ''
+      }
     };
   },
   methods: {
@@ -143,30 +178,38 @@ export default {
         ...this.search,
         current: this.currentPage,
         size: this.pageSize,
+        typeId: 0 // 全部类型
       })
       console.log(res);
       if (res && res.data && res.data.records) {
-        // res.data.map(item => {
-        //   switch (item.jobType) {
-        //     case '1':
-        //       item.jobTypeName = '主官'
-        //       break
-        //     case '2':
-        //       item.jobTypeName = '干部'
-        //       break
-        //     case '3':
-        //       item.jobTypeName = '义务兵'
-        //       break
-        //     default:
-        //       item.jobTypeName = '义务兵'
-        //   }
-        // })
+        res.data.records.map(item => {
+          switch (item.status) {
+            case 1:
+              item.statusStr = '待审批'
+              break
+            case 2:
+              item.statusStr = '通过'
+              break
+            case 3:
+              item.statusStr = '未通过'
+              break
+            default:
+              item.statusStr = '待审批'
+          }
+        })
         this.personData = res.data.records
+        this.total = res.data.total
       }
       this.loading = false;
     },
-    update(person) {
-      this.$router.push(`/out/stationApply/${person.id}`)
+    update({ id }) {
+      this.approve = {
+        id: null,
+        status: 1,
+        remark: ''
+      }
+      this.dialogVisible = true
+      this.approve.id = id
     },
     async getDeptList() {
       const res = await lastDept()
@@ -179,11 +222,36 @@ export default {
       this.currentPage = value;
       this.selectPerson();
     },
+    async doHandle() {
+      const res = await updateStatus(this.approve)
+      console.log(res);
+      if (res && res.code === '200') {
+        this.$message({
+          message: '审批成功',
+          type: 'success'
+        })
+        this.dialogVisible = false
+        this.selectPerson()
+      }
+    },
+    cancel() {
+      this.dialogVisible = false
+      this.approve = {
+        id: null,
+        status: 1,
+        remark: ''
+      }
+    },
     searchHandle() {
 
     },
-    onReset() {
-
+    resetHandle() {
+      this.search = {
+        userName: '',
+        deptId: 0,
+        status: 0
+      }
+      this.selectPerson()
     },
   },
   mounted() {
@@ -194,4 +262,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-box {
+  text-align: right;
+  margin-top: 20px;
+}
 </style>
