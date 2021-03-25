@@ -72,12 +72,12 @@
       <el-table-column
         align="center"
         prop="endTime"
-        label="计划离队时间"
+        label="计划归队时间"
       ></el-table-column>
       <el-table-column
         align="center"
         prop="backTime"
-        label="实际离队时间"
+        label="实际归队时间"
       ></el-table-column>
       <!-- <el-table-column
         align="center"
