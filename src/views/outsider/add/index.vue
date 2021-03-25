@@ -21,7 +21,10 @@
       <el-form-item label="来访事由" prop="title">
         <el-input v-model="outsider.title" style="width: 400px"></el-input>
       </el-form-item>
-      <el-form-item label="对接人姓名" prop="contacts">
+      <el-form-item label="联系人单位" prop="company">
+        <el-input v-model="outsider.company" style="width: 400px"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人姓名" prop="contacts">
         <el-input v-model="outsider.contacts" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="来访人员信息">
@@ -132,6 +135,15 @@
           </el-card>
         </div>
       </el-form-item>
+      <el-form-item label="近七天行程报备" prop="journey">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          placeholder="请输入近七天行程报备"
+          v-model="outsider.journey"
+          style="width: 900px"
+        ></el-input>
+      </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input
           type="textarea"
@@ -176,8 +188,9 @@ export default {
       rules: {
         time: [{ required: true, message: "请输入来访时段", trigger: "blur" }],
         title: [{ required: true, message: "请输入来访事由", trigger: "change" }],
-        contacts: [{ required: true, message: "请输入对接人姓名", trigger: "blur" }],
+        contacts: [{ required: true, message: "请输入联系人姓名", trigger: "blur" }],
         people: [{ required: true, message: "请输入来访人员信息", trigger: "blur" }],
+        company: [{ required: true, message: "请输入联系人单位", trigger: "blur" }],
         // carNum: [{ required: true, message: "请输入车牌号", trigger: "blur" }],
       },
 

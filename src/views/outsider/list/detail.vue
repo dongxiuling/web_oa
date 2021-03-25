@@ -9,9 +9,10 @@
         <el-form
           ref="form"
           :model="outsider"
-          label-width="100px"
+          label-width="120px"
           size="medium"
         >
+          <el-form-item label="联系人单位：">{{ outsider.company }}</el-form-item>
           <el-form-item label="联系人：">{{ outsider.contacts }}</el-form-item>
           <el-form-item label="来访事由：">{{ outsider.title }}</el-form-item>
           <el-form-item label="来访时段"
@@ -49,6 +50,7 @@
               >{{ obj.carNum }}</span
             >
           </el-form-item>
+          <el-form-item label="近七天行程报备:">{{ outsider.journey }}</el-form-item>
           <el-form-item label="备注:">{{ outsider.remark }}</el-form-item>
 
           <el-form-item label="来访记录:">

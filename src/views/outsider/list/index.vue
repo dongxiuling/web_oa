@@ -41,7 +41,8 @@
       ></el-table-column>
       <el-table-column prop="title" label="来访事由"></el-table-column>
       <el-table-column prop="name" label="来访人"></el-table-column>
-      <el-table-column prop="contacts" label="对接人"></el-table-column>
+      <el-table-column prop="company" label="联系人单位"></el-table-column>
+      <el-table-column prop="contacts" label="联系人"></el-table-column>
       <el-table-column
         prop="time"
         width="180"
