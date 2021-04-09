@@ -199,8 +199,11 @@ export default {
             case 3:
               item.statusStr = '未通过'
               break
+            case 4:
+              item.statusStr = '已销假'
+              break
             default:
-              item.statusStr = '待审批'
+              item.statusStr = ''
           }
         })
         this.personData = res.data.records

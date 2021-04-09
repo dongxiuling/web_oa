@@ -162,6 +162,9 @@ export default {
       }, {
         id: 3,
         name: '未通过'
+      }, {
+        id: 4,
+        name: '已销假'
       }],
       dialogVisible: false,
       approve: {
@@ -192,6 +195,9 @@ export default {
               break
             case 3:
               item.statusStr = '未通过'
+              break
+            case 4:
+              item.statusStr = '已销假'
               break
             default:
               item.statusStr = '待审批'
