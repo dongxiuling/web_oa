@@ -27,7 +27,8 @@
       <el-form-item label="联系人姓名" prop="contacts">
         <el-input v-model="outsider.contacts" style="width: 400px"></el-input>
       </el-form-item>
-      <el-form-item label="来访人员信息">
+      <div class="form-item-star">
+        <span class="form-item-label">来访人员信息</span>
         <el-button
           type="primary"
           size="small"
@@ -44,17 +45,57 @@
             <div class="people">
               <el-row style="width: 95%">
                 <el-col :span="8">
-                  <el-form-item label="姓名" prop="name">
+                  <el-form-item
+                    label="姓名"
+                    :prop="'persons.' + index + '.name'"
+                    :rules="[
+                      {
+                        required: true,
+                        message: '请输入姓名',
+                        trigger: 'blur',
+                      },
+                    ]"
+                  >
                     <el-input size="small" v-model="item.name"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="身份证号" prop="idCard">
+                  <el-form-item
+                    label="身份证号"
+                    :prop="'persons.' + index + '.idCard'"
+                    :rules="[
+                      {
+                        required: true,
+                        message: '请输入身份证号码',
+                        trigger: 'blur',
+                      },
+                      {
+                        pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+                        message: '请输入正确的身份证号码',
+                        trigger: ['blur', 'change'],
+                      },
+                    ]"
+                  >
                     <el-input size="small" v-model="item.idCard"></el-input>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                  <el-form-item label="手机号" prop="tel">
+                  <el-form-item
+                    label="手机号"
+                    :prop="'persons.' + index + '.tel'"
+                    :rules="[
+                      {
+                        required: true,
+                        message: '请输入手机号码',
+                        trigger: 'blur',
+                      },
+                      {
+                        pattern: /^1[3-9]\d{9}$/,
+                        message: '请输入正确的手机号码',
+                        trigger: ['blur', 'change'],
+                      },
+                    ]"
+                  >
                     <el-input size="small" v-model="item.tel"></el-input>
                   </el-form-item>
                 </el-col>
@@ -93,8 +134,9 @@
             </el-tooltip>
           </el-card>
         </div>
-      </el-form-item>
-      <el-form-item label="来访车辆信息">
+      </div>
+      <div class="form-item">
+        <span class="form-item-label">来访车辆信息</span>
         <el-button
           type="primary"
           size="small"
@@ -134,7 +176,7 @@
             </div>
           </el-card>
         </div>
-      </el-form-item>
+      </div>
       <el-form-item label="近七天行程报备" prop="journey">
         <el-input
           type="textarea"
@@ -191,7 +233,6 @@ export default {
         contacts: [{ required: true, message: "请输入联系人姓名", trigger: "blur" }],
         people: [{ required: true, message: "请输入来访人员信息", trigger: "blur" }],
         company: [{ required: true, message: "请输入联系人单位", trigger: "blur" }],
-        // carNum: [{ required: true, message: "请输入车牌号", trigger: "blur" }],
       },
 
     };
@@ -215,7 +256,7 @@ export default {
       //   this.$router.push("/todaywork/alltodaywork");
     },
     async addHandle() {
-      if(this.outsider.persons.length == 0 || this.outsider.persons[0].name.trim() == ''){
+      if (this.outsider.persons.length == 0 || this.outsider.persons[0].name.trim() == '') {
         this.$message({
           message: '请填写来访人员信息',
           type: 'error'
@@ -299,7 +340,8 @@ export default {
       //   await downLoadFile({ id: this.file.id })
       // }
       window.open(url, "_blank");
-    }
+    },
+
   },
   async mounted() {
     this.id = this.$route.params.id
@@ -317,6 +359,7 @@ export default {
 <style lang="scss">
 .people-info {
   margin-top: 5px;
+  padding-left: 100px;
 }
 
 .people-card {
@@ -346,5 +389,33 @@ export default {
   top: -8px;
   right: -16px;
   z-index: 1;
+}
+
+.form-item,
+.form-item-star {
+  margin-bottom: 20px;
+}
+
+.form-item-label {
+  text-align: right;
+  vertical-align: middle;
+  float: left;
+  font-size: 14px;
+  color: #606266;
+  line-height: 40px;
+  padding: 0 12px 0 4px;
+  box-sizing: border-box;
+  font-weight: 700;
+}
+
+.form-item-star .form-item-label::before {
+  content: "*";
+  color: #ff4949;
+  margin-right: 4px;
+}
+
+.form-item .form-item-label::before {
+  content: "";
+  margin-right: 10px;
 }
 </style>
