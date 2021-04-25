@@ -5,6 +5,7 @@
       class="uploader-example"
       @complete="complete"
       @file-success="onFileSuccess"
+      @file-error="onFileError"
       :file="file"
       :list="true"
     >
@@ -55,6 +56,10 @@ export default {
   methods: {
     onFileSuccess(rootFile, file, response, chunk) {
       console.log("file-success", response, file);
+      this.$message({
+            message: "上传成功",
+            type: "success"
+          });
       let result = JSON.parse(response);
       let obj = {
         wFid: result.data.wFid,
@@ -70,6 +75,13 @@ export default {
         result.data.nFid
       );
       // alert(result.data.wFid);
+    },
+    onFileError(rootFile, file, response, chunk){
+      console.log("onFileError", response, file);
+      this.$message({
+            message: "上传失败",
+            type: "error"
+          });
     },
     complete(rootFile, file, response, chunk) {
       console.log("complete");
