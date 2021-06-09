@@ -87,3 +87,27 @@ export function getExamDetail(params) {
         params
     })
 }
+
+export function getExcisesList(params) {
+    return request({
+      url: '/exam/getQuestionByCate',
+      method: 'post',
+      params
+    })
+  }
+
+// 添加和修改考试题
+export function addExam(params) {
+    return request({
+        url: '/exam/createExer',
+        method: 'post',
+        params
+    })
+}
+// 删除考试题
+export function delExer(query) {
+  return request({
+      url: '/exam/delExerById/'+query.id,
+      method: 'get',
+  })
+}

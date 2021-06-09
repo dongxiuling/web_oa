@@ -22,11 +22,10 @@
       <el-form-item label="考试时间">
         <el-date-picker  style="width:400px"
           v-model="time"
-          type="daterange"
+          type="datetimerange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          format="yyyy 年 MM 月 dd 日"
           value-format="yyyy-MM-dd HH:mm:ss"
         ></el-date-picker>
       </el-form-item>

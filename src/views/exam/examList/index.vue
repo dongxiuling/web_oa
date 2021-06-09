@@ -31,9 +31,11 @@
       </el-form-item>
     </el-form>
     <el-table :data="examList" style="width: 100%" v-loading="loading">
-      <el-table-column label="序号">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
+      <el-table-column
+        type="index"
+        label="序号"
+        :index="(currentPage - 1) * pageSize + 1"
+      ></el-table-column>
       <el-table-column prop="title" label="考试名称"></el-table-column>
       <el-table-column prop="startDate" label="开始时间" width="180"></el-table-column>
       <el-table-column prop="endDate" label="结束时间" width="180"></el-table-column>
