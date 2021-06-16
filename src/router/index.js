@@ -76,8 +76,6 @@ export const constantRoutes = [{
     meta: {
       title: '发布考试',
       icon: 'edit',
-      noCache: true,
-      affix: true
     },
     hidden: true
   },
@@ -88,8 +86,6 @@ export const constantRoutes = [{
     meta: {
       title: '我的发布详情',
       icon: 'build',
-      noCache: true,
-      affix: true
     },
     hidden: true
   },
@@ -436,6 +432,46 @@ export const constantRoutes = [{
     name: 'UpdateOutType',
     meta: {
       title: '修改外出类型'
+    }
+  }]
+}, {
+  path: '/dutys',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addDuty',
+    component: () => import('@/views/duty/add'),
+    name: 'AddDuty',
+    meta: {
+      title: '创建值班'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/todaywork/cate/add'),
+    name: 'UpdateTodayworkCate',
+    meta: {
+      title: '修改工作分类'
+    }
+  }, {
+    path: 'getCateDetail/:id',
+    component: () => import('@/views/todaywork/dateworklist/detail'),
+    name: 'TodayworkDetail',
+    meta: {
+      title: '工作详情'
+    }
+  }, {
+    path: 'addTodaywork',
+    component: () => import('@/views/todaywork/add'),
+    name: 'AddTodaywork',
+    meta: {
+      title: '创建工作'
+    }
+  }, {
+    path: 'addTodaywork/:id',
+    component: () => import('@/views/todaywork/add'),
+    name: 'UpdateTodaywork',
+    meta: {
+      title: '修改工作'
     }
   }]
 }
