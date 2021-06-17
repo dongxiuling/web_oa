@@ -2,18 +2,18 @@
   <div class="app-container">
     <el-form ref="question" :model="question" :rules="rules" label-width="80px">
       <el-form-item label="问卷名称" prop="title">
-        <el-input v-model="question.title" style="width:300px"></el-input>
+        <el-input v-model="question.title" style="width:400px"></el-input>
       </el-form-item>
       <el-form-item label="问卷简介" prop="content">
         <el-input
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 4}"
           v-model="question.content"
-          style="width:300px"
+          style="width:400px"
         ></el-input>
       </el-form-item>
       <el-form-item label="截止日期" prop="endDate">
-        <el-date-picker v-model="question.endDate" 
+        <el-date-picker v-model="question.endDate"  style="width:400px"
         value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-form-item label="参与人员">
@@ -41,7 +41,7 @@ import {
   addQue, //createQues
   getExamById, //fetQuesById
   updateExam //updateQues
-} from "@/api/question/index.js"; //"@/api/ques"
+} from "@/api/question/index"; //"@/api/ques"
 import { getTreeUser } from "@/api/system/user";
 export default {
   data() {
@@ -52,7 +52,8 @@ export default {
       },
       id: this.$route.query.id,
       rules: {
-        title: [{ required: true, message: "请输入问卷名称", trigger: "blur" }]
+        title: [{ required: true, message: "请输入问卷名称", trigger: "blur" }],
+        endDate: [{ required: true, message: "请输入截止日期", trigger: "blur" }]
       },
       userIds: [],
       props: {

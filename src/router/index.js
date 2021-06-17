@@ -214,7 +214,12 @@ export const constantRoutes = [{
   children: [{
     path: 'test',
     component: () => import('@/views/questionnaire/add/test'),
-    // meta: { title: '会议详情', icon: 'monitor', noCache: true, affix: true },
+    meta: { title: '编辑问卷'},
+    hidden: true,
+  }, {
+    path: 'add',
+    component: () => import('@/views/questionnaire/add/index'),
+    meta: { title: '创建问卷'},
     hidden: true,
   }]
 },

@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { getQueList, addTest,delTest } from "@/api/question/index.js";
+import { getQueList, addTest,delTest } from "@/api/question/index";
 export default {
   data() {
     return {

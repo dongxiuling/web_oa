@@ -11,8 +11,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="searchHandle()"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -22,16 +30,17 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="$router.push('/question/add')"
-        >发布问卷</el-button>
+          @click="$router.push('/questions/add')"
+          >创建问卷</el-button
+        >
       </el-col>
     </el-row>
     <el-table border :data="addList" style="width: 100%">
-      <el-table-column label="ID" width="50">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column
+        type="index"
+        label="序号"
+        :index="(currentPage - 1) * pageSize + 1"
+      ></el-table-column>
       <el-table-column label="问卷名称" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
@@ -39,7 +48,9 @@
       </el-table-column>
       <el-table-column class="handle_row" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="GoExcises(scope.row)">编辑问卷</el-button>
+          <el-button size="mini" @click="goExcises(scope.row)"
+            >编辑问卷</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -57,15 +68,15 @@
   </div>
 </template>
 <script>
-import { getAddList } from "@/api/question/index.js";
+import { getAddList } from "@/api/question/index";
 export default {
   data() {
     return {
       search: {},
-      addList:[],
-      total:0,
-      currentPage:1,
-      pageSize:10
+      addList: [],
+      total: 0,
+      currentPage: 1,
+      pageSize: 10
     };
   },
   created() {
@@ -74,14 +85,14 @@ export default {
   methods: {
     getData() {
       getAddList({
-        title:this.search.title,
+        title: this.search.title,
         pageNum: this.currentPage,
         pageSize: this.pageSize
       }).then(res => {
         this.addList = res.data.records;
       });
     },
-    GoExcises(_data) {
+    goExcises(_data) {
       this.$router.push({
         path: "/questions/test/",
         query: { naireId: _data.id }
@@ -91,10 +102,10 @@ export default {
       this.currentPage = value;
       this.getData();
     },
-    searchHandle(){
-       this.getData() ;
+    searchHandle() {
+      this.getData();
     },
-     reSetHandle() {
+    reSetHandle() {
       this.search.title = "";
       this.getData();
     }
