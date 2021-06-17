@@ -1,24 +1,33 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
-      <el-form-item label="工作名称">
-        <el-input
-          placeholder="请输入工作名称"
-          v-model="search.title"
-          clearable
+      <!-- <el-form-item label="日期" prop="start">
+        <el-date-picker
+          v-model="search.dateRange"
           size="small"
-        />
-      </el-form-item>
-      <el-form-item label="工作分类">
-        <el-select v-model="search.cateId" placeholder="请选择工作分类">
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item> -->
+      <el-form-item label="值班部门" prop="deptId">
+        <el-select
+          v-model="search.deptId"
+          placeholder="请选择值班部门"
+          style="width: 240px"
+        >
           <el-option
-            v-for="item in cateData"
-            :key="item.id"
-            :label="item.cateName"
-            :value="item.id"
+            v-for="item in deptList"
+            :key="item.deptId"
+            :label="item.deptName"
+            :value="item.deptId"
           ></el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item>
         <el-button
           type="primary"
@@ -49,18 +58,21 @@
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="title" label="工作名称"></el-table-column>
-      <el-table-column prop="cateName" label="工作分类"></el-table-column>
-      <el-table-column prop="createTime" label="创建时间"></el-table-column>
+      <el-table-column prop="startTime" label="开始时间"></el-table-column>
+      <el-table-column prop="endTime" label="结束时间"></el-table-column>
+      <el-table-column prop="deptName" label="值班部门"></el-table-column>
+      <el-table-column prop="username" label="值班人员"></el-table-column>
+      <el-table-column prop="pos" label="值班地点"></el-table-column>
+      <el-table-column prop="remark" label="备注"></el-table-column>
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-tickets"
             @click="lookHandle(scope.row)"
             >查看详情</el-button
-          >
+          > -->
           <el-button
             size="mini"
             type="text"
@@ -110,7 +122,8 @@
 </template>
 
 <script>
-import { getTodayworkCate, getTodaywork, getTodayworkById, delTodaywork } from "@/api/todaywork.js";
+import { getDutyList, delDuty } from "@/api/duty"
+import { lastDept } from "@/api/system/dept"
 
 export default {
   data() {
@@ -120,57 +133,53 @@ export default {
       pageSize: 10,
       cateData: [],
       search: {
-        title: "",
-        cateId: 0,
+        deptId: 0,
       },
       total: 0, //分页总页数
       loading: true,
       dialogVisible: false,
       id: null,
+      deptList: [],
+      personList: [],
     };
   },
   methods: {
+    async getDeptList() {
+      const res = await lastDept()
+      if (res && res.code == 200 && res.data) {
+        this.deptList = res.data
+        this.deptList.unshift({ deptId: 0, deptName: "全部部门" });
+      }
+    },
     async getData() {
-      const res = await getTodaywork({
+      const res = await getDutyList({
         current: this.currentPage,
         size: this.pageSize,
-        title: this.search.title,
-        cateId: this.search.cateId,
+        deptId: this.search.deptId,
       })
-      // console.log(res);
+      console.log(res);
       if (res.code === '200' && res.data) {
         this.list = res.data.records;
         this.total = res.data.total;
         this.loading = false;
       }
     },
-    // 获取分类列表
-    async getCateList() {
-      const { code, data } = await getTodayworkCate({
-        size: 1000,
-      })
-      if (code === '200' && data.records) {
-        this.cateData = data.records;
-        this.cateData.unshift({ id: 0, cateName: "全部分类" });
-      }
-    },
     searchHandle() {
       this.getData();
     },
     reSetHandle() {
-      this.search.title = "";
-      this.search.cateId = 0;
+      this.search.deptId = 0;
       this.getData();
     },
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
     },
-    lookHandle({ id }) {
-      this.$router.push(`/todayworks/getCateDetail/${id}`)
-    },
+    /* lookHandle({ id }) {
+      this.$router.push(`/dutys/addDuty/${id}`)
+    }, */
     editHandle({ id }) {
-      this.$router.push(`/todayworks/addTodaywork/${id}`)
+      this.$router.push(`/dutys/addDuty/${id}`)
     },
     delHandle({ id }) {
       this.dialogVisible = true
@@ -178,7 +187,7 @@ export default {
     },
     async doDelHandle() {
       this.dialogVisible = false
-      const res = await delTodaywork(this.id)
+      const res = await delDuty(this.id)
       this.$message({
         message: '删除成功',
         type: 'success'
@@ -187,8 +196,8 @@ export default {
     },
   },
   created() {
+    this.getDeptList();
     this.getData();
-    this.getCateList();
   },
 
 };

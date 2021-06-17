@@ -26,9 +26,9 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="值班人员" prop="personId">
+      <el-form-item label="值班人员" prop="userId">
         <el-select
-          v-model="duty.personId"
+          v-model="duty.userId"
           placeholder="请选择所值班人员"
           style="width: 400px"
         >
@@ -39,6 +39,9 @@
             :value="item.id"
           ></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="值班地点" prop="pos">
+        <el-input v-model="duty.pos" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input
@@ -67,11 +70,9 @@
 </template>
 
 <script>
-import { getTodayworkCate, saveTodaywork, getTodayworkById, updateTodaywork } from "@/api/todaywork.js";
-import { listUser, getTreeUser } from "@/api/system/user";
-
 import { lastDept } from "@/api/system/dept";
 import { selectPerson } from "@/api/insider.js";
+import { saveDuty, getDutyById, updateDuty } from "@/api/duty"
 
 
 export default {
@@ -81,8 +82,8 @@ export default {
       personList: [],
       id: this.$route.query.id,
       duty: {
-        deptId: '',
-        personId: '',
+        deptId: 0,
+        userId: '',
         time: '',
         remark: ''
       },
@@ -91,7 +92,7 @@ export default {
         deptId: [
           { required: true, message: "请选择值班部门", trigger: "change" }
         ],
-        personId: [
+        userId: [
           { required: true, message: "请选择值班人员", trigger: "change" }
         ],
       }
@@ -102,9 +103,12 @@ export default {
   },
   watch: {
     changeDeptId(val) {
-      this.personList = []
-      this.duty.personId = ''
-      this.getPersonInfoByDeptId(val)
+      console.log('val', val);
+      if (val != 0) {
+        this.personList = []
+        this.duty.userId = ''
+        this.getPersonInfoByDeptId(val)
+      }
     }
   },
   methods: {
@@ -136,21 +140,23 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.$router.push("/todaywork/alltodaywork");
+      this.$router.push("/duty/dutyList");
     },
     async addHandle() {
-      const res = await saveTodaywork(this.todaywork);
+      const [startTime, endTime] = this.duty.time
+      const res = await saveDuty({ ...this.duty, startTime, endTime });
       if (res.code === '200') {
         this.$message({
           message: "添加成功",
           type: "success"
         });
-        this.$router.push("/todaywork/alltodaywork");
+        this.$router.push("/duty/dutyList");
       }
     },
     async updateHandle() {
-      const res = await updateTodaywork(this.todaywork)
-      //   console.log(res);
+      const [startTime, endTime] = this.duty.time
+      const res = await updateDuty({ ...this.duty, startTime, endTime })
+      // console.log(res);
       if (res && res.code === '200') {
         this.$message({
           message: '修改成功',
@@ -167,17 +173,18 @@ export default {
     },
   },
   async mounted() {
+    await this.getDeptList();
     const { id } = this.$route.params
     if (id) { // 修改
-      const res = await getTodayworkById(id)
-      //   console.log(res)
+      const res = await getDutyById(id)
       if (res && res.code === '200') {
-        this.todaywork = res.data
+        this.duty.deptId = res.data.deptId
+        setTimeout(() => {
+          this.duty = res.data
+          this.duty.time = [res.data.startTime, res.data.endTime]
+        }, 1000)
       }
     }
-
-    // 获取分类列表
-    this.getDeptList();
   }
 };
 </script>

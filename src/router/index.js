@@ -450,6 +450,13 @@ export const constantRoutes = [{
     meta: {
       title: '创建值班'
     }
+  }, {
+    path: 'addDuty/:id',
+    component: () => import('@/views/duty/add'),
+    name: 'UpdateDuty',
+    meta: {
+      title: '修改值班'
+    }
   }]
 }
 ]
