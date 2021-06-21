@@ -41,7 +41,7 @@
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column label="问卷名称" width="180">
+      <el-table-column label="问卷名称">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>

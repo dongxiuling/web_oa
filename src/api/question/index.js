@@ -21,7 +21,8 @@ export function getAddList(data) {
 // 查询问卷下的题列表
 export function getQueList(data) {
     return request({
-        url: '/naire/takeNaire/'+data.naireId,
+        url: '/naire/takenaire/'+data.naireId,
+        // url: '/naire/takenaire',
         method: 'get',
         // data: data
     })

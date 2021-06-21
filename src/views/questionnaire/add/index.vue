@@ -16,7 +16,7 @@
         <el-date-picker v-model="question.endDate"  style="width:400px"
         value-format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期"></el-date-picker>
       </el-form-item>
-      <el-form-item label="参与人员">
+      <!-- <el-form-item label="参与人员">
         <el-tree
           :data="deptTree"
           show-checkbox
@@ -27,6 +27,7 @@
           :default-checked-keys="userIds"
         ></el-tree>
       </el-form-item>
+       -->
       <el-form-item>
         <el-button v-if="$route.query.id" type="primary" @click="updateHandle('question')">确定修改</el-button>
         <el-button v-else type="primary" @click="submitForm('question')">立即创建</el-button>
@@ -104,7 +105,7 @@ export default {
           message: "添加成功",
           type: "success"
         });
-        this.$router.push("/question/addList");
+        this.$router.push("/questionnaire/questionnaireEdit");
       });
     },
     // 修改考试
@@ -134,7 +135,7 @@ export default {
   },
   created() {
     // 获取部门树形结构
-    this.getDeptTreeselect();
+    // this.getDeptTreeselect();
     if (this.id) {
       // console.log(this.id)
       this.getExamById(this.id);
