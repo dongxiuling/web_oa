@@ -41,7 +41,7 @@
       <el-table-column prop="deptName" label="部门"></el-table-column>
       <el-table-column prop="isCompleted" label="完成情况" align="center">
         <template scope="scope">
-          <el-tag v-if="scope.row.isCompleted == '0'" type="success"
+          <el-tag v-if="scope.row.isCompleted != '0'" type="success"
             >已完成</el-tag
           >
           <el-tag v-else type="danger">未完成</el-tag>
@@ -50,7 +50,7 @@
       <el-table-column class="handle_row" label="操作">
         <template slot-scope="scope">
           <el-button
-            v-if="scope.row.isCompleted == '0'"
+            v-if="scope.row.isCompleted != '0'"
             size="mini"
             @click="look(scope.row)"
             >问卷详情</el-button
