@@ -51,6 +51,7 @@
           <el-button size="mini" @click="goExcises(scope.row)"
             >编辑问卷</el-button
           >
+          <el-button size="mini" @click="look(scope.row)">查看结果</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,7 +80,7 @@ export default {
       pageSize: 10
     };
   },
-  created() {
+  mounted() {
     this.getData();
   },
   methods: {
@@ -95,6 +96,12 @@ export default {
     goExcises(_data) {
       this.$router.push({
         path: "/questions/test/",
+        query: { naireId: _data.id }
+      });
+    },
+    look(_data) {
+      this.$router.push({
+        path: "/questions/detail/",
         query: { naireId: _data.id }
       });
     },

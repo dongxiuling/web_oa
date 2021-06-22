@@ -221,6 +221,11 @@ export const constantRoutes = [{
     component: () => import('@/views/questionnaire/add/index'),
     meta: { title: '创建问卷'},
     hidden: true,
+  }, {
+    path: 'detail',
+    component: () => import('@/views/questionnaire/addList/detail'),
+    meta: { title: '查看结果'},
+    hidden: true,
   }]
 },
 {
