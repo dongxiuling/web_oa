@@ -82,7 +82,7 @@ export default {
       personList: [],
       id: this.$route.query.id,
       duty: {
-        deptId: 0,
+        deptId: '',
         userId: '',
         time: '',
         remark: ''
@@ -104,11 +104,9 @@ export default {
   watch: {
     changeDeptId(val) {
       console.log('val', val);
-      if (val != 0) {
-        this.personList = []
-        this.duty.userId = ''
-        this.getPersonInfoByDeptId(val)
-      }
+      this.personList = []
+      this.duty.userId = ''
+      this.getPersonInfoByDeptId(val)
     }
   },
   methods: {
