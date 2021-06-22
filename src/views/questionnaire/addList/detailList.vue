@@ -49,7 +49,12 @@
       </el-table-column>
       <el-table-column class="handle_row" label="操作">
         <template slot-scope="scope">
-          <el-button size="mini" @click="look(scope.row)">详情</el-button>
+          <el-button
+            v-if="scope.row.isCompleted == '0'"
+            size="mini"
+            @click="look(scope.row)"
+            >问卷详情</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -69,7 +74,7 @@
 
 <script>
 import { lastDept } from "@/api/system/dept"
-import { selectNaireInfo, geTNaireContent } from "@/api/question/index";
+import { selectNaireInfo } from "@/api/question/index";
 export default {
   data() {
     return {
@@ -102,16 +107,10 @@ export default {
       }
     },
     async look({ userId }) {
-      const res = await geTNaireContent({
-        naireId: this.naireId,
-        userId
-      })
-      console.log(res);
-      // if (res && res.code === '200') {
-      //   this.detailList = res.data.records
-      //   this.total = res.data.total;
-      //   this.fullscreenLoading = false;
-      // }
+      this.$router.push({
+        path: "/questions/testDetail/",
+        query: { naireId: this.naireId, userId }
+      });
     },
     handleCurrentChange(value) {
       this.currentPage = value;

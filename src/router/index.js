@@ -222,9 +222,14 @@ export const constantRoutes = [{
     meta: { title: '创建问卷'},
     hidden: true,
   }, {
-    path: 'detail',
-    component: () => import('@/views/questionnaire/addList/detail'),
+    path: 'detailList',
+    component: () => import('@/views/questionnaire/addList/detailList'),
     meta: { title: '查看结果'},
+    hidden: true,
+  }, {
+    path: 'testDetail',
+    component: () => import('@/views/questionnaire/addList/testDetail'),
+    meta: { title: '问卷详情'},
     hidden: true,
   }]
 },

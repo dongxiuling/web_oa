@@ -101,7 +101,7 @@ export default {
     },
     look(_data) {
       this.$router.push({
-        path: "/questions/detail/",
+        path: "/questions/detailList/",
         query: { naireId: _data.id }
       });
     },
