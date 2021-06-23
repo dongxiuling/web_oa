@@ -1,8 +1,30 @@
 <template>
   <div class="dashboard-editor-container">
     <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>本周工作学习计划</span>
+      </div>
+      <el-table :data="workplanList" style="width: 100%" v-loading="loading">
+        <el-table-column align="center" label="序号" type="index"> </el-table-column>
+        <el-table-column align="center" prop="title" label="工作名称"></el-table-column>
+        <el-table-column align="center" prop="startTime" label="开始时间"></el-table-column>
+        <el-table-column align="center" prop="endTime" label="结束时间"></el-table-column>
+        <el-table-column align="center" label="操作" width="220">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-tickets"
+              @click="workplanDetail(scope.row)"
+              >查看详情</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <el-row style="background: #fff; padding: 16px 16px 0; margin-bottom: 32px">
       <line-chart :chart-data="lineChartData" />
     </el-row>
 
@@ -23,8 +45,6 @@
         </div>
       </el-col>
     </el-row>
-
-    
   </div>
 </template>
 
@@ -34,6 +54,8 @@ import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
+import { selectWorkplan } from "@/api/workplan"
+import { dateFormat } from "@/utils/format"
 
 const lineChartData = {
   newVisitis: {
@@ -65,13 +87,34 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      loading: false,
+      workplanList: []
     }
   },
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
-    }
+    },
+    async getWorkplan() {
+      const res = await selectWorkplan({
+        current: 0,
+        size: 999,
+        startTime: dateFormat("YYYY-mm-dd HH:MM:SS", new Date()),
+      })
+      if (res.code === '200' && res.data) {
+        this.workplanList = res.data.records;
+      }
+    },
+    workplanDetail({ id }) {
+      this.$router.push(`/plans/getDetail/${id}`)
+    },
+  },
+  async mounted() {
+    this.loading = true
+    await this.getWorkplan()
+    this.loading = false
+
   }
 }
 </script>
@@ -89,7 +132,11 @@ export default {
   }
 }
 
-@media (max-width:1024px) {
+.box-card {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1024px) {
   .chart-wrapper {
     padding: 8px;
   }

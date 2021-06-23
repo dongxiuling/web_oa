@@ -1,74 +1,80 @@
 <template>
   <div class="app-container">
     <el-form ref="plan" :model="plan" :rules="rules" label-width="80px">
-      <el-form-item label="计划名称" prop="name">
-        <el-input v-model="plan.name" style="width:400px"></el-input>
+      <el-form-item label="计划名称" prop="title">
+        <el-input v-model="plan.title" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="计划时间" prop="date">
         <el-date-picker
-          style="width:400px"
+          style="width: 400px"
           v-model="plan.date"
           type="daterange"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          format="yyyy 年 MM 月 dd 日"
-          value-format="yyyy-MM-dd"
         ></el-date-picker>
+        <!-- <el-date-picker
+          v-model="plan.date"
+          type="week"
+          format="yyyy 第 WW 周"
+          placeholder="选择周"
+        >
+        </el-date-picker> -->
       </el-form-item>
       <el-form-item label="计划内容" prop="content">
-        <el-input type="textarea" style="width:400px" v-model="plan.content"></el-input>
+        <el-input
+          type="textarea"
+          style="width: 400px"
+          v-model="plan.content"
+        ></el-input>
       </el-form-item>
       <el-form-item label="上传资料">
         <Uploader v-on:getFile="getFileUrl(arguments)"></Uploader>
       </el-form-item>
-      <el-form-item label="关联人员">
-        <el-tree
-          :data="deptTree"
-          show-checkbox
-          node-key="id"
-          ref="tree"
-          :props="defaultProps"
-          @check="getCheckedNodes()"
-          :default-checked-keys="plan.userIds"
-        ></el-tree>
+      <el-form-item label="备注" prop="remark">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 8 }"
+          placeholder="请输入备注"
+          v-model="plan.remark"
+          style="width: 400px"
+        ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="$route.query.id" type="primary" @click="updateHandle('exam')">确定修改</el-button>
-        <el-button v-else type="primary" @click="submitForm('exam')">立即创建</el-button>
-        <el-button @click="resetForm('exam')">取消</el-button>
+        <el-button
+          v-if="$route.params.id"
+          type="primary"
+          @click="updateHandle('plan')"
+          >确定修改</el-button
+        >
+        <el-button v-else type="primary" @click="submitForm('plan')"
+          >立即创建</el-button
+        >
+        <el-button @click="resetForm('plan')">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { getCategory } from '@/api/tool/category.js';
-import {
-  createExam,
-  getExamById,
-  updateExam
-} from '@/api/exam';
-import { listUser, getTreeUser } from '@/api/system/user';
-import Uploader from "@/components/Uploader";
+import { saveWorkplan, getWorkplanById, upldateWorkplan } from "@/api/workplan"
+import { dateFormat } from "@/utils/format"
+import Uploader from "@/components/Uploader"
 
 export default {
   data() {
     return {
-      deptTree: [],
       plan: {
-        name: '',
-        data: '',
+        title: '',
+        date: '',
         content: '',
-        userIds: []
       },
-      id: this.$route.query.id,
+      id: this.$route.params.id,
       rules: {
-        name: [{ required: true, message: '请输入计划名称', trigger: 'blur' }],
+        title: [{ required: true, message: '请输入计划名称', trigger: 'blur' }],
         content: [{ required: true, message: '请输入计划内容', trigger: 'blur' }],
         date: [
           {
-            type: 'date',
             required: true,
             message: '请选择日期',
             trigger: 'change'
@@ -76,46 +82,20 @@ export default {
         ]
       },
       time: [],
-      userIds: [],
-      props: {
-        label: 'name',
-        children: 'zones'
+      file: {
+        title: "",
+        url: "",
+        readUrl: "",
+        type: "regulatory_documents",
+        name: ""
       },
-      defaultProps: {
-        children: 'children',
-        label: 'label',
-        isLeaf: 'leaf'
-      }
     }
   },
   components: {
     Uploader
   },
   methods: {
-    //获取选中状态下的人员数据
-    getCheckedNodes() {
-      this.userIds = this.$refs.tree.getCheckedNodes(true).map(item => {
-        return item.id;
-      });
-    },
-    /** 查询部门树结构 */
-    getDeptTreeselect() {
-      getTreeUser().then(response => {
-        this.deptTree = response.data;
-      });
-    },
-    // 获取分类列表ç
-    getCateList() {
-      getExamCategory({
-        pageNum: 1,
-        pageSize: 1000,
-        dictType: 'sys_module_name'
-      }).then(res => {
-        this.cateData = res.rows;
-      });
-    },
     submitForm(formName) {
-      console.log(11111);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.addHandle();
@@ -128,45 +108,42 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    // 添加考试
-    addHandle() {
+    async addHandle() {
       let params = {
-        ...this.exam,
-        startDate: this.time[0],
-        endDate: this.time[1],
-        userIds: this.userIds.join(',')
+        ...this.plan,
+        files: [this.file],
+        startTime: dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.plan.date[0])),
+        endTime: dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.plan.date[1])),
       };
-      createExam(params).then(res => {
+      console.log(params);
+      const res = await saveWorkplan(params);
+      // console.log(res);
+      if (res && res.code === '200') {
         this.$message({
           message: '添加成功',
           type: 'success'
         });
-        this.$router.push('/exam/addlist');
-      });
+        this.$router.push('/plan/planList');
+      }
+
     },
-    // 修改考试
-    updateHandle() {
+    async updateHandle() {
       let params = {
-        ...this.exam,
-        startDate: this.time[0],
-        endDate: this.time[1],
-        userIds: this.userIds.join(',')
+        ...this.plan,
+        files: [this.file],
+        startTime: dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.plan.date[0])),
+        endTime: dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.plan.date[1])),
       };
-      updateExam(params).then(res => {
+      const res = await upldateWorkplan(params)
+      if (res && res.code === '200') {
         this.$message({
           message: '修改成功',
           type: 'success'
         });
-        this.$router.push('/exam/addlist');
-      });
-    },
-    // 修改考试获取信息
-    getExamById(id) {
-      getExamById({ id }).then(res => {
-        this.exam = res.data;
-        this.time = [res.data.startDate, res.data.endDate];
-        this.userIds = res.data.userIds.split(',');
-      })
+        this.$router.push('/plan/planList');
+      }
+
+
     },
     // 获取wFid和nFid
     getFileUrl(args) {
@@ -174,15 +151,16 @@ export default {
       this.file.readUrl = args[1];
     }
   },
-  created() {
-    // 获取分类列表
-    // this.getCateList();
-    // // 获取部门树形结构
-    this.getDeptTreeselect();
-    // if(this.id){
-    //   // console.log(this.id)
-    //   this.getExamById(this.id);
-    // }
+  async mounted() {
+    if (this.id) {
+      // console.log(this.id)
+      const { data } = await getWorkplanById(this.id);
+      this.plan = data
+      this.plan.date = [data.startTime, data.endTime]
+      if (data.files && data.files[0]) {
+        this.file = data.files[0]
+      }
+    }
   }
 };
 </script>
