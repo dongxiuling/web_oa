@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { selectOutsider, getOutsiderById, delOutsiderById } from "@/api/outsider.js";
+import { selectOutsider, delOutsiderById } from "@/api/outsider.js";
 
 export default {
   data() {
