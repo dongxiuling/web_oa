@@ -485,6 +485,81 @@ export const constantRoutes = [{
       title: '修改值班'
     }
   }]
+}, {
+  path: '/exposure_',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail/:id',
+    component: () => import('@/views/exposure/detail'),
+    name: 'exposureDetail',
+    meta: {
+      title: '文章详情'
+    }
+  }]
+},
+{
+  path: '/important_',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail/:id',
+    component: () => import('@/views/important/detail'),
+    name: 'importantDetail',
+    meta: {
+      title: '文章详情'
+    }
+  }]
+},
+{
+  path: '/accident_',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail/:id',
+    component: () => import('@/views/accident/detail'),
+    name: 'accidentDetail',
+    meta: {
+      title: '文章详情'
+    }
+  }]
+},
+{
+  path: '/driver_',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail/:id',
+    component: () => import('@/views/driver/detail'),
+    name: 'driverDetail',
+    meta: {
+      title: '文章详情'
+    }
+  }]
+},{
+  path: '/learn_',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail/:id',
+    component: () => import('@/views/learn/detail'),
+    name: 'learnDetail',
+    meta: {
+      title: '文章详情'
+    }
+  }]
+},{
+  path: '/history_',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail/:id',
+    component: () => import('@/views/history/detail'),
+    name: 'historyDetail',
+    meta: {
+      title: '文章详情'
+    }
+  }]
 }
 ]
 
