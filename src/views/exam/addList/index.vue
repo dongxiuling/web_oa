@@ -14,9 +14,9 @@
         <el-select v-model="search.categoryId" placeholder="请选择考试类型">
           <el-option
             v-for="item in cateData"
-            :key="item.dictCode"
-            :label="item.dictLabel"
-            :value="item.dictCode"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -76,8 +76,7 @@
 </template>
 
 <script>
-import { getCategory } from "@/api/tool/category.js";
-import { getCreatedExam, delExam } from "@/api/exam";
+import { getCreatedExam, delExam,getExamCate } from "@/api/exam";
 export default {
   data() {
     return {
@@ -115,12 +114,13 @@ export default {
     },
     // 获取分类列表
     getCateList() {
-      getCategory({
-        pageNum: 1,
-        pageSize: 1000,
-        dictType: "sys_module_name"
+      getExamCate({
+        ...this.search,
+        size: 1000,
+        current:1
       }).then(res => {
-        this.cateData = res.rows;
+        // console.log(res);
+        this.cateData = res.data.records;
       });
     },
     handleCurrentChange(value) {

@@ -26,8 +26,16 @@
         </el-select>
       </el-form-item>-->
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="searchHandle()"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
     <el-table :data="examList" style="width: 100%" v-loading="loading">
@@ -37,8 +45,16 @@
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
       <el-table-column prop="title" label="考试名称"></el-table-column>
-      <el-table-column prop="startDate" label="开始时间" width="180"></el-table-column>
-      <el-table-column prop="endDate" label="结束时间" width="180"></el-table-column>
+      <el-table-column
+        prop="startDate"
+        label="开始时间"
+        width="180"
+      ></el-table-column>
+      <el-table-column
+        prop="endDate"
+        label="结束时间"
+        width="180"
+      ></el-table-column>
       <el-table-column prop="categoryName" label="模块"></el-table-column>
       <el-table-column prop="duration" label="时长"></el-table-column>
       <el-table-column label="操作">
@@ -47,20 +63,32 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="$router.push({path:'/exams/single',query:{id:scope.row.id}})"
+            @click="
+              $router.push({
+                path: '/exams/single',
+                query: { id: scope.row.id },
+              })
+            "
             v-if="scope.row.isFinished == null"
-          >考试</el-button>
+            >考试</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-thumb"
             v-else
-            @click="$router.push({path:'/exams/analytic',query:{examId:scope.row.id}})"
-          >查看</el-button>
+            @click="
+              $router.push({
+                path: '/exams/analytic',
+                query: { examId: scope.row.id },
+              })
+            "
+            >查看</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    <div class="page-box"> 
+    <div class="page-box">
       <el-pagination
         style="width: 100%"
         background
@@ -75,9 +103,8 @@
 </template>
 
 <script>
-import { getMyExam } from "@/api/exam.js";
-import { getCategory } from "@/api/tool/category.js";
-
+import { getMyExam, getExamCate } from "@/api/exam.js";
+// import { getCategory } from "@/api/tool/category.js";
 export default {
   data() {
     return {
@@ -87,10 +114,10 @@ export default {
       cateData: [],
       search: {
         title: "",
-        categoryId: ""
+        categoryId: "",
       },
-      total: 0 ,//分页总页数
-      loading:true
+      total: 0, //分页总页数
+      loading: true,
     };
   },
   methods: {
@@ -106,8 +133,8 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         title: this.search.title,
-        categoryId: categoryId
-      }).then(res => {
+        categoryId: categoryId,
+      }).then((res) => {
         this.examList = res.data.records;
         this.total = res.data.total;
         this.loading = false;
@@ -115,11 +142,11 @@ export default {
     },
     // 获取分类列表
     getCateList() {
-      getCategory({
+      getExamCate({
         pageNum: 1,
         pageSize: 1000,
-        dictType: "sys_module_name"
-      }).then(res => {
+        dictType: "sys_module_name",
+      }).then((res) => {
         this.cateData = res.rows;
       });
     },
@@ -134,12 +161,12 @@ export default {
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
-    }
+    },
   },
   created() {
     this.getData();
     this.getCateList();
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>

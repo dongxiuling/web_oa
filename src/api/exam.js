@@ -11,7 +11,7 @@ export function getMyExam(params) {
 // 查询我发布的考试
 export function getCreatedExam(params) {
     return request({
-        url: '/exam/findMyCreated',
+        url: '/exam/findAllList',
         method: 'post',
         params
     })
@@ -110,4 +110,41 @@ export function delExer(query) {
       url: '/exam/delExerById/'+query.id,
       method: 'get',
   })
+}
+
+
+
+
+// 获取考试类型
+export const getExamCate = (data = {}) => request({
+    url: '/examType/selectType',
+    method: 'post',
+    data
+})
+
+// 添加考试类型
+export const saveExamCate = (data = {}) => request({
+    url: '/examType/save',
+    method: 'post',
+    data
+})
+
+export const getCateById = id => {
+    return request({
+        url: `/examType/getById/${id}`,
+        method: 'get'
+    })
+}
+
+export const updateExamCate = (data = {}) => request({
+    url: '/examType/update',
+    method: 'post',
+    data
+})
+
+export const delExamCate = id => {
+    return request({
+        url: `/examType/delById/${id}`,
+        method: 'get'
+    })
 }
