@@ -306,7 +306,7 @@ export default {
         }
     },
     addHandle() {
-      if (this.status == 2 || this.status == 3) {
+      if (this.status == 2 ) {
         this.exer.answer = this.checkList.join(",");
       }
       let params = { ...this.exer, categoryId:this.categoryId ,type:this.status};

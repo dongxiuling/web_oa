@@ -114,6 +114,21 @@ export const constantRoutes = [{
     path: 'excises',
     component: () => import('@/views/exam/excises'),
     hidden: true
+  },
+  {
+    path: 'addCate',
+    component: () => import('@/views/exam/cate/add'),
+    name: 'AddTodayworkCate',
+    meta: {
+      title: '创建考试分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/exam/cate/add'),
+    name: 'UpdateTodayworkCate',
+    meta: {
+      title: '修改考试分类'
+    }
   }
   ]
 },
@@ -214,22 +229,22 @@ export const constantRoutes = [{
   children: [{
     path: 'test',
     component: () => import('@/views/questionnaire/add/test'),
-    meta: { title: '编辑问卷'},
+    meta: { title: '编辑问卷' },
     hidden: true,
   }, {
     path: 'add',
     component: () => import('@/views/questionnaire/add/index'),
-    meta: { title: '创建问卷'},
+    meta: { title: '创建问卷' },
     hidden: true,
   }, {
     path: 'detailList',
     component: () => import('@/views/questionnaire/addList/detailList'),
-    meta: { title: '查看结果'},
+    meta: { title: '查看结果' },
     hidden: true,
   }, {
     path: 'testDetail',
     component: () => import('@/views/questionnaire/addList/testDetail'),
-    meta: { title: '问卷详情'},
+    meta: { title: '问卷详情' },
     hidden: true,
   }]
 },
@@ -309,15 +324,15 @@ export const constantRoutes = [{
       title: '周工作计划详情'
     }
   }
-  // {
-  //   path: 'addStudy',
-  //   component: () => import('@/views/plan/add/study'),
-  //   name: 'AddStudy',
-  //   meta: {
-  //     title: '创建学习计划'
-  //   }
-  // }
-]
+    // {
+    //   path: 'addStudy',
+    //   component: () => import('@/views/plan/add/study'),
+    //   name: 'AddStudy',
+    //   meta: {
+    //     title: '创建学习计划'
+    //   }
+    // }
+  ]
 },
 {
   path: '/todayworks',

@@ -15,26 +15,7 @@
       >{{examDetail.judgmentNum}}个，每题{{examDetail.judgmentScore}}分，共{{examDetail.judgmentNum*examDetail.judgmentScore}}分</el-form-item>
       <el-form-item label="考试总分：">{{totalScore}}</el-form-item>
     </el-form>
-    <el-table :data="examDetail.ue.records" style="width: 100%">
-      <el-table-column label="序号">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
-      <el-table-column prop="userName" label="参考人"></el-table-column>
-      <el-table-column prop="deptName" label="部门"></el-table-column>
-      <el-table-column prop="score" label="分数"></el-table-column>
-      <el-table-column prop="createTime" label="答题时间" width="180"></el-table-column>
-    </el-table>
-    <div class="page-box">
-      <el-pagination
-        style="width: 100%"
-        background
-        layout="prev, pager, next"
-        :total="total"
-        :current-page.sync="currentPage"
-        :page-size="pageSize"
-        @current-change="handleCurrentChange"
-      ></el-pagination>
-    </div>
+   
   </div>
 </template>
 
@@ -67,6 +48,7 @@ export default {
   },
   methods: {
     getDetail() {
+      console.log(1213334)
       getExamDetail({
         id: this.examId,
         current: this.currentPage,
