@@ -111,6 +111,7 @@ export default {
         console.log(res);
         this.dataList = res.data.records;
         this.loading = false;
+        this.total = res.data.total
       });
     },
     // 初始化数据

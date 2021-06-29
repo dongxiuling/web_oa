@@ -28,9 +28,9 @@
             <el-button
               size="mini"
               type="text"
-              icon="el-icon-tickets"
+              icon="el-icon-view"
               @click="workplanDetail(scope.row)"
-              >查看详情</el-button
+              >详情</el-button
             >
           </template>
         </el-table-column>
@@ -132,7 +132,7 @@
             <el-button
               size="mini"
               type="text"
-              icon="el-icon-tickets"
+              icon="el-icon-view"
               @click="outSiderDetail(scope.row)"
               >详情</el-button
             >
