@@ -1,140 +1,322 @@
 <template>
   <div class="app-container">
-    <el-form ref="file" :model="file" :rules="rules" label-width="80px">
-      <el-form-item label="上传安全图">
-        <Uploader v-on:getFile="getFileUrl(arguments)" :change="isChange" :name="file.name"></Uploader>
-        <!-- <el-button @click="openTabWin(file.readUrl,'view')" v-if="file.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button> -->
-        <el-button v-if="id" @click="openTabWin(file.url,'download')" icon="el-icon-download" size="small" type="success">下载文件</el-button>
-      </el-form-item>
+    <el-form :inline="true">
       <el-form-item>
-        <el-button  type="primary" @click="submitForm('file')">立即创建</el-button>
-        <el-button @click="resetForm('file')">取消</el-button>
+        <el-button
+          class="filter-item"
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          v-if="list.length == 0"
+          @click="handleAdd()"
+          >新增</el-button
+        >
+        <el-button
+          class="filter-item"
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleDel()"
+          >删除</el-button
+        >
       </el-form-item>
     </el-form>
+
+    <el-table
+      :data="list"
+      row-key="id"
+      default-expand-all
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+    >
+      <el-table-column prop="name" label="姓名" width="260"></el-table-column>
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="scope">
+          <!-- <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            >修改</el-button
+          > -->
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleAdd(scope.row)"
+            >新增</el-button
+          >
+          <!-- <el-button
+            v-if="scope.row.parentId != 0"
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            >删除</el-button
+          > -->
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 添加或修改部门对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="600px">
+      <el-form
+        :model="loginForm"
+        :rules="rules"
+        class="login-form"
+        label-width="60px"
+        ref="question"
+      >
+        <el-form-item label="部门" prop="deptId">
+          <el-select
+            v-model="loginForm.deptId"
+            placeholder="请选择部门"
+            style="width: 260px"
+          >
+            <el-option
+              v-for="item in deptList"
+              :key="item.deptId"
+              :label="item.deptName"
+              :value="item.deptId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="姓名" prop="user">
+          <el-select
+            v-model="loginForm.user"
+            placeholder="请选择姓名"
+            style="width: 260px"
+          >
+            <el-option
+              v-for="item in personList"
+              :key="item.id"
+              :label="item.name"
+              :value="item"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { saveSafety } from "@/api/safety.js";
-import { fileSave ,downLoadFile,readFile} from "@/api/file";
-import { listUser, getTreeUser } from "@/api/system/user";
-import Uploader from "@/components/Uploader";
+import { lastDept } from "@/api/system/dept";
+import { selectPerson } from "@/api/insider";
+import {
+  listDept,
+  getDept,
+  delDept,
+  addDept,
+  updateDept,
+} from "@/api/system/dept";
+import { saveSafety, selectSafety } from "@/api/safety.js";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
+  name: "Dept",
+  components: { Treeselect },
   data() {
     return {
-      cateData: [],
-      deptTree: [],
-      defaultProps: {
-        children: "children",
-        label: "label",
-        isLeaf: "leaf"
+      // 遮罩层
+      loading: true,
+      // 表格树数据
+      deptList: [],
+      list: [],
+      deptOptions: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 状态数据字典
+      statusOptions: [],
+      // 查询参数
+      queryParams: {
+        deptName: undefined,
+        status: undefined,
       },
-      filterText: "",
-      file: {
-        title: "",
-        cateId: "",
-        url: "http://www.rr.cc",
-        readUrl: "http://www.rr.cc",
-        userIds: [],
-        type: "regulatory_documents",
-        name: ""
+      // 表单参数
+      form: {},
+      obj: {},
+      loginForm: {
+        deptId: "",
+        user: "",
       },
-      isChange: false, //false添加 true修改
-      id: this.$route.query.id,
+      deptList: [],
+      personList: [],
       rules: {
-        title: [{ required: true, message: "请输入法规名称", trigger: "blur" }],
-
-        cateId: [
-          { required: true, message: "请选择法规分类", trigger: "change" }
-        ],
-        level: [
-          { required: true, message: "请选择法规级别", trigger: "change" }
-        ]
+        deptId: [{ required: true, message: "请选择部门", trigger: "blur" }],
+        user: [{ required: true, message: "请选择姓名", trigger: "blur" }],
       },
-      time: [],
-      props: {
-        label: "name",
-        children: "zones"
-      },
-      levels: ["紧急事件", "重点关注事件", "一般事件"]
+      id: 0,
     };
   },
-  components: {
-    Uploader
+  created() {
+    this.getDeptList();
+    this.getList();
+  },
+  computed: {
+    changeDeptId() {
+      return this.loginForm.deptId;
+    },
+    changeUserId() {
+      return this.loginForm.user;
+    },
   },
   watch: {
-    filterText(val) {
-      this.$refs.tree.filter(val);
-    }
+    changeDeptId(val) {
+      console.log(val,'111')
+      if (val != undefined) {
+        this.personList = [];
+        this.loginForm.user = "";
+        this.getPersonInfoByDeptId(val);
+      }
+    },
+    changeUserId(val) {
+      console.log(95, val);
+      // this.questionList = []
+      // this.loginForm.questionId = ''
+      // this.getQuestionList(val)
+    },
   },
   methods: {
-    //获取选中状态下的人员数据
-    getCheckedNodes() {
-      this.file.userIds = this.$refs.tree.getCheckedNodes(true).map(item => {
-        return item.id;
+    /** 查询人员列表 */
+    getList() {
+      this.loading = true;
+      selectSafety({
+        size: 100,
+        current: 1,
+      }).then((res) => {
+        if (res.data.records.length > 0) {
+          this.id = res.data.records[0].id;
+          this.list = JSON.parse(res.data.records[0].url);
+        }
       });
     },
-    /** 查询部门树结构 */
-    getDeptTreeselect() {
-      getTreeUser().then(response => {
-        this.deptTree = response.data;
+
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.loginForm = {
+        deptId: undefined,
+        user: undefined,
+      };
+      // this.resetForm("form");
+    },
+
+    /** 新增按钮操作 */
+    handleAdd(row) {
+      // this.reset();
+      if (row != undefined) {
+        this.obj = row;
+      } else {
+        this.obj = {};
+      }
+
+      this.open = true;
+      this.title = "添加人员";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      this.getTreeselect();
+      getDept(row.deptId).then((response) => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改人员";
       });
     },
-    filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+    /** 提交按钮 */
+    submitForm: function () {
+      //验证
+      this.$refs['question'].validate(valid => {
         if (valid) {
-          this.addHandle();
+          if (JSON.stringify(this.obj) == "{}") {
+            this.list.push({
+              name: this.loginForm.user.name,
+              id: this.loginForm.user.id,
+            });
+          }
+          if (!this.obj.hasOwnProperty("children")) {
+            this.obj.children = [];
+          }
+          this.obj.children.push({
+            name: this.loginForm.user.name,
+            id: this.loginForm.user.id,
+          });
+
+          // this.list已更新 提交到数据库 ->更新页面
+          var data = this.id
+            ? { url: JSON.stringify(this.list), id: this.id }
+            : { url: JSON.stringify(this.list) };
+          saveSafety(data).then(() => {
+            this.open = false;
+            this.getList();
+            this.reset();
+          });
+        }
+      });
+    },
+    handleDel() {
+      this.$confirm("是否确认删除安全管理责任图?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          console.log(111)
+          var data = this.id
+            ? { url: JSON.stringify([]), id: this.id }
+            : { url: JSON.stringify([]) };
+          saveSafety(data).then(() => {
+            this.open = false;
+            this.getList();
+            this.msgSuccess("删除成功");
+          });
+        })
+        .catch(function () {});
+    },
+    async getDeptList() {
+      const res = await lastDept();
+      if (res && res.code == 200 && res.data) {
+        this.deptList = res.data;
+      }
+    },
+    async getPersonInfoByDeptId(deptId) {
+      const res = await selectPerson({
+        deptId,
+        current: 0,
+        size: 999,
+      });
+      if (res.code === "200" && res.data) {
+        this.personList = res.data.records;
+      }
+    },
+    handleLogin(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$router.push({
+            path: "/examList",
+            query: { ...this.loginForm },
+          });
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    // 添加
-    addHandle() {
-      // 验证 是否上传文件
-      if (this.file.name) {
-        saveSafety(this.file).then(res => {
-          this.$message({
-            message: "添加成功",
-            type: "success"
-          });
-          this.$router.push("/safeUpload/safeUploadlist");
-        });
-      }else{
-        this.$message.error('请选择上传文件');
-      }
-    },
-    // 获取wFid和nFid
-    getFileUrl(args) {
-      this.file.url = args[1];
-      this.file.readUrl = args[2];
-      this.file.name = args[0];
-      this.isChange = true;
-    },
-    // 下载或预览操作
-    async openTabWin(url,type){
-      if(type=="view"){
-        await readFile({id:this.file.id})
-      }else if(type="download"){
-        await downLoadFile({id:this.file.id})
-      }
-      window.open(url,"_blank");
-    },
   },
-  created() {
-    if (this.id) {
-      // 修改upload 状态 false添加 true修改
-      this.isChange = true;
-    }
-  }
 };
 </script>
