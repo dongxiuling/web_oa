@@ -10,12 +10,12 @@
         </div>
 
         <el-table :data="dataList" style="width: 100%" v-loading="loading">
-          <el-table-column type="index" width="150" label="序号">
+          <el-table-column type="index" width="150" label="序号" align="center">
           </el-table-column>
-          <el-table-column prop="title" label="名称"></el-table-column>
-          <el-table-column v-if="type == 1" prop="time" label="历史时间"></el-table-column>
-          <el-table-column v-else prop="createTime" label="添加时间"></el-table-column>
-          <el-table-column label="操作" width="200">
+          <el-table-column prop="title" label="名称" align="center"></el-table-column>
+          <el-table-column v-if="type == 1" prop="time" label="历史时间" align="center"></el-table-column>
+          <el-table-column v-else prop="createTime" label="添加时间" align="center"></el-table-column>
+          <el-table-column label="操作" width="200" align="center">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -141,12 +141,10 @@ export default {
       this.loading = true;
       exposureList(_data).then((res) => {
         console.log(res);
-      }).then((res) => {
-        // console.log(res);
         this.dataList = res.data.records;
         this.loading = false;
         this.total = res.data.total
-      });
+      })
     },
     // 初始化数据
     initData() {
