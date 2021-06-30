@@ -11,7 +11,7 @@
         <el-table-column type="index" width="150" label="序号">
         </el-table-column>
         <el-table-column prop="title" label="名称"></el-table-column>
-        <el-table-column prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column prop="time" label="历史时间"></el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button
@@ -51,6 +51,7 @@
   </div>
 </template>
 <script>
+import {dateFormat} from "../../utils/format";
 import { exposureList, exposureDel } from "@/api/exposure";
 export default {
   data() {
@@ -113,6 +114,7 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         type: 1,
+        time:dateFormat("YYYY-mm-dd HH:MM:SS", new Date())
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;

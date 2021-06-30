@@ -5,6 +5,12 @@
       <el-form-item label="文章标题" prop="title">
         <el-input v-model="form.title" style="width: 300px"></el-input>
       </el-form-item>
+      <el-form-item label="活动时间" required>
+      <el-form-item prop="date">
+        <el-date-picker type="date" placeholder="选择日期" v-model="form.date" style="width: 300px;"></el-date-picker>
+      </el-form-item>
+    
+  </el-form-item>
       <el-form-item label="文章内容" prop="content">
         <tinymce v-model="form.content" :height="300" />
         <!-- <VueUeditorWrap :config="myConfig" v-model="form.content" /> -->
@@ -23,12 +29,25 @@
 </template>
 
 <script>
+import {dateFormat} from "../../utils/format";
 import Tinymce from "@/components/Tinymce/index";
-// import VueUeditorWrap from "vue-ueditor-wrap";
+import VueUeditorWrap from "vue-ueditor-wrap";
 import { addExposure, exposureDetail,exposureUpdate } from "@/api/exposure";
 export default {
   data() {
     return {
+      // myConfig: {
+      //   elementPathEnabled: false,
+      //   wordCount: false, //是否开启字数统计
+      //   // 初始容器高度
+      //   initialFrameHeight: 380,
+      //   // 初始容器宽度
+      //   initialFrameWidth: "100%",
+      //   // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
+      //   serverUrl: "http://www.gxxmglzx.com/tender/ueditor/controller.php",
+      //   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
+      //   UEDITOR_HOME_URL: process.env.BASE_URL + "UEditor/"
+      // },
       loading: false,
       form: {
         title: "",
@@ -36,6 +55,7 @@ export default {
       },
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+        date: [{ required: true, message: "请选择时间", trigger: "blur" }],
         content: [{ required: true, message: "请输入内容", trigger: "blur" }],
       },
 
@@ -53,6 +73,7 @@ export default {
             type: 1,
             id:this.$route.query.id,
             content: this.form.content,
+            time:dateFormat("YYYY-mm-dd HH:MM:SS",this.form.date)
           }).then((res) => {
             this.$message({
               message: "修改成功",
@@ -75,6 +96,7 @@ export default {
             title: this.form.title,
             type: 1,
             content: this.form.content,
+            time:dateFormat("YYYY-mm-dd HH:MM:SS",this.form.date)
           }).then((res) => {
             this.$message({
               message: "添加成功",
@@ -99,6 +121,7 @@ export default {
       exposureDetail(id).then((res) => {
         let _data = {
           title: res.data.title,
+          date:res.data.time,
           content: res.data.content,
         };
         this.form = _data;
@@ -115,7 +138,7 @@ export default {
   },
   components: {
     Tinymce,
-    // VueUeditorWrap
+    VueUeditorWrap
   },
 };
 </script>

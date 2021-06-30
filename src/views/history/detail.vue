@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="title">{{ dataInfo.title }}</div>
-    <div class="time">{{ dataInfo.createTime }}</div>
+    <div class="time">{{ dataInfo.time }}</div>
     <div class="content" v-html="dataInfo.content"></div>
   </div>
 </template>
