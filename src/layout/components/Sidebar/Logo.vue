@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      title: 'OA系统',
+      title: 'OA管理系统',
       logo: logoImg
     }
   }

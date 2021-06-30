@@ -141,8 +141,11 @@ export default {
       this.loading = true;
       exposureList(_data).then((res) => {
         console.log(res);
+      }).then((res) => {
+        // console.log(res);
         this.dataList = res.data.records;
         this.loading = false;
+        this.total = res.data.total
       });
     },
     // 初始化数据
@@ -167,33 +170,20 @@ export default {
   },
   computed: {
     title() {
-      let _title = "";
+      let _title = ""
       let _type = this.type * 1;
       switch (_type) {
-        case 1:
-          _title = "历史今天";
-          break;
-        case 2:
-          _title = "曝光问题";
-          break;
-        case 3:
-          _title = "部门要事";
-          break;
-        case 4:
-          _title = "事故通报";
-          break;
-        case 5:
-          _title = "司机专栏";
-          break;
-        case 6:
-          _title = "学习园地";
-          break;
-        default:
-          _title = "无";
+        case 1: _title = "历史今天"; break;
+        case 2: _title = "曝光问题"; break;
+        case 3: _title = "部门要事"; break;
+        case 4: _title = "事故通报"; break;
+        case 5: _title = "司机专栏"; break;
+        case 6: _title = "学习园地"; break;
+        default: _title = "无";
       }
-      return _title;
-    },
-  },
+      return _title
+    }
+  }
 };
 </script>
 <style scoped>
@@ -210,5 +200,10 @@ li {
   content: "";
   display: block;
   clear: both;
+}
+
+.page-box {
+  padding: 20px 0;
+  float: right;
 }
 </style>

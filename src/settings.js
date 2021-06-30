@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'OA系统',
+  title: 'OA管理系统',
 
   /**
    * 是否系统布局配置

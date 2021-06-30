@@ -31,25 +31,25 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/user/profile">
+          <!-- <router-link to="/user/profile">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
           <el-dropdown-item @click.native="setting = true">
             <span>布局设置</span>
-          </el-dropdown-item>
+          </el-dropdown-item> -->
           <el-dropdown-item divided @click.native="logout">
             <span>退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-tooltip content="进入消息中心查看消息" effect="dark" placement="bottom">
+    <!-- <el-tooltip content="进入消息中心查看消息" effect="dark" placement="bottom">
     <div class="msg-remind" @click="goMessageCenter">
       <el-badge :value="message>0?message:''" class="item">
         <i class="el-icon-message-solid"></i>
       </el-badge>
     </div>
-    </el-tooltip>
+    </el-tooltip> -->
   </div>
 </template>
 
