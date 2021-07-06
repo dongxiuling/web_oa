@@ -22,8 +22,12 @@ export default {
         current: 1,
       }).then((res) => {
         if (res.data.records.length > 0) {
-          var data = JSON.parse(res.data.records[0].url)[0];
-          console.log(data);
+         var userData = JSON.parse(res.data.records[0].url);
+          var data = {
+            name:'安全责任图',
+            id:0,
+            children:userData
+          }
           var option = {
             series: [
               {

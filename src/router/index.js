@@ -81,10 +81,10 @@ export const constantRoutes = [{
   },
   {
     path: 'detail',
-    component: () => import('@/views/exam/addList/detail'),
-    name: '我的发布详情',
+    component: () => import('@/views/exam/examList/detail'),
+    name: '考试详情',
     meta: {
-      title: '我的发布详情',
+      title: '考试详情',
       icon: 'build',
     },
     hidden: true

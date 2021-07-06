@@ -59,27 +59,14 @@
       <el-table-column prop="duration" label="时长"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="
-              $router.push({
-                path: '/exams/single',
-                query: { id: scope.row.id },
-              })
-            "
-            v-if="scope.row.isFinished == null"
-            >考试</el-button
-          >
+          
           <el-button
             size="mini"
             type="text"
             icon="el-icon-thumb"
-            v-else
             @click="
               $router.push({
-                path: '/exams/analytic',
+                path: '/exams/detail',
                 query: { examId: scope.row.id },
               })
             "
