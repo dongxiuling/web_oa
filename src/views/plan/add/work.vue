@@ -147,7 +147,8 @@ export default {
     },
     // 获取wFid和nFid
     getFileUrl(args) {
-      this.file.url = args[0];
+      this.file.name = args[0];
+      this.file.url = args[1];
       this.file.readUrl = args[1];
     }
   },

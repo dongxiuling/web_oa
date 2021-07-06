@@ -309,7 +309,7 @@ export const constantRoutes = [{
       title: '创建工作计划'
     }
   }, {
-    path: 'addWork:id',
+    path: 'addWork/:id',
     component: () => import('@/views/plan/add/work'),
     name: 'EditWork',
     meta: {
