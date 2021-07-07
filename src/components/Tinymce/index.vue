@@ -22,6 +22,7 @@ import "tinymce/plugins/lists"; // 列表插件
 import "tinymce/plugins/wordcount"; // 字数统计插件
 import "tinymce/plugins/searchreplace";
 import { getToken } from "@/utils/auth";
+import axios from 'axios'
 export default {
   components: {
     Editor,
@@ -74,57 +75,59 @@ export default {
         // 此处为图片上传处理函数，这个直接用了base64的图片形式上传图片，
         // 如需ajax上传可参考https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_handler
         images_upload_handler: (blobInfo, success, failure) => {
-          console.log(blobInfo, success, failure);
           const img = "data:image/jpeg;base64," + blobInfo.base64();
 
-          var xhr, formData;
+          // var xhr, formData;
 
-          xhr = new XMLHttpRequest();
-          xhr.withCredentials = false;
-          xhr.open("POST", process.env.VUE_APP_BASE_API + "/upload/chunk");
-          xhr.setRequestHeader("Authorization",getToken());
+          // xhr = new XMLHttpRequest();
+          // xhr.withCredentials = false;
+          // xhr.open("POST", process.env.VUE_APP_BASE_API + "/common/upload");
+          // xhr.setRequestHeader("Authorization",'Bearer ' + getToken());
           // xhr.upload.onprogress = function (e) {
           //   progress((e.loaded / e.total) * 100);
           // };
 
-          xhr.onload = function () {
-            var json;
+          // xhr.onload = function () {
+          //   var json;
 
-            if (xhr.status === 403) {
-              failure("HTTP Error: " + xhr.status, { remove: true });
-              return;
-            }
+          //   if (xhr.status === 403) {
+          //     failure("HTTP Error: " + xhr.status, { remove: true });
+          //     return;
+          //   }
 
-            if (xhr.status < 200 || xhr.status >= 300) {
-              failure("HTTP Error: " + xhr.status);
-              return;
-            }
+          //   if (xhr.status < 200 || xhr.status >= 300) {
+          //     failure("HTTP Error: " + xhr.status);
+          //     return;
+          //   }
 
-            json = JSON.parse(xhr.responseText);
+          //   json = JSON.parse(xhr.responseText);
 
-            if (!json || typeof json.location != "string") {
-              failure("Invalid JSON: " + xhr.responseText);
-              return;
-            }
+          //   if (!json || typeof json.location != "string") {
+          //     failure("Invalid JSON: " + xhr.responseText);
+          //     return;
+          //   }
 
-            success(json.location);
-          };
+          //   success(json.location);
+          // };
 
-          xhr.onerror = function () {
-            failure(
-              "Image upload failed due to a XHR Transport error. Code: " +
-                xhr.status
-            );
-          };
+          // xhr.onerror = function () {
+          //   failure(
+          //     "Image upload failed due to a XHR Transport error. Code: " +
+          //       xhr.status
+          //   );
+          // };
 
-          formData = new FormData();
+          var formData = new FormData();
           formData.append("file", blobInfo.blob(), blobInfo.filename());
-          formData.append("chunkNumber", 1);
-          formData.append("chunkSize", 2048000);
-          formData.append("filename", blobInfo.filename());
-          xhr.send(formData);
-
-          // success(img);
+          // xhr.send(formData);
+          var configs = {
+            headers:{"Authorization":'Bearer ' + getToken()}
+          };
+          axios.post(process.env.VUE_APP_BASE_API + "/common/upload",formData ,configs).then(res=>{
+            console.log(res)
+            success(res.data.msg);
+          })
+          
         },
       },
       myValue: this.value,
