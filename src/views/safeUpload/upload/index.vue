@@ -7,7 +7,6 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          v-if="list.length == 0"
           @click="handleAdd()"
           >新增</el-button
         >
@@ -70,17 +69,19 @@
         label-width="60px"
         ref="question"
       >
-        <el-form-item label="部门" prop="deptId">
+        <el-form-item label="部门" prop="dept">
           <el-select
-            v-model="loginForm.deptId"
+            v-model="loginForm.dept"
             placeholder="请选择部门"
             style="width: 260px"
+            @change="updateDept"
+             value-key="deptId"
           >
             <el-option
               v-for="item in deptList"
               :key="item.deptId"
               :label="item.deptName"
-              :value="item.deptId"
+              :value="item"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -89,6 +90,7 @@
             v-model="loginForm.user"
             placeholder="请选择姓名"
             style="width: 260px"
+            @change="updateUser"
           >
             <el-option
               v-for="item in personList"
@@ -145,15 +147,15 @@ export default {
       },
       // 表单参数
       form: {},
-      obj: {},
+      obj: { name: "安全责任图", children: [] },
       loginForm: {
-        deptId: "",
+        dept: "",
         user: "",
       },
       deptList: [],
       personList: [],
       rules: {
-        deptId: [{ required: true, message: "请选择部门", trigger: "blur" }],
+        dept: [{ required: true, message: "请选择部门", trigger: "blur" }],
         user: [{ required: true, message: "请选择姓名", trigger: "blur" }],
       },
       id: 0,
@@ -164,30 +166,37 @@ export default {
     this.getList();
   },
   computed: {
-    changeDeptId() {
-      return this.loginForm.deptId;
-    },
-    changeUserId() {
-      return this.loginForm.user;
-    },
+    // changeDeptId() {
+    //   return this.loginForm.dept.deptId;
+    // },
+    // changeUserId() {
+    //   return this.loginForm.user.id;
+    // },
   },
-  watch: {
-    changeDeptId(val) {
-      console.log(val,'111')
-      if (val != undefined) {
-        this.personList = [];
-        this.loginForm.user = "";
-        this.getPersonInfoByDeptId(val);
-      }
-    },
-    changeUserId(val) {
-      console.log(95, val);
-      // this.questionList = []
-      // this.loginForm.questionId = ''
-      // this.getQuestionList(val)
-    },
-  },
+  // watch: {
+  //   changeDeptId(val) {
+  //     console.log(val, "111");
+  //     if (val != undefined) {
+  //       this.personList = [];
+  //       this.loginForm.user = "";
+  //       this.getPersonInfoByDeptId(val);
+  //     }
+  //   },
+  //   changeUserId(val) {
+  //     console.log(95, val);
+
+  //     // this.questionList = []
+  //     // this.loginForm.questionId = ''
+  //     // this.getQuestionList(val)
+  //   },
+  // },
   methods: {
+    updateDept() {
+        this.getPersonInfoByDeptId(this.loginForm.dept.deptId);
+    },
+    updateUser(){
+
+    },
     /** 查询人员列表 */
     getList() {
       this.loading = true;
@@ -210,7 +219,7 @@ export default {
     // 表单重置
     reset() {
       this.loginForm = {
-        deptId: undefined,
+        dept: undefined,
         user: undefined,
       };
       // this.resetForm("form");
@@ -241,11 +250,12 @@ export default {
     /** 提交按钮 */
     submitForm: function () {
       //验证
-      this.$refs['question'].validate(valid => {
+      this.$refs["question"].validate((valid) => {
         if (valid) {
           if (JSON.stringify(this.obj) == "{}") {
             this.list.push({
-              name: this.loginForm.user.name,
+              name:
+                this.loginForm.dept.deptName + ":" + this.loginForm.user.name,
               id: this.loginForm.user.id,
             });
           }
@@ -253,7 +263,7 @@ export default {
             this.obj.children = [];
           }
           this.obj.children.push({
-            name: this.loginForm.user.name,
+            name: this.loginForm.dept.deptName + ":" + this.loginForm.user.name,
             id: this.loginForm.user.id,
           });
 
@@ -261,6 +271,8 @@ export default {
           var data = this.id
             ? { url: JSON.stringify(this.list), id: this.id }
             : { url: JSON.stringify(this.list) };
+
+            console.log(data,'22')
           saveSafety(data).then(() => {
             this.open = false;
             this.getList();
@@ -276,7 +288,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          console.log(111)
+          console.log(111);
           var data = this.id
             ? { url: JSON.stringify([]), id: this.id }
             : { url: JSON.stringify([]) };
@@ -303,19 +315,6 @@ export default {
       if (res.code === "200" && res.data) {
         this.personList = res.data.records;
       }
-    },
-    handleLogin(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.$router.push({
-            path: "/examList",
-            query: { ...this.loginForm },
-          });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
     },
   },
 };
