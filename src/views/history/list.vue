@@ -114,7 +114,7 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         type: 1,
-        time:dateFormat("YYYY-mm-dd HH:MM:SS", new Date())
+        // time:dateFormat("YYYY-mm-dd HH:MM:SS", new Date())
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;
