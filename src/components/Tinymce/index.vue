@@ -50,12 +50,12 @@ export default {
     },
     plugins: {
       type: [String, Array],
-      default: "searchreplace lists image media table wordcount",
+      default: "searchreplace lists image table wordcount",
     },
     toolbar: {
       type: [String, Array],
       default:
-        "searchreplace undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image media table | removeformat",
+        "searchreplace undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image table | removeformat",
     },
   },
   data() {
