@@ -61,6 +61,11 @@
       ></el-table-column>
       <el-table-column
         align="center"
+        prop="typeStr"
+        label="外出类型"
+      ></el-table-column>
+      <el-table-column
+        align="center"
         prop="title"
         label="请假事由"
       ></el-table-column>
@@ -201,6 +206,17 @@ export default {
               break
             default:
               item.statusStr = '待审批'
+          }
+          switch (item.typeId) {
+            case 1:
+              item.typeStr = '请假外出人员申请'
+              break
+            case 2:
+              item.typeStr = '驻地人员轮休申请'
+              break
+            case 3:
+              item.typeStr = '休假人员申请'
+              break
           }
         })
         this.personData = res.data.records
