@@ -6,8 +6,9 @@
   >
     <el-form ref="form" :model="meeting" label-width="100px" size="medium">
       <el-form-item label="会议名称：">{{meeting.title}}</el-form-item>
-      <el-form-item label="会议时间：">{{meeting.startTime}}</el-form-item>
-      <el-form-item label="会议内容：">{{meeting.content}}</el-form-item>
+      <el-form-item label="开始时间：">{{meeting.startTime}}</el-form-item>
+      <el-form-item label="结束时间：">{{meeting.endTime}}</el-form-item>
+      <el-form-item label="会议要求：">{{meeting.content}}</el-form-item>
     </el-form>
     <el-table :data="meeting.users.records" style="width: 100%">
       <el-table-column label="序号">

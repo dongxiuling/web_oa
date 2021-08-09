@@ -15,7 +15,7 @@
       </el-table-column>
       <el-table-column prop="title" label="会议名称"></el-table-column>
       <el-table-column prop="startTime" label="会议时间" width="180"></el-table-column>
-      <el-table-column prop="content" label="会议内容"></el-table-column>
+      <el-table-column prop="content" label="会议要求"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-thumb"  @click="detailHandle(scope.row)">查看</el-button>

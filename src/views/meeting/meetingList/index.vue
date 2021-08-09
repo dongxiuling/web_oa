@@ -24,18 +24,34 @@
     </el-form>
     <el-table :data="meetingList" style="width: 100%" v-loading="loading">
       <el-table-column
+        align="center"
         type="index"
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="title" label="会议名称"></el-table-column>
       <el-table-column
+        align="center"
+        prop="title"
+        label="会议名称"
+      ></el-table-column>
+      <el-table-column
+        align="center"
         prop="startTime"
-        label="会议时间"
+        label="开始时间"
         width="180"
       ></el-table-column>
-      <el-table-column prop="content" label="会议内容"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column
+        align="center"
+        prop="endTime"
+        label="结束时间"
+        width="180"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="content"
+        label="会议要求"
+      ></el-table-column>
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
