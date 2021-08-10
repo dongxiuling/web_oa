@@ -2,16 +2,24 @@
 <template>
   <div v-loading="loading" class="app-container">
     <el-form ref="form" :model="form" :rules="rules" label-width="130px">
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="动态标题" prop="title">
         <el-input v-model="form.title" style="width: 300px"></el-input>
       </el-form-item>
-      <el-form-item label="时间" required>
-      <el-form-item prop="date">
-        <el-date-picker type="date" placeholder="选择日期" v-model="form.date" style="width: 300px;"></el-date-picker>
+      <el-form-item label="选择分类" prop="cateId">
+        <el-select
+          v-model="form.cateId"
+          placeholder="请选择分类"
+          style="width: 300px"
+        >
+          <el-option
+            v-for="item in cateData"
+            :key="item.id"
+            :label="item.cateName"
+            :value="item.id"
+          ></el-option>
+        </el-select>
       </el-form-item>
-    
-  </el-form-item>
-      <el-form-item label="内容" prop="content">
+      <el-form-item label="动态内容" prop="content">
         <tinymce v-model="form.content" :height="300" />
         <!-- <VueUeditorWrap :config="myConfig" v-model="form.content" /> -->
       </el-form-item>
@@ -29,37 +37,29 @@
 </template>
 
 <script>
-import {dateFormat} from "../../utils/format";
 import Tinymce from "@/components/Tinymce/index";
-import VueUeditorWrap from "vue-ueditor-wrap";
-import { addExposure, exposureDetail,exposureUpdate } from "@/api/exposure";
+// import VueUeditorWrap from "vue-ueditor-wrap";
+import { getCate } from "@/api/cate.js";
+import { addExposure, exposureDetail, exposureUpdate } from "@/api/exposure";
 export default {
   data() {
     return {
-      // myConfig: {
-      //   elementPathEnabled: false,
-      //   wordCount: false, //是否开启字数统计
-      //   // 初始容器高度
-      //   initialFrameHeight: 380,
-      //   // 初始容器宽度
-      //   initialFrameWidth: "100%",
-      //   // 上传文件接口（这个地址是我为了方便各位体验文件上传功能搭建的临时接口，请勿在生产环境使用！！！）
-      //   serverUrl: "http://www.gxxmglzx.com/tender/ueditor/controller.php",
-      //   // UEditor 资源文件的存放路径，如果你使用的是 vue-cli 生成的项目，通常不需要设置该选项，vue-ueditor-wrap 会自动处理常见的情况，如果需要特殊配置，参考下方的常见问题2
-      //   UEDITOR_HOME_URL: process.env.BASE_URL + "UEditor/"
-      // },
       loading: false,
       form: {
         title: "",
         content: "",
+        cateId: '',
       },
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
-        date: [{ required: true, message: "请选择时间", trigger: "blur" }],
         content: [{ required: true, message: "请输入内容", trigger: "blur" }],
+        cateId: [
+          { required: true, message: "请选择分类", trigger: "change" }
+        ],
       },
 
       isChange: false, //false添加 true修改
+      cateData: [],
     };
   },
   methods: {
@@ -70,17 +70,17 @@ export default {
         if (valid) {
           exposureUpdate({
             title: this.form.title,
-            type: 1,
-            id:this.$route.query.id,
+            type: 7,
+            id: this.$route.query.id,
             content: this.form.content,
-            time:dateFormat("YYYY-mm-dd HH:MM:SS",this.form.date)
+            cateId: this.form.cateId
           }).then((res) => {
             this.$message({
               message: "修改成功",
               type: "success",
             });
             this.loading = false;
-            this.$router.push("/history/list");
+            this.$router.push("/dynamic/dynamicList");
           });
         } else {
           console.log(valid, "error submit!!");
@@ -94,16 +94,16 @@ export default {
         if (valid) {
           addExposure({
             title: this.form.title,
-            type: 1,
+            type: 7,
             content: this.form.content,
-            time:dateFormat("YYYY-mm-dd HH:MM:SS",this.form.date)
+            cateId: this.form.cateId
           }).then((res) => {
             this.$message({
               message: "添加成功",
               type: "success",
             });
             this.loading = false;
-            this.$router.push("/history/list");
+            this.$router.push("/dynamic/dynamicList");
           });
         } else {
           console.log(valid, "error submit!!");
@@ -112,7 +112,8 @@ export default {
     },
     //   清除表单内容
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      // this.$refs[formName].resetFields();
+      this.$router.go(-1)
     },
     // 修改曝光问题
     initUpdate(id) {
@@ -121,12 +122,22 @@ export default {
       exposureDetail(id).then((res) => {
         let _data = {
           title: res.data.title,
-          date:res.data.time,
           content: res.data.content,
+          cateId: res.data.cateId
         };
         this.form = _data;
         this.loading = false;
       });
+    },
+    // 获取分类列表
+    async getCateList() {
+      const { code, data } = await getCate({
+        size: 1000,
+        type: 7, // 部队动态管理7
+      })
+      if (code === '200' && data.records) {
+        this.cateData = data.records;
+      }
     },
   },
   //生命周期 - 创建完成（访问当前this实例）
@@ -135,10 +146,12 @@ export default {
     if (_id) {
       this.initUpdate(_id);
     }
+    // 获取分类列表
+    this.getCateList();
   },
   components: {
     Tinymce,
-    VueUeditorWrap
+    // VueUeditorWrap
   },
 };
 </script>

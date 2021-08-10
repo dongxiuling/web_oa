@@ -10,8 +10,16 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="searchHandle()"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -22,27 +30,61 @@
           icon="el-icon-plus"
           size="mini"
           @click="$router.push('/meeting/add')"
-        >发布会议</el-button>
+          >发布会议</el-button
+        >
       </el-col>
     </el-row>
 
     <el-table :data="meetingList" style="width: 100%" v-loading="loading">
-      <el-table-column label="序号">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
-      <el-table-column prop="title" label="会议名称"></el-table-column>
-      <el-table-column prop="startTime" label="会议时间" width="180"></el-table-column>
-      <el-table-column prop="content" label="会议详情" width="180"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column
+        align="center"
+        type="index"
+        width="150"
+        label="序号"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="title"
+        label="会议名称"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="startTime"
+        label="开始时间"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="endTime"
+        label="结束时间"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="content"
+        label="会议要求"
+      ></el-table-column>
+      <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="updateHandle(scope.row)">修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="updateHandle(scope.row)"
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-search"
             @click="detailHandle(scope.row)"
-          >查看</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
+            >查看</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="delHandle(scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -127,7 +169,7 @@ export default {
     detailHandle(_data) {
       this.$router.push({
         path: "/meetings/detail",
-        query: { id: _data.id,type:1 }
+        query: { id: _data.id, type: 1 }
       });
     },
     searchHandle() {
@@ -137,7 +179,7 @@ export default {
       this.search.title = "";
       this.getData();
     },
-   
+
   },
   mounted() {
     this.getData();

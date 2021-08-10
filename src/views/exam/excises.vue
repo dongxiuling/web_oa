@@ -17,7 +17,11 @@
               <div v-html="row.title"></div>
             </template>
           </el-table-column>
-          <el-table-column label="ID" prop="id"></el-table-column>
+          <el-table-column label="序号" width="70px">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
           <el-table-column label="题目" prop="title">
             <template slot-scope="{row}">
               <div v-html="row.title" style="height: 27px;"></div>
@@ -56,7 +60,11 @@
               <div v-html="row.title"></div>
             </template>
           </el-table-column>
-          <el-table-column label="ID" prop="id"></el-table-column>
+          <el-table-column label="序号" width="70px">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
           <el-table-column label="题目" prop="title">
             <template slot-scope="{row}">
               <div v-html="row.title" style="height: 27px;"></div>
@@ -93,7 +101,11 @@
               <div v-html="row.title"></div>
             </template>
           </el-table-column>
-          <el-table-column label="ID" prop="id"></el-table-column>
+          <el-table-column label="序号" width="70px">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
           <el-table-column label="题目" prop="title">
             <template slot-scope="{row}">
               <div v-html="row.title" style="height: 27px;"></div>
@@ -118,12 +130,55 @@
           ></el-pagination>
         </div>
       </el-tab-pane>
+      <el-tab-pane label="简答题" name="4">
+        <el-button
+          type="primary"
+          size="mini"
+          id="banner-list-add"
+          @click="showDialog('add', 4)"
+        >
+          <i class="el-icon-plus"></i>
+          添加简答题
+        </el-button>
+        <el-table :data="essay.exercises" style="width: 100%">
+          <el-table-column type="expand">
+            <template slot-scope="{ row }">
+              <h3>题目详情</h3>
+              <div v-html="row.title"></div>
+            </template>
+          </el-table-column>
+          <!-- <el-table-column label="ID" prop="id"></el-table-column> -->
+          <el-table-column label="序号" width="70px">
+            <template slot-scope="scope">
+              {{ scope.$index + 1 }}
+            </template>
+          </el-table-column>
+          <el-table-column label="题目" prop="title">
+            <template slot-scope="{ row }">
+              <div v-html="row.title" style="height: 27px"></div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" prop="desc">
+            <template slot-scope="scope">
+              <el-button
+                @click="change(scope.row, 'change', 4)"
+                type="text"
+                size="small"
+                >编辑</el-button
+              >
+              <el-button @click="delHandle(scope.row)" type="text" size="small"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
     </el-tabs>
 
-    <el-dialog title="添加习题" :visible.sync="dialogVisible" width="70%">
+    <el-dialog title="编辑习题" :visible.sync="dialogVisible" width="70%">
       <el-form label-width="100px">
         <el-form-item label="题目">
-          <el-input type="textarea" v-model="exer.title"></el-input>
+          <el-input type="textarea" :rows="2" v-model="exer.title"></el-input>
           <!-- <quill-editor
             ref="text"
             v-model="data.title"
@@ -145,7 +200,7 @@
             <el-input type="textarea" v-model="exer.choiceD"></el-input>
           </el-form-item>
         </div>
-        <div v-else>
+        <div v-else-if="status*1 == 3">
           <el-form-item label="A">
             <el-input type="textarea" v-model="exer.choiceA" :disabled="true" ></el-input>
           </el-form-item>
@@ -224,6 +279,12 @@ export default {
         choiceD: "",
         answer: ""
       },
+      essay: {
+        exercises: [],
+        currentPage: 1,
+        pageSize: 10,
+        total: 0
+      },
       exerId:0, //题id
       checkList: [], //多選題列表
       tag: "add",
@@ -244,6 +305,9 @@ export default {
       } else if (this.status == 3) {
         //判断判断题
         typeName = "judge";
+      }else if (this.status == 4) {
+        //判断简答题
+        typeName = "essay";
       }
       return typeName;
     }
@@ -264,7 +328,7 @@ export default {
         size
       })
       .then(res => {
-        // console.log(res);
+        console.log(res);
         this[this.typeName].exercises = res.data.records;
         this[this.typeName].total = res.data.total;
         this[this.typeName+"loading"] = false;
@@ -310,6 +374,7 @@ export default {
         this.exer.answer = this.checkList.join(",");
       }
       let params = { ...this.exer, categoryId:this.categoryId ,type:this.status};
+      console.log(params);
 
       addExam(params).then(res => {
           this.dialogVisible = false;

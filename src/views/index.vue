@@ -168,7 +168,7 @@
         </div>
       </el-col>
     </el-row> -->
-    <div v-for="(item,index) in 6" :key="index">
+    <div v-for="(item,index) in 7" :key="index">
       <indexList :type="item" />
     </div>
   </div>

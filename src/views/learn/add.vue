@@ -5,6 +5,20 @@
       <el-form-item label="文章标题" prop="title">
         <el-input v-model="form.title" style="width: 300px"></el-input>
       </el-form-item>
+      <el-form-item label="选择分类" prop="cateId">
+        <el-select
+          v-model="form.cateId"
+          placeholder="请选择分类"
+          style="width: 300px"
+        >
+          <el-option
+            v-for="item in cateData"
+            :key="item.id"
+            :label="item.cateName"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="文章内容" prop="content">
         <tinymce v-model="form.content" :height="300" />
         <!-- <VueUeditorWrap :config="myConfig" v-model="form.content" /> -->
@@ -25,7 +39,9 @@
 <script>
 import Tinymce from "@/components/Tinymce/index";
 // import VueUeditorWrap from "vue-ueditor-wrap";
-import { addExposure, exposureDetail,exposureUpdate } from "@/api/exposure";
+import { addExposure, exposureDetail, exposureUpdate } from "@/api/exposure";
+import { getCate } from "@/api/cate.js";
+
 export default {
   data() {
     return {
@@ -33,13 +49,18 @@ export default {
       form: {
         title: "",
         content: "",
+        cateId: '',
       },
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
         content: [{ required: true, message: "请输入内容", trigger: "blur" }],
+        cateId: [
+          { required: true, message: "请选择分类", trigger: "change" }
+        ],
       },
 
       isChange: false, //false添加 true修改
+      cateData: [],
     };
   },
   methods: {
@@ -51,8 +72,9 @@ export default {
           exposureUpdate({
             title: this.form.title,
             type: 6,
-            id:this.$route.query.id,
+            id: this.$route.query.id,
             content: this.form.content,
+            cateId: this.form.cateId
           }).then((res) => {
             this.$message({
               message: "修改成功",
@@ -75,6 +97,7 @@ export default {
             title: this.form.title,
             type: 6,
             content: this.form.content,
+            cateId: this.form.cateId
           }).then((res) => {
             this.$message({
               message: "添加成功",
@@ -91,6 +114,7 @@ export default {
     //   清除表单内容
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.$router.go(-1)
     },
     // 修改曝光问题
     initUpdate(id) {
@@ -100,10 +124,21 @@ export default {
         let _data = {
           title: res.data.title,
           content: res.data.content,
+          cateId: res.data.cateId
         };
         this.form = _data;
         this.loading = false;
       });
+    },
+    // 获取分类列表
+    async getCateList() {
+      const { code, data } = await getCate({
+        type: 6, // 学习园地6
+        size: 1000,
+      })
+      if (code === '200' && data.records) {
+        this.cateData = data.records;
+      }
     },
   },
   //生命周期 - 创建完成（访问当前this实例）
@@ -112,6 +147,8 @@ export default {
     if (_id) {
       this.initUpdate(_id);
     }
+    // 获取分类列表
+    this.getCateList();
   },
   components: {
     Tinymce,

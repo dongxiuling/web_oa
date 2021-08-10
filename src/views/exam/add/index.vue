@@ -2,10 +2,14 @@
   <div class="app-container">
     <el-form ref="exam" :model="exam" :rules="rules" label-width="80px">
       <el-form-item label="考试名称" prop="title">
-        <el-input v-model="exam.title" style="width: 300px"></el-input>
+        <el-input v-model="exam.title" style="width: 380px"></el-input>
       </el-form-item>
       <el-form-item label="考试类型" prop="categoryId">
-        <el-select v-model="exam.categoryId" placeholder="请选择考试类型">
+        <el-select
+          v-model="exam.categoryId"
+          placeholder="请选择考试类型"
+          style="width: 380px"
+        >
           <el-option
             v-for="item in cateData"
             :key="item.id"
@@ -19,14 +23,14 @@
           v-model="exam.duration"
           type="number"
           min="0"
-          style="width: 200px"
+          style="width: 380px"
         >
           <span slot="suffix">分钟</span>
         </el-input>
       </el-form-item>
       <el-form-item label="考试时间">
         <el-date-picker
-          style="width: 400px"
+          style="width: 380px"
           v-model="time"
           type="datetimerange"
           range-separator="至"
@@ -116,6 +120,33 @@
           </el-form-item>
         </el-col>
       </el-form-item>
+       <el-form-item label="简答题">
+        <el-col :span="3">
+          <el-form-item prop="essayNum">
+            <el-input
+              v-model="exam.essayNum"
+              type="number"
+              size="small"
+              min="0"
+            >
+              <template slot="append">个</template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item prop="essayScore">
+            <el-input
+              v-model="exam.essayScore"
+              type="number"
+              size="small"
+              min="0"
+            >
+              <template slot="prepend">每题</template>
+              <template slot="append">分</template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-form-item>
       <!-- <el-form-item label="参考人员">
         <el-tree
           :data="deptTree"
@@ -144,7 +175,7 @@
 </template>
 
 <script>
-import { createExam, getExamById, updateExam ,getExamCate} from "@/api/exam";
+import { createExam, getExamById, updateExam, getExamCate } from "@/api/exam";
 import { listUser, getTreeUser } from "@/api/system/user";
 export default {
   data() {
@@ -161,6 +192,8 @@ export default {
         multipleScore: 0,
         judgmentNum: 0,
         judgmentScore: 0,
+        essayNum: 0,
+        essayScore: 0,
       },
       id: this.$route.query.id,
       rules: {
@@ -189,7 +222,7 @@ export default {
         ],
         judgmentScore: [
           { required: true, message: "请输入判断题个数", trigger: "blur" },
-        ],
+        ]
         // time: [
         //   {
         //     type: "date",

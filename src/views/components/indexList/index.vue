@@ -177,6 +177,7 @@ export default {
         case 4: _title = "事故通报"; break;
         case 5: _title = "司机专栏"; break;
         case 6: _title = "学习园地"; break;
+        case 7: _title = "部队管理动态"; break;
         default: _title = "无";
       }
       return _title
