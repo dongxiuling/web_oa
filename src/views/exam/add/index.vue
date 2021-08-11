@@ -133,7 +133,7 @@
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
+        <!-- <el-col :span="5">
           <el-form-item prop="essayScore">
             <el-input
               v-model="exam.essayScore"
@@ -145,7 +145,7 @@
               <template slot="append">分</template>
             </el-input>
           </el-form-item>
-        </el-col>
+        </el-col> -->
       </el-form-item>
       <!-- <el-form-item label="参考人员">
         <el-tree

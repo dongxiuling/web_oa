@@ -129,6 +129,11 @@ export const constantRoutes = [{
     meta: {
       title: '修改考试分类'
     }
+  }, {
+    path: 'testDetail',
+    component: () => import('@/views/exam/testDetail'),
+    meta: { title: '试卷详情' },
+    hidden: true,
   }
   ]
 },

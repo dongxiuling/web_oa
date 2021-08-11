@@ -21,7 +21,7 @@ export function updateExam(data) {
     return request({
         url: '/exam/update',
         method: 'post',
-        data:data
+        data: data
     })
 }
 // 添加考试
@@ -29,13 +29,13 @@ export function createExam(data) {
     return request({
         url: '/exam/create',
         method: 'post',
-        data:data
+        data: data
     })
 }
 // 删除考试
-export function delExam(query) {
+export function delExam(id) {
     return request({
-        url: 'exam/delExamById/' + query.id,
+        url: 'exam/delExamById/' + id,
         method: 'get',
     })
 }
@@ -90,11 +90,11 @@ export function getExamDetail(params) {
 
 export function getExcisesList(params) {
     return request({
-      url: '/exam/getQuestionByCate',
-      method: 'post',
-      params
+        url: '/exam/getQuestionByCate',
+        method: 'post',
+        params
     })
-  }
+}
 
 // 添加和修改考试题
 export function addExam(params) {
@@ -106,10 +106,10 @@ export function addExam(params) {
 }
 // 删除考试题
 export function delExer(query) {
-  return request({
-      url: '/exam/delExerById/'+query.id,
-      method: 'get',
-  })
+    return request({
+        url: '/exam/delExerById/' + query.id,
+        method: 'get',
+    })
 }
 
 
@@ -148,3 +148,15 @@ export const delExamCate = id => {
         method: 'get'
     })
 }
+
+// 查看个人答题情况
+// export const getExamAnswerInfo = (data = {}) => request({
+//     url: '/exam/getExamAnswerInfo?aaa=111',
+//     method: 'post',
+//     data
+// })
+
+export const getExamAnswerInfo = (data) => request({
+    url: `/exam/getExamAnswerInfo/${data.userId}/${data.examId}`,
+    method: 'get'
+})
