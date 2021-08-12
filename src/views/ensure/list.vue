@@ -10,9 +10,7 @@
       >
         <el-table-column type="index" width="150" label="序号">
         </el-table-column>
-        <el-table-column prop="title" label="申请标题"></el-table-column>
-        <el-table-column prop="username" label="反馈人"></el-table-column>
-        <el-table-column prop="complaint" label="反馈内容"></el-table-column>
+        <el-table-column prop="title" label="名称"></el-table-column>
         <el-table-column prop="createTime" label="添加时间"></el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
@@ -21,7 +19,7 @@
               type="text"
               icon="el-icon-view"
               @click.stop="showDetail(scope.row)"
-              >查看申请</el-button
+              >详情</el-button
             >
             <el-button
               size="mini"
@@ -29,6 +27,13 @@
               icon="el-icon-delete"
               @click.stop="delItem(scope.row)"
               >删除</el-button
+            >
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click.stop="editItem(scope.row)"
+              >修改</el-button
             >
           </template>
         </el-table-column>
@@ -46,7 +51,7 @@
   </div>
 </template>
 <script>
-import { appealList,appealDel } from "@/api/appeal"
+import { exposureList, exposureDel } from "@/api/exposure";
 export default {
   data() {
     return {
@@ -67,7 +72,8 @@ export default {
         type: "warning",
       })
         .then(() => {
-          appealDel(item.id).then((res) => {
+          console.log(item)
+          exposureDel(item.id).then((res) => {
             this.$message({
               message: "删除成功",
               type: "success",
@@ -121,15 +127,16 @@ export default {
     //单行选中
     checkLine(row) {
       this.$router.push({
-        path: "/release/lawdetail/" + row.hid,
+        path: "/release/lawdetail/" + row.id,
       });
     },
     // 获取法规列表数据
     getList() {
       this.loading = true;
-      appealList({
+      exposureList({
         current: this.currentPage,
         size: this.pageSize,
+        type: 2,
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;
@@ -145,7 +152,7 @@ export default {
     // 查看详情
     showDetail(_data) {
       this.$router.push({
-        path: "/exposure_/detail/" + _data.hid,
+        path: "/exposure_/detail/" + _data.id,
       });
     },
     handleCurrentChange(value) {

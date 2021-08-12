@@ -21,13 +21,20 @@
               @click.stop="showDetail(scope.row)"
               >详情</el-button
             >
-            <el-button
+            <!-- <el-button
               size="mini"
               type="text"
               icon="el-icon-delete"
               @click.stop="delItem(scope.row)"
               >删除</el-button
-            >
+            > -->
+            <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-s-flag"
+                @click.stop="appealBtn(scope.row)"
+                >反馈</el-button
+              >
             <el-button
               size="mini"
               type="text"
@@ -47,11 +54,37 @@
           @current-change="handleCurrentChange"
         ></el-pagination>
       </div>
+      <!-- 弹框 -->
+    <el-dialog
+      v-loading="diaLoading"
+      @closed="closeDialog"
+      title="问题反馈"
+      :visible.sync="dialogFormVisible"
+    >
+      <el-form ref="form" :model="appealForm" :rules="rules">
+        <el-form-item label="反馈人" label-width="120px" prop="title">
+          <el-input v-model="appealForm.title" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="反馈内容" label-width="120px" prop="content">
+          <el-input
+            type="textarea"
+            v-model="appealForm.content"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="appealHandle">确 定</el-button>
+      </div>
+    </el-dialog>
     </div>
   </div>
 </template>
 <script>
 import { exposureList, exposureDel } from "@/api/exposure";
+import { addAppeal } from "@/api/appeal";
+
 export default {
   data() {
     return {
@@ -61,6 +94,9 @@ export default {
       currentPage: 1, //分页当前页
       pageSize: 10,
       total: 0, //总页数
+      diaLoading: false,
+      appealForm: {},
+      dialogFormVisible: false,
     };
   },
   methods: {
@@ -158,6 +194,38 @@ export default {
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
+    },
+    // 反馈按钮
+    appealBtn(row) {
+      this.appealId = row.id;
+      this.dialogFormVisible = true;
+    },
+    // 反馈
+    appealHandle() {
+      this.diaLoading = true;
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          addAppeal({
+            username: this.appealForm.title,
+            hid: this.appealId,
+            complaint: this.appealForm.content,
+          }).then((res) => {
+            this.$message({
+              message: "反馈已发出",
+              type: "success",
+            });
+            this.$refs.form.resetFields();
+            this.dialogFormVisible = false;
+            this.diaLoading = false;
+          });
+        } else {
+          console.log(valid, "error submit!!");
+        }
+      });
+    },
+    // 关闭弹框
+    closeDialog() {
+      this.$refs.form.resetFields();
     },
   },
   created() {

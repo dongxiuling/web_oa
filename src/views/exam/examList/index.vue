@@ -14,9 +14,9 @@
         <el-select v-model="search.categoryId" placeholder="请选择考试类型">
           <el-option
             v-for="item in cateData"
-            :key="item.dictCode"
-            :label="item.dictLabel"
-            :value="item.dictCode"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -40,24 +40,27 @@
     </el-form>
     <el-table :data="examList" style="width: 100%" v-loading="loading">
       <el-table-column
+      align="center"
         type="index"
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
       <el-table-column prop="title" label="考试名称"></el-table-column>
       <el-table-column
+      align="center"
         prop="startDate"
         label="开始时间"
         width="180"
       ></el-table-column>
       <el-table-column
+      align="center"
         prop="endDate"
         label="截止时间"
         width="180"
       ></el-table-column>
-      <el-table-column prop="categoryName" label="模块"></el-table-column>
-      <el-table-column prop="duration" label="时长"></el-table-column>
-      <el-table-column label="操作">
+      <el-table-column align="center" prop="categoryName" label="模块"></el-table-column>
+      <el-table-column align="center" prop="duration" label="时长(分钟)"></el-table-column>
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           
           <el-button
@@ -139,9 +142,9 @@ export default {
       getExamCate({
         pageNum: 1,
         pageSize: 1000,
-        dictType: "sys_module_name",
+        // dictType: "sys_module_name",
       }).then((res) => {
-        this.cateData = res.rows;
+        this.cateData = res.data.records;
       });
     },
     searchHandle() {
@@ -163,7 +166,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          console.log(item)
+          // console.log(item)
           delExam(item.id).then((res) => {
             this.$message({
               message: "删除成功",

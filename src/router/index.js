@@ -516,6 +516,20 @@ export const constantRoutes = [{
     meta: {
       title: '文章详情'
     }
+  }, {
+    path: 'addCate',
+    component: () => import('@/views/exposure/cate/add'),
+    name: 'AddExposureCate',
+    meta: {
+      title: '创建分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/exposure/cate/add'),
+    name: 'UpdateExposureCate',
+    meta: {
+      title: '修改分类'
+    }
   }]
 },
 {
