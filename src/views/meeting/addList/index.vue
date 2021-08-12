@@ -29,7 +29,7 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-          @click="$router.push('/meeting/add')"
+          @click="$router.push('/meeting/meetadd')"
           >发布会议</el-button
         >
       </el-col>
