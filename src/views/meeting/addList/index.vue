@@ -29,14 +29,9 @@
           type="primary"
           icon="el-icon-plus"
           size="mini"
-<<<<<<< HEAD
-          @click="$router.push('/meeting/meetadd')"
-        >会议预定</el-button>
-=======
           @click="$router.push('/meeting/add')"
           >发布会议</el-button
         >
->>>>>>> 30c183fa6afda0b7fdbc0083685a031f01b468a9
       </el-col>
     </el-row>
 
