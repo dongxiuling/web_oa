@@ -7,11 +7,11 @@
       <el-form-item label="会议地点" prop="roomName">
         <el-input disabled v-model="meeting.roomName" style="width:300px"></el-input>
       </el-form-item>
-      <el-form-item label="会议内容" prop="content">
+      <el-form-item label="会议要求" prop="content">
         <el-input
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 4}"
-          placeholder="请输入会议内容"
+          placeholder="请输入会议要求"
           v-model="meeting.content"
         ></el-input>
       </el-form-item>
@@ -74,7 +74,7 @@ export default {
         title: [{ required: true, message: "请输入会议名称", trigger: "blur" }],
         roomName: [{ required: true, message: "请输入地点名称", trigger: "blur" }],
         content: [
-          { required: true, message: "请输入会议内容", trigger: "blur" }
+          { required: true, message: "请输入会议要求", trigger: "blur" }
         ],
         start: [{ required: true, message: "请输入会议开始时间" },
         { validator: this.validateDate, trigger: ['blur', 'change'] }],

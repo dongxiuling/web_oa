@@ -2,16 +2,16 @@
 <template>
   <div v-loading="loading" class="app-container">
     <el-form ref="form" :model="form" :rules="rules" label-width="130px">
-      <el-form-item label="文章标题" prop="title">
+      <el-form-item label="标题" prop="title">
         <el-input v-model="form.title" style="width: 300px"></el-input>
       </el-form-item>
-      <el-form-item label="活动时间" required>
+      <el-form-item label="时间" required>
       <el-form-item prop="date">
         <el-date-picker type="date" placeholder="选择日期" v-model="form.date" style="width: 300px;"></el-date-picker>
       </el-form-item>
     
   </el-form-item>
-      <el-form-item label="文章内容" prop="content">
+      <el-form-item label="内容" prop="content">
         <tinymce v-model="form.content" :height="300" />
         <!-- <VueUeditorWrap :config="myConfig" v-model="form.content" /> -->
       </el-form-item>

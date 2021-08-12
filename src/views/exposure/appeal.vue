@@ -10,9 +10,9 @@
       >
         <el-table-column type="index" width="150" label="序号">
         </el-table-column>
-        <el-table-column prop="title" label="申述文章"></el-table-column>
-        <el-table-column prop="username" label="申述人"></el-table-column>
-        <el-table-column prop="complaint" label="申述人内容"></el-table-column>
+        <el-table-column prop="title" label="申请标题"></el-table-column>
+        <el-table-column prop="username" label="反馈人"></el-table-column>
+        <el-table-column prop="complaint" label="反馈内容"></el-table-column>
         <el-table-column prop="createTime" label="添加时间"></el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
@@ -21,7 +21,7 @@
               type="text"
               icon="el-icon-view"
               @click.stop="showDetail(scope.row)"
-              >查看曝光问题</el-button
+              >查看申请</el-button
             >
             <el-button
               size="mini"

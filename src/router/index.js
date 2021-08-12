@@ -129,6 +129,11 @@ export const constantRoutes = [{
     meta: {
       title: '修改考试分类'
     }
+  }, {
+    path: 'testDetail',
+    component: () => import('@/views/exam/testDetail'),
+    meta: { title: '试卷详情' },
+    hidden: true,
   }
   ]
 },
@@ -511,6 +516,20 @@ export const constantRoutes = [{
     meta: {
       title: '文章详情'
     }
+  }, {
+    path: 'addCate',
+    component: () => import('@/views/exposure/cate/add'),
+    name: 'AddExposureCate',
+    meta: {
+      title: '创建分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/exposure/cate/add'),
+    name: 'UpdateExposureCate',
+    meta: {
+      title: '修改分类'
+    }
   }]
 },
 {
@@ -537,6 +556,20 @@ export const constantRoutes = [{
     meta: {
       title: '文章详情'
     }
+  }, {
+    path: 'addCate',
+    component: () => import('@/views/accident/cate/add'),
+    name: 'AddAccidentCate',
+    meta: {
+      title: '创建分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/accident/cate/add'),
+    name: 'UpdateAccidentCate',
+    meta: {
+      title: '修改分类'
+    }
   }]
 },
 {
@@ -551,7 +584,7 @@ export const constantRoutes = [{
       title: '文章详情'
     }
   }]
-},{
+}, {
   path: '/learn_',
   component: Layout,
   hidden: true,
@@ -562,8 +595,22 @@ export const constantRoutes = [{
     meta: {
       title: '文章详情'
     }
+  }, {
+    path: 'addCate',
+    component: () => import('@/views/learn/cate/add'),
+    name: 'AddAccidentCate',
+    meta: {
+      title: '创建分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/learn/cate/add'),
+    name: 'UpdateAccidentCate',
+    meta: {
+      title: '修改分类'
+    }
   }]
-},{
+}, {
   path: '/history_',
   component: Layout,
   hidden: true,
@@ -575,7 +622,33 @@ export const constantRoutes = [{
       title: '文章详情'
     }
   }]
-}
+}, {
+  path: '/dynamic_',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'detail/:id',
+    component: () => import('@/views/dynamic/detail'),
+    name: 'dynamicDetail',
+    meta: {
+      title: '文章详情'
+    }
+  }, {
+    path: 'addCate',
+    component: () => import('@/views/dynamic/cate/add'),
+    name: 'AddDynamicCate',
+    meta: {
+      title: '创建分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/dynamic/cate/add'),
+    name: 'UpdateDynamicCate',
+    meta: {
+      title: '修改分类'
+    }
+  }]
+},
 ]
 
 export default new Router({

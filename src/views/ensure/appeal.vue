@@ -8,23 +8,20 @@
         style="width: 100%"
         v-loading="loading"
       >
-        <el-table-column align="center" type="index" width="150" label="序号">
+        <el-table-column type="index" width="150" label="序号">
         </el-table-column>
-        <el-table-column align="center" prop="title" label="名称"></el-table-column>
-        <el-table-column
-          align="center"
-          prop="cateName"
-          label="类型"
-        ></el-table-column>
-        <el-table-column align="center" prop="createTime" label="添加时间"></el-table-column>
-        <el-table-column align="center" label="操作" width="200">
+        <el-table-column prop="title" label="申述文章"></el-table-column>
+        <el-table-column prop="username" label="申述人"></el-table-column>
+        <el-table-column prop="complaint" label="申述人内容"></el-table-column>
+        <el-table-column prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button
               size="mini"
               type="text"
               icon="el-icon-view"
               @click.stop="showDetail(scope.row)"
-              >详情</el-button
+              >查看曝光问题</el-button
             >
             <el-button
               size="mini"
@@ -32,13 +29,6 @@
               icon="el-icon-delete"
               @click.stop="delItem(scope.row)"
               >删除</el-button
-            >
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click.stop="editItem(scope.row)"
-              >修改</el-button
             >
           </template>
         </el-table-column>
@@ -56,7 +46,7 @@
   </div>
 </template>
 <script>
-import { exposureList, exposureDel } from "@/api/exposure";
+import { appealList,appealDel } from "@/api/appeal"
 export default {
   data() {
     return {
@@ -77,8 +67,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          console.log(item)
-          exposureDel(item.id).then((res) => {
+          appealDel(item.id).then((res) => {
             this.$message({
               message: "删除成功",
               type: "success",
@@ -98,25 +87,53 @@ export default {
     // 修改记录
     editItem(item) {
       this.$router.push({
-        path: "/learn/add",
+        path: "/exposure/add",
         query:{
           id:item.id
         }
       });
     },
-    
+    // 清空搜索框
+    clearInp() {
+      this.searchText = "";
+      this.getList();
+    },
+    // 按标题搜索内容
+    searchTitle() {
+      // this.loading = true;
+      // getByTitle(this.searchText).then((res) => {
+      //   let thisData = [];
+      //   this.loading = false;
+      //   thisData = res.data.map((item) => {
+      //     item.createTime = item.createTime.split(" ")[0];
+      //     return item;
+      //   });
+      //   this.dataList = thisData;
+      // })
+
+      this.$router.push({
+        path: "/release/lawdetail/0",
+        query: {
+          search: this.searchText,
+        },
+      });
+    },
+    //单行选中
+    checkLine(row) {
+      this.$router.push({
+        path: "/release/lawdetail/" + row.hid,
+      });
+    },
     // 获取法规列表数据
     getList() {
       this.loading = true;
-      exposureList({
+      appealList({
         current: this.currentPage,
         size: this.pageSize,
-        type: 6,
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;
         this.loading = false;
-        this.total = res.data.total
       });
     },
     // 初始化数据
@@ -128,12 +145,12 @@ export default {
     // 查看详情
     showDetail(_data) {
       this.$router.push({
-        path: "/learn_/detail/" + _data.id,
+        path: "/exposure_/detail/" + _data.hid,
       });
     },
     handleCurrentChange(value) {
       this.currentPage = value;
-      this.getList();
+      this.getData();
     },
   },
   created() {

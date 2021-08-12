@@ -1,22 +1,24 @@
 <template>
   <div class="app-container">
-    
-
     <div class="content">
-      <el-table
-        :data="dataList"
-        style="width: 100%"
-        v-loading="loading"
-      >
+      <el-table :data="dataList" style="width: 100%" v-loading="loading">
         <el-table-column align="center" type="index" width="150" label="序号">
         </el-table-column>
-        <el-table-column align="center" prop="title" label="名称"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="title"
+          label="名称"
+        ></el-table-column>
         <el-table-column
           align="center"
           prop="cateName"
           label="类型"
         ></el-table-column>
-        <el-table-column align="center" prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column
+          align="center"
+          prop="createTime"
+          label="添加时间"
+        ></el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button
@@ -92,26 +94,26 @@ export default {
             message: "已取消删除",
           });
         });
-      
+
     },
 
     // 修改记录
     editItem(item) {
       this.$router.push({
-        path: "/learn/add",
-        query:{
-          id:item.id
+        path: "/accident/add",
+        query: {
+          id: item.id
         }
       });
     },
-    
+
     // 获取法规列表数据
     getList() {
       this.loading = true;
       exposureList({
         current: this.currentPage,
         size: this.pageSize,
-        type: 6,
+        type: 7,
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;
@@ -128,7 +130,7 @@ export default {
     // 查看详情
     showDetail(_data) {
       this.$router.push({
-        path: "/learn_/detail/" + _data.id,
+        path: "/accident_/detail/" + _data.id,
       });
     },
     handleCurrentChange(value) {

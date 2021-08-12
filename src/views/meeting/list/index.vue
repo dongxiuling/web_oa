@@ -10,12 +10,11 @@
       </el-form-item>
     </el-form>
     <el-table :data="meetingList" style="width: 100%" v-loading="loading">
-      <el-table-column label="序号">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
-      </el-table-column>
+      <el-table-column align="center" type="index" width="150" label="序号"></el-table-column>
       <el-table-column prop="title" label="会议名称"></el-table-column>
-      <el-table-column prop="startTime" label="会议时间" width="180"></el-table-column>
-      <el-table-column prop="content" label="会议内容"></el-table-column>
+      <el-table-column prop="startTime" label="开始时间" width="180"></el-table-column>
+      <el-table-column prop="endTime" label="结束时间" width="180"></el-table-column>
+      <el-table-column prop="content" label="会议要求"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-thumb"  @click="detailHandle(scope.row)">查看</el-button>

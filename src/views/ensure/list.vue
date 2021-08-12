@@ -8,16 +8,11 @@
         style="width: 100%"
         v-loading="loading"
       >
-        <el-table-column align="center" type="index" width="150" label="序号">
+        <el-table-column type="index" width="150" label="序号">
         </el-table-column>
-        <el-table-column align="center" prop="title" label="名称"></el-table-column>
-        <el-table-column
-          align="center"
-          prop="cateName"
-          label="类型"
-        ></el-table-column>
-        <el-table-column align="center" prop="createTime" label="添加时间"></el-table-column>
-        <el-table-column align="center" label="操作" width="200">
+        <el-table-column prop="title" label="名称"></el-table-column>
+        <el-table-column prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -98,25 +93,54 @@ export default {
     // 修改记录
     editItem(item) {
       this.$router.push({
-        path: "/learn/add",
+        path: "/exposure/add",
         query:{
           id:item.id
         }
       });
     },
-    
+    // 清空搜索框
+    clearInp() {
+      this.searchText = "";
+      this.getList();
+    },
+    // 按标题搜索内容
+    searchTitle() {
+      // this.loading = true;
+      // getByTitle(this.searchText).then((res) => {
+      //   let thisData = [];
+      //   this.loading = false;
+      //   thisData = res.data.map((item) => {
+      //     item.createTime = item.createTime.split(" ")[0];
+      //     return item;
+      //   });
+      //   this.dataList = thisData;
+      // })
+
+      this.$router.push({
+        path: "/release/lawdetail/0",
+        query: {
+          search: this.searchText,
+        },
+      });
+    },
+    //单行选中
+    checkLine(row) {
+      this.$router.push({
+        path: "/release/lawdetail/" + row.id,
+      });
+    },
     // 获取法规列表数据
     getList() {
       this.loading = true;
       exposureList({
         current: this.currentPage,
         size: this.pageSize,
-        type: 6,
+        type: 2,
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;
         this.loading = false;
-        this.total = res.data.total
       });
     },
     // 初始化数据
@@ -128,12 +152,12 @@ export default {
     // 查看详情
     showDetail(_data) {
       this.$router.push({
-        path: "/learn_/detail/" + _data.id,
+        path: "/exposure_/detail/" + _data.id,
       });
     },
     handleCurrentChange(value) {
       this.currentPage = value;
-      this.getList();
+      this.getData();
     },
   },
   created() {

@@ -2,7 +2,7 @@
 <template>
   <div v-loading="loading" class="app-container">
     <el-form ref="form" :model="form" :rules="rules" label-width="130px">
-      <el-form-item label="曝光标题" prop="title">
+      <el-form-item label="动态标题" prop="title">
         <el-input v-model="form.title" style="width: 300px"></el-input>
       </el-form-item>
       <el-form-item label="选择分类" prop="cateId">
@@ -19,7 +19,7 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="曝光内容" prop="content">
+      <el-form-item label="动态内容" prop="content">
         <tinymce v-model="form.content" :height="300" />
         <!-- <VueUeditorWrap :config="myConfig" v-model="form.content" /> -->
       </el-form-item>
@@ -48,6 +48,7 @@ export default {
       form: {
         title: "",
         content: "",
+        cateId: '',
       },
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
@@ -56,6 +57,7 @@ export default {
           { required: true, message: "请选择分类", trigger: "change" }
         ],
       },
+
       isChange: false, //false添加 true修改
       cateData: [],
     };
@@ -68,16 +70,17 @@ export default {
         if (valid) {
           exposureUpdate({
             title: this.form.title,
-            type: 2,
+            type: 7,
             id: this.$route.query.id,
             content: this.form.content,
+            cateId: this.form.cateId
           }).then((res) => {
             this.$message({
               message: "修改成功",
               type: "success",
             });
             this.loading = false;
-            this.$router.push("/exposure/list");
+            this.$router.push("/dynamic/dynamicList");
           });
         } else {
           console.log(valid, "error submit!!");
@@ -91,15 +94,16 @@ export default {
         if (valid) {
           addExposure({
             title: this.form.title,
-            type: 2,
+            type: 7,
             content: this.form.content,
+            cateId: this.form.cateId
           }).then((res) => {
             this.$message({
               message: "添加成功",
               type: "success",
             });
             this.loading = false;
-            this.$router.push("/exposure/list");
+            this.$router.push("/dynamic/dynamicList");
           });
         } else {
           console.log(valid, "error submit!!");
@@ -108,7 +112,8 @@ export default {
     },
     //   清除表单内容
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      // this.$refs[formName].resetFields();
+      this.$router.go(-1)
     },
     // 修改曝光问题
     initUpdate(id) {
@@ -118,6 +123,7 @@ export default {
         let _data = {
           title: res.data.title,
           content: res.data.content,
+          cateId: res.data.cateId
         };
         this.form = _data;
         this.loading = false;
@@ -127,7 +133,7 @@ export default {
     async getCateList() {
       const { code, data } = await getCate({
         size: 1000,
-        type: 2, //曝光问题2
+        type: 7, // 部队动态管理7
       })
       if (code === '200' && data.records) {
         this.cateData = data.records;
@@ -140,7 +146,8 @@ export default {
     if (_id) {
       this.initUpdate(_id);
     }
-    this.getCateList()
+    // 获取分类列表
+    this.getCateList();
   },
   components: {
     Tinymce,

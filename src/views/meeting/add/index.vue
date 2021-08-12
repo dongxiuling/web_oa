@@ -22,7 +22,7 @@
         {{eventDetail.title}}
       </div>
       <div>
-        <span class="label">会议内容：</span>
+        <span class="label">会议要求：</span>
         <span v-html="eventDetail.content"></span>
       </div>
       <div>
