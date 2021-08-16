@@ -54,17 +54,38 @@
     </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
       <el-table-column
+        align="center"
         type="index"
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="startTime" label="开始时间"></el-table-column>
-      <el-table-column prop="endTime" label="结束时间"></el-table-column>
-      <el-table-column prop="deptName" label="值班部门"></el-table-column>
-      <el-table-column prop="username" label="值班人员"></el-table-column>
-      <el-table-column prop="pos" label="值班地点"></el-table-column>
-      <el-table-column prop="remark" label="备注"></el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column
+        align="center"
+        prop="startTime"
+        label="值班时间"
+      ></el-table-column>
+      <!-- <el-table-column prop="endTime" label="结束时间"></el-table-column> -->
+      <el-table-column
+        align="center"
+        prop="deptName"
+        label="值班部门"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="username"
+        label="值班人员"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="pos"
+        label="值班地点"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="remark"
+        label="备注"
+      ></el-table-column>
+      <el-table-column align="center" label="操作" width="220">
         <template slot-scope="scope">
           <!-- <el-button
             size="mini"
