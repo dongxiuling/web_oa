@@ -648,7 +648,61 @@ export const constantRoutes = [{
       title: '修改分类'
     }
   }]
-},
+}, {
+  path: '/evaluations',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addSeason',
+    component: () => import('@/views/evaluation/addSeason'),
+    name: 'addSeason',
+    meta: {
+      title: '创建季度信息'
+    }
+  }, {
+    path: 'addSeason/:id',
+    component: () => import('@/views/evaluation/addSeason'),
+    name: 'UpdateSeason',
+    meta: {
+      title: '修改季度信息'
+    }
+  }, {
+    path: 'seasonDetail/:quanId/:name',
+    component: () => import('@/views/evaluation/seasonDetail'),
+    name: 'seasonDetail',
+    meta: {
+      title: '评比信息详情'
+    }
+  }, {
+    path: 'addSub/:quanId',
+    component: () => import('@/views/evaluation/addSub'),
+    name: 'addSub',
+    meta: {
+      title: '加减分项'
+    }
+  }, {
+    path: 'itemDetail/:id',
+    component: () => import('@/views/evaluation/addSubDetail'),
+    name: 'AddSubDetail',
+    meta: {
+      title: '加减分详情'
+    }
+  }, {
+    path: 'selectTotal/:id/:name',
+    component: () => import('@/views/evaluation/selectTotal'),
+    name: 'SelectTotal',
+    meta: {
+      title: '量化评比统计'
+    }
+  }, {
+    path: 'selectTotalDetail/:quanId/:deptId',
+    component: () => import('@/views/evaluation/selectTotalDetail'),
+    name: 'SelectTotalDetail',
+    meta: {
+      title: '量化评比详情'
+    }
+  }]
+}
 ]
 
 export default new Router({

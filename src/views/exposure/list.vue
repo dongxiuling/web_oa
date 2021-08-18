@@ -1,13 +1,7 @@
 <template>
   <div class="app-container">
-    
-
     <div class="content">
-      <el-table
-        :data="dataList"
-        style="width: 100%"
-        v-loading="loading"
-      >
+      <el-table :data="dataList" style="width: 100%" v-loading="loading">
         <el-table-column type="index" width="150" label="序号">
         </el-table-column>
         <el-table-column prop="title" label="名称"></el-table-column>
@@ -29,12 +23,12 @@
               >删除</el-button
             > -->
             <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-s-flag"
-                @click.stop="appealBtn(scope.row)"
-                >反馈</el-button
-              >
+              size="mini"
+              type="text"
+              icon="el-icon-s-flag"
+              @click.stop="appealBtn(scope.row)"
+              >反馈</el-button
+            >
             <el-button
               size="mini"
               type="text"
@@ -55,29 +49,29 @@
         ></el-pagination>
       </div>
       <!-- 弹框 -->
-    <el-dialog
-      v-loading="diaLoading"
-      @closed="closeDialog"
-      title="问题反馈"
-      :visible.sync="dialogFormVisible"
-    >
-      <el-form ref="form" :model="appealForm" :rules="rules">
-        <el-form-item label="反馈人" label-width="120px" prop="title">
-          <el-input v-model="appealForm.title" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="反馈内容" label-width="120px" prop="content">
-          <el-input
-            type="textarea"
-            v-model="appealForm.content"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="appealHandle">确 定</el-button>
-      </div>
-    </el-dialog>
+      <el-dialog
+        v-loading="diaLoading"
+        @closed="closeDialog"
+        title="问题反馈"
+        :visible.sync="dialogFormVisible"
+      >
+        <el-form ref="form" :model="appealForm" :rules="rules">
+          <el-form-item label="反馈人" label-width="120px" prop="title">
+            <el-input v-model="appealForm.title" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="反馈内容" label-width="120px" prop="content">
+            <el-input
+              type="textarea"
+              v-model="appealForm.content"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="appealHandle">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -97,6 +91,10 @@ export default {
       diaLoading: false,
       appealForm: {},
       dialogFormVisible: false,
+      rules: {
+        title: [{ required: true, message: "请输入反馈人", trigger: "blur" }],
+        content: [{ required: true, message: "请输入反馈内容", trigger: "blur" }],
+      }
     };
   },
   methods: {
@@ -123,15 +121,15 @@ export default {
             message: "已取消删除",
           });
         });
-      
+
     },
 
     // 修改记录
     editItem(item) {
       this.$router.push({
         path: "/exposure/add",
-        query:{
-          id:item.id
+        query: {
+          id: item.id
         }
       });
     },
@@ -220,6 +218,7 @@ export default {
           });
         } else {
           console.log(valid, "error submit!!");
+          return false;
         }
       });
     },
