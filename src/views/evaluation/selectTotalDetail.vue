@@ -38,7 +38,7 @@
         >
       </el-form-item>
     </el-form> -->
-      <el-button type="primary" @click="$router.go(-1)">返回</el-button>
+    <el-button type="primary" @click="$router.go(-1)">返回</el-button>
     <el-table :data="list" style="width: 100%" v-loading="loading">
       <el-table-column
         align="center"

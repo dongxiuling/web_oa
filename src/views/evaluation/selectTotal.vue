@@ -39,6 +39,7 @@
             >
           </el-form-item>
         </el-form> -->
+          <el-button type="primary" @click="$router.go(-1)">返回</el-button>
           <div id="main"></div>
         </div>
         <div class="main-list">
