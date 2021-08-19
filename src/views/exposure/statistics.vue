@@ -56,6 +56,26 @@
             <el-tag v-else type="success">已反馈</el-tag>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="反馈">
+          <template slot-scope="scope">
+            <!-- <el-button
+              size="mini"
+              type="primary"
+              icon="el-icon-s-flag"
+              @click.stop="appealBtn(scope.row)"
+              v-if="scope.row.count == 0"
+              >填写反馈</el-button
+            > -->
+            <el-button
+              type="success"
+              size="mini"
+              icon="el-icon-search"
+              @click.stop="lookBtn(scope.row)"
+              v-if="scope.row.count > 0"
+              >查看反馈</el-button
+            >
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
             <el-button
@@ -77,6 +97,29 @@
           @current-change="handleCurrentChange"
         ></el-pagination>
       </div>
+
+      <!-- 弹框 -->
+      <el-dialog
+        @closed="closeDialog"
+        title="问题反馈"
+        :visible.sync="dialogFormVisible"
+      >
+        <el-form ref="form" :model="appealForm">
+          <el-form-item label="反馈人" label-width="120px" prop="title">
+            <el-input v-model="appealForm.title" autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="反馈内容" label-width="120px" prop="content">
+            <el-input
+              type="textarea"
+              v-model="appealForm.content"
+              autocomplete="off"
+            ></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+        </div>
+      </el-dialog>
     </el-main>
   </div>
 </template>
@@ -85,6 +128,8 @@
 import echarts from "echarts"
 import { dateFormat } from "@/utils/format";
 import { exposureList, cateStatistics, selectFeedBack, feedbackStatistics } from "@/api/exposure";
+import { appealList } from "@/api/appeal";
+
 
 export default {
   data() {
@@ -102,6 +147,8 @@ export default {
       startTime: null,
       endTime: null,
       cateId: 0,
+      dialogFormVisible: false,
+      appealForm: {},
     }
   },
   methods: {
@@ -300,6 +347,24 @@ export default {
       this.$router.push({
         path: "/accident_/detail/" + _data.id,
       });
+    },
+    async lookBtn(row) {
+      const res = await appealList({
+        current: this.currentPage,
+        size: this.pageSize,
+        hId: row.id
+      })
+      if (res && res.code == 200 && res.data.records && res.data.records[0]) {
+        this.btnShow = false
+        this.dialogFormVisible = true
+        this.appealForm = {
+          title: res.data.records[0].username,
+          content: res.data.records[0].complaint,
+        }
+      }
+    },
+    closeDialog() {
+      this.$refs.form.resetFields();
     },
   },
   async mounted() {

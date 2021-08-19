@@ -15,7 +15,7 @@
       </el-form-item> -->
       <el-form-item label="时间筛选">
         <el-date-picker
-          style="width: 300px"
+          style="width: 380px"
           v-model="search.time"
           type="datetimerange"
           range-separator="至"
@@ -27,7 +27,7 @@
         <el-select
           v-model="search.deptId"
           placeholder="请选择值班部门"
-          style="width: 200px"
+          style="width: 160px"
         >
           <el-option
             v-for="item in deptList"
@@ -41,7 +41,7 @@
         <el-select
           v-model="search.userId"
           placeholder="请选择姓名"
-          style="width: 200px"
+          style="width: 160px"
         >
           <el-option
             v-for="item in personList"
