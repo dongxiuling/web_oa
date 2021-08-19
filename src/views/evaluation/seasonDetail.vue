@@ -1,13 +1,36 @@
 <template>
   <div class="app-container">
-    <el-form ref="queryForm" :inline="true">
-      <el-form-item label="来访人姓名">
-        <el-input
-          placeholder="请输入来访人姓名"
-          v-model="search.name"
-          clearable
-          size="small"
-        />
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="6">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="$router.push(`/evaluations/addSub/${quanId}`)"
+          >添加加减分项</el-button
+        >
+        <el-button
+          type="primary"
+          icon="el-icon-back"
+          size="mini"
+          @click="$router.go(-1)"
+          >返回</el-button
+        >
+      </el-col>
+      <el-col :span="12" class="title-col">
+        <span class="title">{{$route.params.name}}量化评比加减分情况</span>
+      </el-col>
+    </el-row>
+    <el-form ref="所属连队" :inline="true">
+      <el-form-item label="所属连队">
+        <el-select v-model="search.deptId" placeholder="请选择所属连队">
+          <el-option
+            v-for="item in deptList"
+            :key="item.deptId"
+            :label="item.deptName"
+            :value="item.deptId"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button
@@ -22,53 +45,59 @@
         >
       </el-form-item>
     </el-form>
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          size="mini"
-          @click="$router.push('/outsiders/addOutsider')"
-          >外来人员登记</el-button
-        >
-      </el-col>
-    </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
       <el-table-column
+        align="center"
         type="index"
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="title" label="来访事由"></el-table-column>
-      <el-table-column prop="name" label="来访人"></el-table-column>
-      <el-table-column prop="company" label="联系人单位"></el-table-column>
-      <el-table-column prop="contacts" label="联系人"></el-table-column>
       <el-table-column
-        prop="time"
-        width="180"
-        label="来访时段"
+        align="center"
+        prop="deptName"
+        label="单位"
       ></el-table-column>
-      <!-- <el-table-column
-        prop="createTime"
-        width="180"
-        label="创建时间"
-      ></el-table-column> -->
-      <el-table-column label="操作" width="220">
+      <el-table-column
+        align="center"
+        prop="week"
+        label="日期"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="itemName"
+        label="特殊项名称"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="content"
+        label="内容"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="fraction"
+        label="加减分"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="remark"
+        label="备注"
+      ></el-table-column>
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-tickets"
             @click="lookHandle(scope.row)"
-            >来访详情</el-button
+            >详情</el-button
           >
-          <el-button
+          <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="editHandle(scope.row)"
             >修改</el-button
-          >
+          > -->
           <el-button
             size="mini"
             type="text"
@@ -111,7 +140,8 @@
 </template>
 
 <script>
-import { selectOutsider, delOutsiderById } from "@/api/outsider.js";
+import { lastDept } from "@/api/system/dept";
+import { itemList, itemDel } from "@/api/evaluation"
 
 export default {
   data() {
@@ -119,49 +149,41 @@ export default {
       list: [],
       currentPage: 1,
       pageSize: 10,
-      search: {
-        name: ""
-      },
       total: 0, //分页总页数
       loading: true,
       dialogVisible: false,
-      id: null,
+      id: this.$route.params.id,
+      quanId: this.$route.params.quanId,
+      deptList: [],
+      search: {
+        deptId: 0
+      },
     };
   },
   methods: {
     async getData() {
-      const res = await selectOutsider({
+      const res = await itemList({
         current: this.currentPage,
         size: this.pageSize,
-        name: this.search.name
+        deptId: this.search.deptId,
+        quanId: this.quanId
       })
       // console.log(res);
       if (res.code === '200' && res.data) {
         this.list = res.data.records;
-        res.data.records && res.data.records.map((item, index) => {
-          this.list[index].time = item.startTime + ' 至 ' + item.endTime
-        })
-
         this.total = res.data.total;
         this.loading = false;
       }
-    },
-    searchHandle() {
-      this.getData();
-    },
-    reSetHandle() {
-      this.search.name = "";
-      this.getData();
     },
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
     },
     lookHandle({ id }) {
-      this.$router.push(`/outsiders/getOutsiderDetail/${id}`)
+      this.$router.push(`/evaluations/itemDetail/${id}`)
     },
     editHandle({ id }) {
-      this.$router.push(`/outsiders/addOutsider/${id}`)
+      this.$router.push(`/evaluations/seasonDetail/${id}`)
     },
     delHandle({ id }) {
       this.dialogVisible = true
@@ -169,24 +191,32 @@ export default {
     },
     async doDelHandle() {
       this.dialogVisible = false
-      const res = await delOutsiderById(this.id)
-      console.log(res);
-      if (res.code == 200) {
+      const res = await itemDel(this.id)
+      if (res && res.code === '200') {
         this.$message({
           message: '删除成功',
           type: 'success'
         })
         this.getData()
-      } else {
-        this.$message({
-          message: '删除失败',
-          type: 'error'
-        })
       }
-
+    },
+    async getDeptList() {
+      const res = await lastDept()
+      if (res && res.code == 200 && res.data) {
+        this.deptList = res.data
+        this.deptList.unshift({ deptId: 0, deptName: "全部连队" });
+      }
+    },
+    searchHandle() {
+      this.getData();
+    },
+    reSetHandle() {
+      this.search.deptId = 0
+      this.getData();
     },
   },
   mounted() {
+    this.getDeptList()
     this.getData();
   },
 
@@ -199,5 +229,12 @@ export default {
 }
 .el-tag {
   cursor: pointer;
+}
+.title-col {
+  text-align: center;
+}
+.title {
+  font-size: 24px;
+  font-weight: bolder;
 }
 </style>

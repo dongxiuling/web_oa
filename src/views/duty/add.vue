@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-form ref="duty" :model="duty" :rules="rules" label-width="80px">
-      <el-form-item label="值班时间" prop="time">
-        <el-date-picker
+      <el-form-item label="值班时间" prop="startTime">
+        <!-- <el-date-picker
           style="width: 400px"
           v-model="duty.time"
           type="datetimerange"
@@ -10,6 +10,12 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           value-format="yyyy-MM-dd HH:mm:ss"
+        ></el-date-picker> -->
+        <el-date-picker
+          v-model="duty.startTime"
+          type="datetime"
+          placeholder="请选择时间"
+          style="width: 400px"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="值班部门" prop="deptId">
@@ -73,7 +79,7 @@
 import { lastDept } from "@/api/system/dept";
 import { selectPerson } from "@/api/insider.js";
 import { saveDuty, getDutyById, updateDuty } from "@/api/duty"
-
+import { dateFormat } from "@/utils/format"
 
 export default {
   data() {
@@ -84,11 +90,11 @@ export default {
       duty: {
         deptId: '',
         userId: '',
-        time: '',
+        startTime: '',
         remark: ''
       },
       rules: {
-        time: [{ required: true, message: "请输入值班时间", trigger: "change" }],
+        startTime: [{ required: true, message: '请选择值班时间', trigger: 'change' }],
         deptId: [
           { required: true, message: "请选择值班部门", trigger: "change" }
         ],
@@ -103,7 +109,7 @@ export default {
   },
   watch: {
     changeDeptId(val) {
-      console.log('val', val);
+      // console.log('val', val);
       this.personList = []
       this.duty.userId = ''
       this.getPersonInfoByDeptId(val)
@@ -122,6 +128,7 @@ export default {
         current: 0,
         size: 999,
       })
+      // console.log(res);
       if (res.code === '200' && res.data) {
         this.personList = res.data.records
       }
@@ -141,8 +148,11 @@ export default {
       this.$router.push("/duty/dutyList");
     },
     async addHandle() {
-      const [startTime, endTime] = this.duty.time
-      const res = await saveDuty({ ...this.duty, startTime, endTime });
+      // const [startTime, endTime] = this.duty.time
+      // const res = await saveDuty({ ...this.duty, startTime, endTime });
+      this.duty.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.duty.startTime))
+      this.duty.endTime = null
+      const res = await saveDuty(this.duty);
       if (res.code === '200') {
         this.$message({
           message: "添加成功",
@@ -152,8 +162,11 @@ export default {
       }
     },
     async updateHandle() {
-      const [startTime, endTime] = this.duty.time
-      const res = await updateDuty({ ...this.duty, startTime, endTime })
+      // const [startTime, endTime] = this.duty.time
+      // const res = await updateDuty({ ...this.duty, startTime, endTime })
+      this.duty.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.duty.startTime))
+      this.duty.endTime = null
+      const res = await updateDuty(this.duty)
       // console.log(res);
       if (res && res.code === '200') {
         this.$message({
@@ -179,7 +192,7 @@ export default {
         this.duty.deptId = res.data.deptId
         setTimeout(() => {
           this.duty = res.data
-          this.duty.time = [res.data.startTime, res.data.endTime]
+          // this.duty.time = [res.data.startTime, res.data.endTime]
         }, 1000)
       }
     }

@@ -14,7 +14,7 @@
           </el-table-column>
           <el-table-column prop="title" label="名称" align="center"></el-table-column>
           <el-table-column v-if="type == 1" prop="time" label="历史时间" align="center"></el-table-column>
-          <el-table-column v-else prop="createTime" label="添加时间" align="center"></el-table-column>
+          <el-table-column v-else prop="createTime" label="创建时间" align="center"></el-table-column>
           <el-table-column label="操作" width="200" align="center">
             <template slot-scope="scope">
               <el-button

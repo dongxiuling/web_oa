@@ -62,7 +62,7 @@
       <el-pagination
         style="width: 100%"
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :total="total"
         :current-page.sync="currentPage"
         :page-size="pageSize"
@@ -99,7 +99,7 @@ export default {
         current: this.currentPage,
         size: this.pageSize
       })
-      console.log(res);
+      // console.log(res);
       if (res && res.code === '200') {
         this.detailList = res.data.records
         this.total = res.data.total;

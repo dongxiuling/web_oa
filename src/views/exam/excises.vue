@@ -38,7 +38,7 @@
           <el-pagination
             style="width: 100%"
             background
-            layout="prev, pager, next"
+            layout="total, prev, pager, next"
             :total="single.total"
             :current-page.sync="single.currentPage"
             :page-size="single.pageSize"
@@ -81,7 +81,7 @@
           <el-pagination
             style="width: 100%"
             background
-            layout="prev, pager, next"
+            layout="total, prev, pager, next"
             :total="multiple.total"
             :current-page.sync="multiple.currentPage"
             :page-size="multiple.pageSize"
@@ -122,7 +122,7 @@
           <el-pagination
             style="width: 100%"
             background
-            layout="prev, pager, next"
+            layout="total, prev, pager, next"
             :total="judge.total"
             :current-page.sync="judge.currentPage"
             :page-size="judge.pageSize"

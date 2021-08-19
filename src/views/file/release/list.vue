@@ -34,7 +34,7 @@
           label="序号"
         ></el-table-column>
         <el-table-column prop="name" label="法规名称"></el-table-column>
-        <el-table-column prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column prop="remark" label="法规简介"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -65,7 +65,7 @@
         <el-pagination
           style="width: 100%"
           background
-          layout="prev, pager, next"
+          layout="total, prev, pager, next"
           :total="total"
           :current-page.sync="currentPage"
           :page-size="pageSize"

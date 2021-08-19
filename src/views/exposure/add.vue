@@ -48,6 +48,7 @@ export default {
       form: {
         title: "",
         content: "",
+        cateId: ''
       },
       rules: {
         title: [{ required: true, message: "请输入标题", trigger: "blur" }],
@@ -71,6 +72,7 @@ export default {
             type: 2,
             id: this.$route.query.id,
             content: this.form.content,
+            cateId: this.form.cateId,
           }).then((res) => {
             this.$message({
               message: "修改成功",
@@ -93,6 +95,7 @@ export default {
             title: this.form.title,
             type: 2,
             content: this.form.content,
+            cateId: this.form.cateId,
           }).then((res) => {
             this.$message({
               message: "添加成功",
