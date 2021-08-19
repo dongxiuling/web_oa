@@ -7,13 +7,12 @@ export const addAppeal = (data = {}) => request({
     data
 })
 // 获取全部申诉
-export const appealList = (data = {}) => request({
-    url: `/complaint/selectComplaint`,
-    method: 'post',
-    data
+export const appealList = (params) => request({
+    url: `/complaint/selectComplaint/${params.size}/${params.current}/${params.hId}`,
+    method: 'get'
 })
 // 删除申诉
 export const appealDel = (id) => request({
-    url: `/complaint/delById/`+id,
+    url: `/complaint/delById/` + id,
     method: 'get',
 })

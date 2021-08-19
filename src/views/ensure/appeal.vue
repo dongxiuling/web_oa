@@ -13,7 +13,7 @@
         <el-table-column prop="title" label="申述文章"></el-table-column>
         <el-table-column prop="username" label="申述人"></el-table-column>
         <el-table-column prop="complaint" label="申述人内容"></el-table-column>
-        <el-table-column prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button
@@ -130,6 +130,7 @@ export default {
       appealList({
         current: this.currentPage,
         size: this.pageSize,
+        hId: 0
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;

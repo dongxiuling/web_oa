@@ -13,7 +13,7 @@
         <el-table-column prop="title" label="申请标题"></el-table-column>
         <el-table-column prop="username" label="反馈人"></el-table-column>
         <el-table-column prop="complaint" label="反馈内容"></el-table-column>
-        <el-table-column prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button
@@ -35,12 +35,14 @@
       </el-table>
       <div class="page-box">
         <el-pagination
-          layout="total, prev, pager, next, jumper"
-          :total="total"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
+        style="width: 100%"
+        background
+        layout="total, prev, pager, next"
+        :total="total"
+        :current-page.sync="currentPage"
+        :page-size="pageSize"
+        @current-change="handleCurrentChange"
+      ></el-pagination>
       </div>
     </div>
   </div>
@@ -128,11 +130,13 @@ export default {
     getList() {
       this.loading = true;
       appealList({
+        hId: 0,
         current: this.currentPage,
         size: this.pageSize,
       }).then((res) => {
         console.log(res);
         this.dataList = res.data.records;
+        this.total = res.data.total
         this.loading = false;
       });
     },
@@ -198,5 +202,9 @@ li {
 }
 .search-box .el-input__suffix {
   right: 10px;
+}
+.page-box {
+  text-align: right;
+  margin-top: 20px;
 }
 </style>

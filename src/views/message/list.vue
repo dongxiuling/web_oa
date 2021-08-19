@@ -37,7 +37,7 @@
         </el-table>
       </div>
       <div class="pagination">
-        <el-pagination :current-page.sync="currentPage" @current-change="changePage" :page-size="10" background layout="prev, pager, next" :total="message"></el-pagination>
+        <el-pagination :current-page.sync="currentPage" @current-change="changePage" :page-size="10" background layout="total, prev, pager, next" :total="message"></el-pagination>
       </div>
     </div>
   </div>

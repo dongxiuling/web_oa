@@ -1,5 +1,12 @@
 <template>
   <div class="container">
+    <el-button
+      type="primary"
+      icon="el-icon-back"
+      size="mini"
+      @click="$router.go(-1)"
+      >返回</el-button
+    >
     <div class="title">{{ dataInfo.title }}</div>
     <div class="time">{{ dataInfo.createTime }}</div>
     <div class="content" v-html="dataInfo.content"></div>
@@ -29,24 +36,24 @@ export default {
 };
 </script>
 <style scoped>
-.container{
-    margin: 20px;
-    padding-top: 30px;
-    overflow: hidden;
+.container {
+  margin: 20px;
+  padding-top: 30px;
+  overflow: hidden;
 }
-.container .title{
-    margin: 20px 0;
-    font-size: 40px;
-    font-weight: bold;
-    text-align: center;
+.container .title {
+  margin: 20px 0;
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
 }
-.container .time{
-    text-align: center;
-    font-size: 14px;
-    color: #999;
+.container .time {
+  text-align: center;
+  font-size: 14px;
+  color: #999;
 }
-.container .content{
-    width: 1000px;
-    margin: 50px auto 0;
+.container .content {
+  width: 1000px;
+  margin: 50px auto 0;
 }
 </style>

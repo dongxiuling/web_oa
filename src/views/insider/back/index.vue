@@ -129,7 +129,7 @@
       <el-pagination
         style="width: 100%"
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :total="total"
         :current-page.sync="currentPage"
         :page-size="pageSize"

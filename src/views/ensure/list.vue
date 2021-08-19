@@ -11,7 +11,7 @@
         <el-table-column type="index" width="150" label="序号">
         </el-table-column>
         <el-table-column prop="title" label="名称"></el-table-column>
-        <el-table-column prop="createTime" label="添加时间"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
             <el-button

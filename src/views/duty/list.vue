@@ -13,17 +13,41 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item> -->
+      <el-form-item label="时间筛选">
+        <el-date-picker
+          style="width: 300px"
+          v-model="search.time"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+        ></el-date-picker>
+      </el-form-item>
       <el-form-item label="值班部门" prop="deptId">
         <el-select
           v-model="search.deptId"
           placeholder="请选择值班部门"
-          style="width: 240px"
+          style="width: 200px"
         >
           <el-option
             v-for="item in deptList"
             :key="item.deptId"
             :label="item.deptName"
             :value="item.deptId"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="姓名" prop="userId">
+        <el-select
+          v-model="search.userId"
+          placeholder="请选择姓名"
+          style="width: 200px"
+        >
+          <el-option
+            v-for="item in personList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -132,7 +156,7 @@
       <el-pagination
         style="width: 100%"
         background
-        layout="prev, pager, next"
+        layout="total, prev, pager, next"
         :total="total"
         :current-page.sync="currentPage"
         :page-size="pageSize"
@@ -145,6 +169,8 @@
 <script>
 import { getDutyList, delDuty } from "@/api/duty"
 import { lastDept } from "@/api/system/dept"
+import { selectPerson } from "@/api/insider"
+import { dateFormat } from "@/utils/format"
 
 export default {
   data() {
@@ -155,6 +181,8 @@ export default {
       cateData: [],
       search: {
         deptId: 0,
+        userId: '',
+        time: ''
       },
       total: 0, //分页总页数
       loading: true,
@@ -162,7 +190,19 @@ export default {
       id: null,
       deptList: [],
       personList: [],
+      startTime: null,
+      endTime: null,
     };
+  },
+  watch: {
+    changeDeptId(val) {
+      this.personList = []
+      this.search.userId = ''
+      this.getPersonInfoByDeptId(val)
+    }
+  },
+  computed: {
+    changeDeptId() { return this.search.deptId },
   },
   methods: {
     async getDeptList() {
@@ -177,19 +217,39 @@ export default {
         current: this.currentPage,
         size: this.pageSize,
         deptId: this.search.deptId,
+        userId: this.search.userId,
+        startTime: this.startTime,
+        endTime: this.endTime,
       })
-      console.log(res);
+      // console.log(res);
       if (res.code === '200' && res.data) {
         this.list = res.data.records;
         this.total = res.data.total;
         this.loading = false;
       }
     },
+    async getPersonInfoByDeptId(deptId) {
+      const res = await selectPerson({
+        deptId,
+        current: 0,
+        size: 999,
+      })
+      if (res.code === '200' && res.data) {
+        this.personList = res.data.records
+      }
+    },
     searchHandle() {
+      this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[1])
+      this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[0])
       this.getData();
     },
     reSetHandle() {
+      const now = new Date()
+      this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", now)
+      this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", now.setMonth((new Date().getMonth() - 1)))
+      this.search.time = [this.startTime, this.endTime]
       this.search.deptId = 0;
+      this.search.userId = null;
       this.getData();
     },
     handleCurrentChange(value) {
@@ -217,6 +277,11 @@ export default {
     },
   },
   created() {
+    const now = new Date()
+    this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", now)
+    this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", now.setMonth((new Date().getMonth() - 1)))
+    this.search.time = [this.startTime, this.endTime]
+
     this.getDeptList();
     this.getData();
   },
