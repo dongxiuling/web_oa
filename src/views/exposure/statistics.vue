@@ -243,7 +243,7 @@ export default {
       myChart.setOption(option)
 
       myChart.on('click', async (param) => { //添加点击事件
-        console.log(param.data);
+        // console.log(param.data);
         const res = await selectFeedBack({
           isBack: param.data.isBack,
           startTime: this.startTime,

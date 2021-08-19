@@ -52,7 +52,13 @@ export function delTest(data) {
     return request({
         url: '/naire/delExerById/' + data.id,
         method: 'get',
-        // data: data
+    })
+}
+
+export function delNaire(id) {
+    return request({
+        url: '/naire/delNaireById/' + id,
+        method: 'get',
     })
 }
 
