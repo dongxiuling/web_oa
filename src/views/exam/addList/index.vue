@@ -21,8 +21,16 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="searchHandle()">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()">重置</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          size="mini"
+          @click="searchHandle()"
+          >搜索</el-button
+        >
+        <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()"
+          >重置</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -33,31 +41,68 @@
           icon="el-icon-plus"
           size="mini"
           @click="$router.push('/exams/add')"
-        >发布考试</el-button>
+          >发布考试</el-button
+        >
       </el-col>
     </el-row>
 
     <el-table :data="examList" style="width: 100%" v-loading="loading">
       <el-table-column
+        align="center"
         type="index"
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="title" label="考试名称"></el-table-column>
-      <el-table-column prop="startDate" label="开始时间" width="180"></el-table-column>
-      <el-table-column prop="endDate" label="结束时间" width="180"></el-table-column>
-      <el-table-column prop="categoryName" label="考试类型"></el-table-column>
-      <el-table-column prop="duration" label="时长"></el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column
+        align="center"
+        prop="title"
+        label="考试名称"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="startDate"
+        label="开始时间"
+        width="180"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="endDate"
+        label="结束时间"
+        width="180"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="categoryName"
+        label="考试类型"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="duration"
+        label="时长"
+      ></el-table-column>
+      <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="updateHandle(scope.row)">修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="updateHandle(scope.row)"
+            >修改</el-button
+          >
           <el-button
             size="mini"
             type="text"
             icon="el-icon-search"
             @click="detailHandle(scope.row)"
-          >查看</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="delHandle(scope.row)">删除</el-button>
+            >查看</el-button
+          >
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="delHandle(scope.row)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -76,7 +121,7 @@
 </template>
 
 <script>
-import { getCreatedExam, delExam,getExamCate } from "@/api/exam";
+import { getCreatedExam, delExam, getExamCate } from "@/api/exam";
 export default {
   data() {
     return {
@@ -117,7 +162,7 @@ export default {
       getExamCate({
         ...this.search,
         size: 1000,
-        current:1
+        current: 1
       }).then(res => {
         // console.log(res);
         this.cateData = res.data.records;
