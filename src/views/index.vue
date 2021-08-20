@@ -286,7 +286,7 @@ export default {
             let newArr = [];
             if (arr != undefined && arr.length > 0) {
               newArr = arr.map(item => {
-                item.symbolSize = [100, 30]
+                item.symbolSize = [200, 50]
                 item.symbol = 'rectangle'
                 if (item.children != undefined && item.children.length > 0) {
                   iteration(item.children);
@@ -300,12 +300,12 @@ export default {
           const data = {
             name: '安全责任图',
             value: 0,
-            symbolSize: [100, 30],
+            symbolSize: [200, 50],
             symbol: 'rectangle',
             itemStyle: {
               normal: {
                 borderWidth: 2,
-                borderColor: '#395EFB'
+                borderColor: '#1890ff'
               }
             },
             children: newObj
@@ -349,13 +349,13 @@ export default {
               // nodePadding: 30,
               // layerPadding: 40,
               // symbol: 'rectangle',
-              // borderColor: '#395EFB',
+              // borderColor: '#1890ff',
 
               itemStyle: {
                 normal: {
-                  color: '#395EFB', //节点背景色
+                  color: '#1890ff', //节点背景色
                   borderWidth: 2,
-                  borderColor: '#395EFB',
+                  borderColor: '#1890ff',
                   label: {
                     show: true,
                     position: 'inside',
@@ -377,6 +377,7 @@ export default {
                   }
                 }
               },
+              initialTreeDepth: 10,
               data: [data]
             }]
           };
@@ -420,6 +421,6 @@ export default {
   }
 }
 #safeBox {
-  min-height: 300px;
+  min-height: 500px;
 }
 </style>
