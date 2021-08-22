@@ -17,10 +17,13 @@
         <el-date-picker
           style="width: 380px"
           v-model="search.time"
-          type="datetimerange"
+          type="daterange"
           range-separator="至"
           start-placeholder="开始时间"
           end-placeholder="结束时间"
+          :picker-options="{
+            firstDayOfWeek: 1,
+          }"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="值班部门" prop="deptId">
@@ -101,8 +104,8 @@
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="pos"
-        label="值班地点"
+        prop="phone"
+        label="电话号码"
       ></el-table-column>
       <el-table-column
         align="center"
@@ -239,14 +242,14 @@ export default {
       }
     },
     searchHandle() {
-      this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[1])
-      this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[0])
+      this.endTime = dateFormat("YYYY-mm-dd", this.search.time[1])
+      this.startTime = dateFormat("YYYY-mm-dd", this.search.time[0])
       this.getData();
     },
     reSetHandle() {
       const now = new Date()
-      this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", now)
-      this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", now.setMonth((new Date().getMonth() - 1)))
+      this.startTime = dateFormat("YYYY-mm-dd", this.getFirstDayOfWeek(now))
+      this.endTime = dateFormat("YYYY-mm-dd", this.getLastDayOfWeek(now))
       this.search.time = [this.startTime, this.endTime]
       this.search.deptId = 0;
       this.search.userId = null;
@@ -275,11 +278,17 @@ export default {
       })
       this.getData()
     },
+    getFirstDayOfWeek(date) {
+      return date.getTime() - (date.getDay() || 7 - 1) * 24 * 60 * 60 * 1000
+    },
+    getLastDayOfWeek(date) {
+      return date.getTime() + (7 - (date.getDay() || 7)) * 24 * 60 * 60 * 1000
+    },
   },
   created() {
     const now = new Date()
-    this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", now)
-    this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", now.setMonth((new Date().getMonth() - 1)))
+    this.startTime = dateFormat("YYYY-mm-dd", this.getFirstDayOfWeek(now))
+    this.endTime = dateFormat("YYYY-mm-dd", this.getLastDayOfWeek(now))
     this.search.time = [this.startTime, this.endTime]
 
     this.getDeptList();

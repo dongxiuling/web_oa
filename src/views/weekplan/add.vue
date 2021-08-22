@@ -1,16 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="duty" :model="duty" :rules="rules" label-width="80px">
-      <el-form-item label="值班日期" prop="startTime">
-        <!-- <el-date-picker
-          style="width: 400px"
-          v-model="duty.time"
-          type="datetimerange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          value-format="yyyy-MM-dd HH:mm:ss"
-        ></el-date-picker> -->
+      <el-form-item label="日期" prop="startTime">
         <el-date-picker
           v-model="duty.startTime"
           type="date"
@@ -21,10 +12,10 @@
       <el-form-item label="星期" prop="week">
         <el-input disabled v-model="duty.week" style="width: 400px"></el-input>
       </el-form-item>
-      <el-form-item label="值班部门" prop="deptId">
+      <el-form-item label="单位" prop="deptId">
         <el-select
           v-model="duty.deptId"
-          placeholder="请选择值班部门"
+          placeholder="请选择单位"
           style="width: 400px"
         >
           <el-option
@@ -35,13 +26,19 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="电话号码" prop="phone">
-        <el-input disabled v-model="duty.phone" style="width: 400px"></el-input>
+      <el-form-item label="工作内容" prop="content">
+        <el-input
+          type="textarea"
+          style="width: 400px"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          placeholder="请输入备注"
+          v-model="duty.content"
+        ></el-input>
       </el-form-item>
-      <el-form-item label="值班人员" prop="userId">
+      <el-form-item label="人员" prop="userId">
         <el-select
           v-model="duty.userId"
-          placeholder="请选择所值班人员"
+          placeholder="请选择人员"
           style="width: 400px"
         >
           <el-option
@@ -51,6 +48,26 @@
             :value="item.id"
           ></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="责任人" prop="resUserId">
+        <el-select
+          v-model="duty.resUserId"
+          placeholder="请选择责任人"
+          style="width: 400px"
+        >
+          <el-option
+            v-for="item in personList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+       <el-form-item label="地点" prop="pos">
+        <el-input v-model="duty.pos" style="width: 400px"></el-input>
+      </el-form-item>
+      <el-form-item label="天气预报" prop="weather">
+        <el-input v-model="duty.weather" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input
@@ -81,7 +98,7 @@
 <script>
 import { lastDept, getDept } from "@/api/system/dept";
 import { selectPerson } from "@/api/insider.js";
-import { saveDuty, getDutyById, updateDuty } from "@/api/duty"
+import { saveWeekplan, getWeekplanById, updateWeekplan } from "@/api/weekplan"
 import { dateFormat } from "@/utils/format"
 
 export default {
@@ -96,7 +113,10 @@ export default {
         startTime: '',
         remark: '',
         week: '',
-        phone: '',
+        content: '',
+        pos: '',
+        weather: '',
+        resUserId: '', // 责任人
       },
       rules: {
         startTime: [{ required: true, message: '请选择值班时间', trigger: 'change' }],
@@ -106,8 +126,13 @@ export default {
         userId: [
           { required: true, message: "请选择值班人员", trigger: "change" }
         ],
-        phone: [{ required: true, message: "请输入电话号码", trigger: "blur" }],
+        resUserId: [
+          { required: true, message: "请选择责任人", trigger: "change" }
+        ],
+        content: [{ required: true, message: "请输入工作内容", trigger: "blur" }],
         week: [{ required: true, message: "请输入星期", trigger: "blur" }],
+        pos: [{ required: true, message: "请输入地点", trigger: "blur" }],
+        weather: [{ required: true, message: "请输入天气预报", trigger: "blur" }],
       }
     };
   },
@@ -120,6 +145,7 @@ export default {
       // console.log('val', val);
       this.personList = []
       this.duty.userId = ''
+      this.duty.resUserId = ''
       this.getPersonInfoByDeptId(val)
     },
     changeStartTime(val) {
@@ -154,6 +180,7 @@ export default {
       const res = await lastDept()
       if (res && res.code == 200 && res.data) {
         this.deptList = res.data
+        this.resDeptList = res.data
       }
     },
     async getPersonInfoByDeptId(deptId) {
@@ -167,10 +194,7 @@ export default {
         this.personList = res.data.records
       }
 
-      const deptDetail = await getDept(deptId)
-      if (deptDetail.code === 200 && deptDetail.data) {
-        this.duty.phone = deptDetail.data.phone
-      }
+     
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -188,24 +212,24 @@ export default {
     },
     async addHandle() {
       // const [startTime, endTime] = this.duty.time
-      // const res = await saveDuty({ ...this.duty, startTime, endTime });
+      // const res = await saveWeekplan({ ...this.duty, startTime, endTime });
       this.duty.startTime = dateFormat("YYYY-mm-dd", new Date(this.duty.startTime))
-      // console.log(this.duty);
-      const res = await saveDuty(this.duty);
+      console.log(this.duty);
+      const res = await saveWeekplan(this.duty);
       if (res.code === '200') {
         this.$message({
           message: "添加成功",
           type: "success"
         });
-        this.$router.push("/duty/dutyList");
+        this.$router.push("/weekplan/weekplanList");
       }
     },
     async updateHandle() {
       // const [startTime, endTime] = this.duty.time
-      // const res = await updateDuty({ ...this.duty, startTime, endTime })
+      // const res = await updateWeekplan({ ...this.duty, startTime, endTime })
       this.duty.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.duty.startTime))
       this.duty.endTime = null
-      const res = await updateDuty(this.duty)
+      const res = await updateWeekplan(this.duty)
       // console.log(res);
       if (res && res.code === '200') {
         this.$message({
@@ -226,7 +250,7 @@ export default {
     await this.getDeptList();
     const { id } = this.$route.params
     if (id) { // 修改
-      const res = await getDutyById(id)
+      const res = await getWeekplanById(id)
       if (res && res.code === '200') {
         this.duty.deptId = res.data.deptId
         setTimeout(() => {

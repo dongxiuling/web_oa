@@ -62,3 +62,10 @@ export const updateTodaywork = (data = {}) => request({
     data
 })
 
+// 周值班表
+export const dutyStatistics = (data = {}) => request({
+    url: '/duty/dutyStatistics',
+    method: 'post',
+    data
+})
+
