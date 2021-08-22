@@ -49,6 +49,12 @@
         ></el-table-column>
         <el-table-column
           align="center"
+          prop="startTime"
+          label="值班时间"
+        ></el-table-column>
+        <!-- <el-table-column prop="endTime" label="结束时间"></el-table-column> -->
+        <el-table-column
+          align="center"
           prop="deptName"
           label="值班部门"
         ></el-table-column>
@@ -59,30 +65,14 @@
         ></el-table-column>
         <el-table-column
           align="center"
-          prop="startTime"
-          label="值班时间"
+          prop="phone"
+          label="电话号码"
         ></el-table-column>
-        <!-- <el-table-column
-          align="center"
-          prop="endTime"
-          label="结束时间"
-        ></el-table-column> -->
         <el-table-column
           align="center"
-          prop="pos"
-          label="值班地点"
+          prop="remark"
+          label="备注"
         ></el-table-column>
-        <!-- <el-table-column align="center" label="操作" width="220">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-tickets"
-              @click="workplanDetail(scope.row)"
-              >查看详情</el-button
-            >
-          </template>
-        </el-table-column> -->
       </el-table>
     </el-card>
 
@@ -168,7 +158,7 @@
         </div>
       </el-col>
     </el-row> -->
-    <div v-for="(item,index) in 7" :key="index">
+    <div v-for="(item, index) in 7" :key="index">
       <indexList :type="item" />
     </div>
   </div>
@@ -245,8 +235,8 @@ export default {
         current: 0,
         size: 999,
         deptId: 0,
-        startTime: dateFormat("YYYY-mm-dd 00:00:00", new Date()),
-        endTime: dateFormat("YYYY-mm-dd 23:59:59", new Date()),
+        startTime: dateFormat("YYYY-mm-dd", new Date()),
+        endTime: dateFormat("YYYY-mm-dd", new Date()),
       })
       // console.log(res);
       if (res.code === '200' && res.data) {
