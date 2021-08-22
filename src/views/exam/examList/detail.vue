@@ -63,9 +63,15 @@
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="score"
-        label="成绩"
+        prop="createTime"
+        label="考试时间"
       ></el-table-column>
+      <el-table-column align="center" prop="score" label="成绩">
+        <template slot-scope="scope">
+          <span v-if="scope.row.score == null">0</span>
+          <span v-else>{{scope.row.score}}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <el-button

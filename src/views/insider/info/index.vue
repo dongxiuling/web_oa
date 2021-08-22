@@ -67,17 +67,43 @@
     </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
       <el-table-column
+        align="center"
         type="index"
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="deptName" label="所属连队"></el-table-column>
-      <el-table-column prop="name" label="姓名"></el-table-column>
-      <el-table-column prop="idCard" width="180" label="身份证号码"></el-table-column>
-      <el-table-column prop="jobName" label="部职别"></el-table-column>
-      <el-table-column prop="jobTypeName" label="身份"></el-table-column>
-      <el-table-column prop="remark1" label="军衔"></el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column
+        align="center"
+        prop="deptName"
+        label="所属连队"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="name"
+        label="姓名"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="idCard"
+        width="180"
+        label="身份证号码"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="jobName"
+        label="部职别"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="jobTypeName"
+        label="身份"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="remark1"
+        label="军衔"
+      ></el-table-column>
+      <el-table-column align="center" label="操作" width="220">
         <template slot-scope="scope">
           <!-- <el-button
             size="mini"

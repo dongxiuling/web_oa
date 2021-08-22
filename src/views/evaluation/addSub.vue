@@ -21,6 +21,9 @@
           placeholder="选择周"
           style="width: 400px"
           id="week"
+          :picker-options="{
+            firstDayOfWeek: 1,
+          }"
         >
         </el-date-picker>
       </el-form-item>

@@ -45,7 +45,7 @@
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="title" label="考试名称"></el-table-column>
+      <el-table-column align="center" prop="title" label="考试名称"></el-table-column>
       <el-table-column
       align="center"
         prop="startDate"

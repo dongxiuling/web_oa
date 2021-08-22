@@ -49,6 +49,12 @@
         ></el-table-column>
         <el-table-column
           align="center"
+          prop="startTime"
+          label="值班时间"
+        ></el-table-column>
+        <!-- <el-table-column prop="endTime" label="结束时间"></el-table-column> -->
+        <el-table-column
+          align="center"
           prop="deptName"
           label="值班部门"
         ></el-table-column>
@@ -59,30 +65,14 @@
         ></el-table-column>
         <el-table-column
           align="center"
-          prop="startTime"
-          label="开始时间"
+          prop="phone"
+          label="电话号码"
         ></el-table-column>
         <el-table-column
           align="center"
-          prop="endTime"
-          label="结束时间"
+          prop="remark"
+          label="备注"
         ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="pos"
-          label="值班地点"
-        ></el-table-column>
-        <!-- <el-table-column align="center" label="操作" width="220">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-tickets"
-              @click="workplanDetail(scope.row)"
-              >查看详情</el-button
-            >
-          </template>
-        </el-table-column> -->
       </el-table>
     </el-card>
 
@@ -168,7 +158,7 @@
         </div>
       </el-col>
     </el-row> -->
-    <div v-for="(item,index) in 7" :key="index">
+    <div v-for="(item, index) in 7" :key="index">
       <indexList :type="item" />
     </div>
   </div>
@@ -245,7 +235,8 @@ export default {
         current: 0,
         size: 999,
         deptId: 0,
-        startTime: dateFormat("YYYY-mm-dd HH:MM:SS", new Date()),
+        startTime: dateFormat("YYYY-mm-dd", new Date()),
+        endTime: dateFormat("YYYY-mm-dd", new Date()),
       })
       // console.log(res);
       if (res.code === '200' && res.data) {
@@ -285,7 +276,7 @@ export default {
             let newArr = [];
             if (arr != undefined && arr.length > 0) {
               newArr = arr.map(item => {
-                item.symbolSize = [100, 30]
+                item.symbolSize = [200, 50]
                 item.symbol = 'rectangle'
                 if (item.children != undefined && item.children.length > 0) {
                   iteration(item.children);
@@ -299,12 +290,12 @@ export default {
           const data = {
             name: '安全责任图',
             value: 0,
-            symbolSize: [100, 30],
+            symbolSize: [200, 50],
             symbol: 'rectangle',
             itemStyle: {
               normal: {
                 borderWidth: 2,
-                borderColor: '#395EFB'
+                borderColor: '#1890ff'
               }
             },
             children: newObj
@@ -348,13 +339,13 @@ export default {
               // nodePadding: 30,
               // layerPadding: 40,
               // symbol: 'rectangle',
-              // borderColor: '#395EFB',
+              // borderColor: '#1890ff',
 
               itemStyle: {
                 normal: {
-                  color: '#395EFB', //节点背景色
+                  color: '#1890ff', //节点背景色
                   borderWidth: 2,
-                  borderColor: '#395EFB',
+                  borderColor: '#1890ff',
                   label: {
                     show: true,
                     position: 'inside',
@@ -376,6 +367,7 @@ export default {
                   }
                 }
               },
+              initialTreeDepth: 10,
               data: [data]
             }]
           };
@@ -419,6 +411,6 @@ export default {
   }
 }
 #safeBox {
-  min-height: 300px;
+  min-height: 500px;
 }
 </style>

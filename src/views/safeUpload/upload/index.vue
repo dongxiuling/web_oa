@@ -75,7 +75,7 @@
             placeholder="请选择部门"
             style="width: 260px"
             @change="updateDept"
-             value-key="deptId"
+            value-key="deptId"
           >
             <el-option
               v-for="item in deptList"
@@ -192,9 +192,11 @@ export default {
   // },
   methods: {
     updateDept() {
-        this.getPersonInfoByDeptId(this.loginForm.dept.deptId);
+      this.loginForm.user = ''
+      this.personList = []
+      this.getPersonInfoByDeptId(this.loginForm.dept.deptId);
     },
-    updateUser(){
+    updateUser() {
 
     },
     /** 查询人员列表 */
@@ -272,7 +274,7 @@ export default {
             ? { url: JSON.stringify(this.list), id: this.id }
             : { url: JSON.stringify(this.list) };
 
-            console.log(data,'22')
+          console.log(data, '22')
           saveSafety(data).then(() => {
             this.open = false;
             this.getList();
@@ -298,7 +300,7 @@ export default {
             this.msgSuccess("删除成功");
           });
         })
-        .catch(function () {});
+        .catch(function () { });
     },
     async getDeptList() {
       const res = await lastDept();
