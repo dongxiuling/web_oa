@@ -52,8 +52,8 @@
         ></el-table-column>
         <el-table-column align="center" label="是否反馈">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.count == 0">未反馈</el-tag>
-            <el-tag v-else type="success">已反馈</el-tag>
+            <el-tag v-if="scope.row.count == 0">待解决</el-tag>
+            <el-tag v-else type="success">已解决</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="反馈">
@@ -114,6 +114,9 @@
               v-model="appealForm.content"
               autocomplete="off"
             ></el-input>
+          </el-form-item>
+           <el-form-item v-if="appealForm.createTime" label="反馈时间" label-width="120px" prop="content">
+            <el-input v-model="appealForm.createTime" autocomplete="off"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -307,12 +310,12 @@ export default {
       if (res3 && res3.code == 200) {
         const d = res3.data[0]
         this.chartData2[0] = {
-          name: '未反馈',
+          name: '待解决',
           value: d.totalCount - d.feedBackCount,
           isBack: 0
         }
         this.chartData2[1] = {
-          name: '已反馈',
+          name: '已解决',
           value: d.feedBackCount,
           isBack: 1
         }
@@ -360,6 +363,7 @@ export default {
         this.appealForm = {
           title: res.data.records[0].username,
           content: res.data.records[0].complaint,
+          createTime: res.data.records[0].createTime,
         }
       }
     },
