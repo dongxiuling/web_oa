@@ -6,17 +6,52 @@
           v-model="duty.startTime"
           type="date"
           placeholder="请选择日期"
-          style="width: 400px"
+          style="width: 430px"
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="星期" prop="week">
-        <el-input disabled v-model="duty.week" style="width: 400px"></el-input>
+        <el-input disabled v-model="duty.week" style="width: 430px"></el-input>
       </el-form-item>
+      <el-form-item label="时间" required>
+        <el-col :span="5">
+          <el-form-item prop="start">
+            <el-time-select
+              style="width: 198px"
+              placeholder="起始时间"
+              v-model="duty.start"
+              :picker-options="{
+                start: '05:00',
+                step: '00:05',
+                end: '23:30',
+              }"
+            >
+            </el-time-select>
+          </el-form-item>
+        </el-col>
+        <!-- <el-col class="line" :span="1">-</el-col> -->
+        <el-col :span="5">
+          <el-form-item prop="end">
+            <el-time-select
+              style="width: 198px"
+              placeholder="结束时间"
+              v-model="duty.end"
+              :picker-options="{
+                start: '05:00',
+                step: '00:05',
+                end: '23:30',
+                minTime: duty.start,
+              }"
+            >
+            </el-time-select>
+          </el-form-item>
+        </el-col>
+      </el-form-item>
+
       <el-form-item label="单位" prop="deptId">
         <el-select
           v-model="duty.deptId"
           placeholder="请选择单位"
-          style="width: 400px"
+          style="width: 430px"
         >
           <el-option
             v-for="item in deptList"
@@ -29,7 +64,7 @@
       <el-form-item label="工作内容" prop="content">
         <el-input
           type="textarea"
-          style="width: 400px"
+          style="width: 430px"
           :autosize="{ minRows: 2, maxRows: 4 }"
           placeholder="请输入备注"
           v-model="duty.content"
@@ -39,7 +74,7 @@
         <el-select
           v-model="duty.userId"
           placeholder="请选择人员"
-          style="width: 400px"
+          style="width: 430px"
         >
           <el-option
             v-for="item in personList"
@@ -53,7 +88,7 @@
         <el-select
           v-model="duty.resUserId"
           placeholder="请选择责任人"
-          style="width: 400px"
+          style="width: 430px"
         >
           <el-option
             v-for="item in personList"
@@ -63,16 +98,16 @@
           ></el-option>
         </el-select>
       </el-form-item>
-       <el-form-item label="地点" prop="pos">
-        <el-input v-model="duty.pos" style="width: 400px"></el-input>
+      <el-form-item label="地点" prop="pos">
+        <el-input v-model="duty.pos" style="width: 430px"></el-input>
       </el-form-item>
       <el-form-item label="天气预报" prop="weather">
-        <el-input v-model="duty.weather" style="width: 400px"></el-input>
+        <el-input v-model="duty.weather" style="width: 430px"></el-input>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
         <el-input
           type="textarea"
-          style="width: 400px"
+          style="width: 430px"
           :autosize="{ minRows: 2, maxRows: 4 }"
           placeholder="请输入备注"
           v-model="duty.remark"
@@ -117,9 +152,15 @@ export default {
         pos: '',
         weather: '',
         resUserId: '', // 责任人
+
+        start: '', // 开始时间段
+        end: '', // 结束时间段
       },
       rules: {
         startTime: [{ required: true, message: '请选择值班时间', trigger: 'change' }],
+        start: [{ required: true, message: '请选择时间段', trigger: 'change' }],
+        end: [{ required: true, message: '请选择时间段', trigger: 'change' }],
+        // time: [{ required: true, message: '请选择时间段', trigger: 'change' }],
         deptId: [
           { required: true, message: "请选择值班部门", trigger: "change" }
         ],
@@ -194,7 +235,7 @@ export default {
         this.personList = res.data.records
       }
 
-     
+
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -208,13 +249,26 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.$router.push("/duty/dutyList");
+      this.$router.go(-1);
     },
     async addHandle() {
       // const [startTime, endTime] = this.duty.time
       // const res = await saveWeekplan({ ...this.duty, startTime, endTime });
       this.duty.startTime = dateFormat("YYYY-mm-dd", new Date(this.duty.startTime))
-      console.log(this.duty);
+      const tempStart = new Date(this.duty.startTime + ' ' + this.duty.start)
+      // const tempEnd = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(this.duty.startTime + ' ' + this.duty.end))
+      let day = ''
+      if (tempStart.getHours() >= 0 && tempStart.getHours() < 12) {
+        day = "上午"
+      } else if (tempStart.getHours() >= 12 && tempStart.getHours() < 18) {
+        day = "下午"
+      } else {
+        day = "晚上"
+      }
+      this.duty.day = day
+      this.duty.time = this.duty.start + '-' + this.duty.end
+
+      // console.log(this.duty);
       const res = await saveWeekplan(this.duty);
       if (res.code === '200') {
         this.$message({

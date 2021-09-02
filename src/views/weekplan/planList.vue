@@ -188,10 +188,10 @@ export default {
       // console.log(this.startTime, this.endTime);
     },
     getFirstDayOfWeek(date) {
-      return date.getTime() - (date.getDay() - 1) * 24 * 60 * 60 * 1000
+      return date.getTime() - ((date.getDay() || 7) - 1) * 24 * 60 * 60 * 1000
     },
     getLastDayOfWeek(date) {
-      return date.getTime() + (7 - date.getDay()) * 24 * 60 * 60 * 1000
+      return date.getTime() + (7 - (date.getDay() || 7)) * 24 * 60 * 60 * 1000
     },
   },
   created() {
