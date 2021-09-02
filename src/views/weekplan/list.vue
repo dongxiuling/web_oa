@@ -86,13 +86,13 @@
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="time"
-        label="时间段"
+        prop="deptName"
+        label="单位"
       ></el-table-column>
       <el-table-column
         align="center"
-        prop="deptName"
-        label="单位"
+        prop="time"
+        label="时间段"
       ></el-table-column>
       <el-table-column
         align="center"
