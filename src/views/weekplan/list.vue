@@ -81,6 +81,16 @@
       ></el-table-column>
       <el-table-column
         align="center"
+        prop="day"
+        label="上下午"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="time"
+        label="时间段"
+      ></el-table-column>
+      <el-table-column
+        align="center"
         prop="deptName"
         label="单位"
       ></el-table-column>
@@ -110,6 +120,17 @@
         prop="remark"
         label="备注"
       ></el-table-column>
+      <el-table-column align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click.stop="delItem(scope.row)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
     <div class="page-box">
       <el-pagination
@@ -202,7 +223,7 @@ export default {
               this.pos = i;
             }
           }
-          console.log(this.spanArr);
+          // console.log(this.spanArr);
         }
       }
     },
@@ -242,12 +263,34 @@ export default {
       // console.log(this.startTime, this.endTime);
     },
     getFirstDayOfWeek(date) {
-      return date.getTime() - (date.getDay() || 7 - 1) * 24 * 60 * 60 * 1000
+      return date.getTime() - ((date.getDay() || 7) - 1) * 24 * 60 * 60 * 1000
     },
     getLastDayOfWeek(date) {
       return date.getTime() + (7 - (date.getDay() || 7)) * 24 * 60 * 60 * 1000
     },
-    
+    delItem(item) {
+      this.$confirm("此操作将永久删除且无法恢复, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          // console.log(item)
+          delWeekplan(item.id).then((res) => {
+            this.$message({
+              message: "删除成功",
+              type: "success",
+            });
+            this.getData();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
   },
   created() {
     const now = new Date()
