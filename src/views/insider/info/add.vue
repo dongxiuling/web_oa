@@ -106,7 +106,7 @@ export default {
         idCard: '',
         jobName: '',
         sex: '男',
-        jobType: '义务兵'
+        jobType: '1'
       },
       jobTypes: [
         {
@@ -151,6 +151,7 @@ export default {
       });
     },
     async addHandle() {
+      // console.log(this.info);
       const res = await savePerson(this.info);
       if (res.code === '200') {
         this.$message({
