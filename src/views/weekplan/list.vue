@@ -196,6 +196,8 @@ export default {
       }
     },
     async getData() {
+      this.spanArr = []
+      this.pos = 0
       const res = await selectWeekplan({
         current: this.currentPage,
         size: this.pageSize,
@@ -230,7 +232,6 @@ export default {
     searchHandle() {
       // this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[1])
       // this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[0])
-
 
       this.getData();
     },
