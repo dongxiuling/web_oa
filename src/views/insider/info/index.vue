@@ -171,14 +171,14 @@
         :name="file.name"
       ></Uploader>
       <!-- <el-button @click="openTabWin(file.readUrl,'view')" v-if="file.readUrl"  icon="el-icon-view" size="small" type="primary">预览文件</el-button> -->
-      <el-button
+      <!-- <el-button
         v-if="id"
         @click="openTabWin(file.url, 'download')"
         icon="el-icon-download"
         size="small"
         type="success"
         >下载文件</el-button
-      >
+      > -->
       <!-- <el-divider></el-divider> -->
       <div class="dialog-content">
         上传人员信息表格注意事项： <br />
@@ -359,6 +359,7 @@ export default {
           message: "上传成功",
           type: "success"
         });
+        this.getData()
       } else {
         this.$message({
           message: "上传失败,请下载人员信息表格编辑后上传",
