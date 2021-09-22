@@ -69,34 +69,31 @@
         label-width="60px"
         ref="question"
       >
-        <el-form-item label="部门" prop="dept">
+        <el-form-item label="部门" prop="deptId">
           <el-select
-            v-model="loginForm.dept"
+            v-model="loginForm.deptId"
             placeholder="请选择部门"
             style="width: 260px"
-            @change="updateDept"
-            value-key="deptId"
           >
             <el-option
               v-for="item in deptList"
               :key="item.deptId"
               :label="item.deptName"
-              :value="item"
+              :value="item.deptId"
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="姓名" prop="user">
+        <el-form-item label="姓名" prop="userId">
           <el-select
-            v-model="loginForm.user"
+            v-model="loginForm.userId"
             placeholder="请选择姓名"
             style="width: 260px"
-            @change="updateUser"
           >
             <el-option
               v-for="item in personList"
               :key="item.id"
               :label="item.name"
-              :value="item"
+              :value="item.id"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -113,11 +110,7 @@
 import { lastDept } from "@/api/system/dept";
 import { selectPerson } from "@/api/insider";
 import {
-  listDept,
   getDept,
-  delDept,
-  addDept,
-  updateDept,
 } from "@/api/system/dept";
 import { saveSafety, selectSafety } from "@/api/safety.js";
 import Treeselect from "@riophae/vue-treeselect";
@@ -130,33 +123,25 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 表格树数据
-      deptList: [],
       list: [],
-      deptOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
-      // 状态数据字典
-      statusOptions: [],
-      // 查询参数
-      queryParams: {
-        deptName: undefined,
-        status: undefined,
-      },
       // 表单参数
       form: {},
       obj: { name: "安全责任图", children: [] },
       loginForm: {
-        dept: "",
-        user: "",
+        deptId: '',
+        userId: '',
       },
+      dept: null,
+      user: null,
       deptList: [],
       personList: [],
       rules: {
-        dept: [{ required: true, message: "请选择部门", trigger: "blur" }],
-        user: [{ required: true, message: "请选择姓名", trigger: "blur" }],
+        deptId: [{ required: true, message: "请选择部门", trigger: "blur" }],
+        userId: [{ required: true, message: "请选择姓名", trigger: "blur" }],
       },
       id: 0,
     };
@@ -166,40 +151,35 @@ export default {
     this.getList();
   },
   computed: {
-    // changeDeptId() {
-    //   return this.loginForm.dept.deptId;
-    // },
-    // changeUserId() {
-    //   return this.loginForm.user.id;
-    // },
+    changeDeptId() { return this.loginForm.deptId },
+    changeUserId() { return this.loginForm.userId },
   },
-  // watch: {
-  //   changeDeptId(val) {
-  //     console.log(val, "111");
-  //     if (val != undefined) {
-  //       this.personList = [];
-  //       this.loginForm.user = "";
-  //       this.getPersonInfoByDeptId(val);
-  //     }
-  //   },
-  //   changeUserId(val) {
-  //     console.log(95, val);
-
-  //     // this.questionList = []
-  //     // this.loginForm.questionId = ''
-  //     // this.getQuestionList(val)
-  //   },
-  // },
+  watch: {
+    changeDeptId(val) {
+      if (val) {
+        this.personList = []
+        // this.loginForm.userId = ''
+        for (let i in this.deptList) {
+          if (val == this.deptList[i].deptId) {
+            this.dept = this.deptList[i]
+            break
+          }
+        }
+        this.getPersonInfoByDeptId(val)
+      }
+    },
+    changeUserId(val) {
+      if (val) {
+        for (let i in this.personList) {
+          if (val == this.personList[i].id) {
+            this.user = this.personList[i]
+            break
+          }
+        }
+      }
+    }
+  },
   methods: {
-    updateDept() {
-      this.loginForm.user = ''
-      this.personList = []
-      this.getPersonInfoByDeptId(this.loginForm.dept.deptId);
-    },
-    updateUser() {
-
-    },
-    /** 查询人员列表 */
     getList() {
       this.loading = true;
       selectSafety({
@@ -221,10 +201,9 @@ export default {
     // 表单重置
     reset() {
       this.loginForm = {
-        dept: undefined,
-        user: undefined,
+        dept: '',
+        user: '',
       };
-      // this.resetForm("form");
     },
 
     /** 新增按钮操作 */
@@ -256,17 +235,16 @@ export default {
         if (valid) {
           if (JSON.stringify(this.obj) == "{}") {
             this.list.push({
-              name:
-                this.loginForm.dept.deptName + ":" + this.loginForm.user.name,
-              id: this.loginForm.user.id,
+              name: this.dept.deptName + "：" + this.user.name,
+              id: this.user.id,
             });
           }
           if (!this.obj.hasOwnProperty("children")) {
             this.obj.children = [];
           }
           this.obj.children.push({
-            name: this.loginForm.dept.deptName + ":" + this.loginForm.user.name,
-            id: this.loginForm.user.id,
+            name: this.dept.deptName + "：" + this.user.name,
+            id: this.user.id,
           });
 
           // this.list已更新 提交到数据库 ->更新页面
@@ -274,7 +252,6 @@ export default {
             ? { url: JSON.stringify(this.list), id: this.id }
             : { url: JSON.stringify(this.list) };
 
-          console.log(data, '22')
           saveSafety(data).then(() => {
             this.open = false;
             this.getList();
@@ -290,7 +267,6 @@ export default {
         type: "warning",
       })
         .then(() => {
-          console.log(111);
           var data = this.id
             ? { url: JSON.stringify([]), id: this.id }
             : { url: JSON.stringify([]) };
