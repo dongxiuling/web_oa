@@ -39,40 +39,65 @@
 
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span>今日值班</span>
+        <span>本周值班</span>
       </div>
       <el-table :data="dutyList" style="width: 100%" v-loading="loading">
+        <el-table-column align="center" label="序号" type="index" />
+
         <el-table-column
           align="center"
-          label="序号"
-          type="index"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="startTime"
-          label="值班时间"
+          prop="showTime"
+          label="周值班表"
         ></el-table-column>
         <!-- <el-table-column prop="endTime" label="结束时间"></el-table-column> -->
-        <el-table-column
-          align="center"
-          prop="deptName"
-          label="值班部门"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="username"
-          label="值班人员"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="phone"
-          label="电话号码"
-        ></el-table-column>
         <el-table-column
           align="center"
           prop="remark"
           label="备注"
         ></el-table-column>
+        <el-table-column prop="url" label="值班表格">
+          <template slot-scope="scope">
+            <el-button
+              icon="el-icon-view"
+              size="small"
+              type="primary"
+              @click="openfile(scope.row.url)"
+              >查看</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
+     <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>本周工作安排</span>
+      </div>
+      <el-table :data="weekplanList" style="width: 100%" v-loading="loading">
+        <el-table-column align="center" label="序号" type="index" />
+
+        <el-table-column
+          align="center"
+          prop="showTime"
+          label="周工作安排表"
+        ></el-table-column>
+        <!-- <el-table-column prop="endTime" label="结束时间"></el-table-column> -->
+        <el-table-column
+          align="center"
+          prop="remark"
+          label="备注"
+        ></el-table-column>
+        <el-table-column prop="url" label="工作安排表格">
+          <template slot-scope="scope">
+            <el-button
+              icon="el-icon-view"
+              size="small"
+              type="primary"
+              @click="openfile(scope.row.url)"
+              >查看</el-button
+            >
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
 
@@ -172,7 +197,8 @@ import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
 import indexList from '@/views/components/indexList/index'
 import { selectWorkplan } from "@/api/workplan"
-import { getDutyList } from "@/api/duty"
+// import { getDutyList } from "@/api/duty"
+import { selectWorkupload } from "@/api/workupload"
 import { selectOutsider } from "@/api/outsider.js";
 import { dateFormat } from "@/utils/format"
 import echarts from "echarts";
@@ -213,6 +239,7 @@ export default {
       loading: false,
       workplanList: [],
       dutyList: [],
+      weekplanList: [],
       outsiderList: []
     }
   },
@@ -230,17 +257,46 @@ export default {
         this.workplanList = res.data.records;
       }
     },
+    getFirstDayOfWeek(date) {
+      return date.getTime() - ((date.getDay() || 7) - 1) * 24 * 60 * 60 * 1000
+    },
+    openfile(url) {
+      window.open(url, "_blank");
+    },
     async getDutyList() {
-      const res = await getDutyList({
+      const res = await selectWorkupload({
         current: 0,
-        size: 999,
-        deptId: 0,
-        startTime: dateFormat("YYYY-mm-dd", new Date()),
-        endTime: dateFormat("YYYY-mm-dd", new Date()),
+        size: 10,
+        startTime: dateFormat("YYYY-mm-dd", this.getFirstDayOfWeek(new Date())),
+        type: 2,
       })
-      // console.log(res);
+      //   console.log(res);
       if (res.code === '200' && res.data) {
+        res.data.records.map(rec => {
+          let startDate = new Date(rec.startTime)
+          let endDate = new Date(rec.endTime)
+          rec.showTime = startDate.getFullYear() + '年' + (startDate.getMonth() + 1) + '月' + startDate.getDate() + '日' + ' - ' +
+            endDate.getFullYear() + '年' + (endDate.getMonth() + 1) + '月' + endDate.getDate() + '日'
+        })
         this.dutyList = res.data.records;
+      }
+    },
+    async getWeekplan() {
+      const res = await selectWorkupload({
+        current: 0,
+        size: 10,
+        startTime: dateFormat("YYYY-mm-dd", this.getFirstDayOfWeek(new Date())),
+        type: 1,
+      })
+      //   console.log(res);
+      if (res.code === '200' && res.data) {
+        res.data.records.map(rec => {
+          let startDate = new Date(rec.startTime)
+          let endDate = new Date(rec.endTime)
+          rec.showTime = startDate.getFullYear() + '年' + (startDate.getMonth() + 1) + '月' + startDate.getDate() + '日' + ' - ' +
+            endDate.getFullYear() + '年' + (endDate.getMonth() + 1) + '月' + endDate.getDate() + '日'
+        })
+        this.weekplanList = res.data.records;
       }
     },
     async getOutsider() {
@@ -380,6 +436,7 @@ export default {
     this.loading = true
     this.getWorkplan()
     this.getDutyList()
+    this.getWeekplan()
     this.getOutsider()
     this.drawSafe()
     this.loading = false

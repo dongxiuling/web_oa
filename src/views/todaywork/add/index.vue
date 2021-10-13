@@ -7,7 +7,7 @@
       label-width="80px"
     >
       <el-form-item label="工作分类" prop="cateId">
-        <el-select v-model="todaywork.cateId" placeholder="请选择工作分类">
+        <el-select style="width: 400px" v-model="todaywork.cateId" placeholder="请选择工作分类">
           <el-option
             v-for="item in cateData"
             :key="item.id"
@@ -17,10 +17,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="工作名称" prop="title">
-        <el-input v-model="todaywork.title" style="width: 300px"></el-input>
+        <el-input v-model="todaywork.title" style="width: 400px"></el-input>
       </el-form-item>
       <el-form-item label="工作内容" prop="content">
         <el-input
+          style="width: 400px"
           type="textarea"
           :autosize="{ minRows: 2, maxRows: 4 }"
           placeholder="请输入工作内容"

@@ -1,20 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="queryForm" :inline="true">
-      <el-form-item label="选择周">
-        <!--  <el-date-picker
-          style="width: 360px"
-          v-model="search.time"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :picker-options="{
-            firstDayOfWeek: 1,
-          }"
-        ></el-date-picker> -->
-        <!-- format="yyyy-MM-dd年 第 WW 周" -->
-
+      <el-form-item label="选择周" prop="time">
         <el-date-picker
           v-model="search.time"
           type="week"
@@ -29,20 +16,6 @@
         >
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="值班部门" prop="deptId">
-        <el-select
-          v-model="search.deptId"
-          placeholder="请选择值班部门"
-          style="width: 160px"
-        >
-          <el-option
-            v-for="item in deptList"
-            :key="item.deptId"
-            :label="item.deptName"
-            :value="item.deptId"
-          ></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -56,39 +29,77 @@
         >
       </el-form-item>
     </el-form>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          size="mini"
+          @click="$router.push('/workuploads/addUpload')"
+          >创建周工作安排</el-button
+        >
+      </el-col>
+    </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
-      <el-table-column
+      <!-- <el-table-column
         align="center"
         type="index"
         label="序号"
         :index="(currentPage - 1) * pageSize + 1"
-      ></el-table-column>
+      ></el-table-column> -->
+      <el-table-column align="center" label="序号" type="index" />
+
       <el-table-column
         align="center"
-        prop="startTime"
-        label="值班时间"
+        prop="showTime"
+        label="周工作安排"
       ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="deptName"
-        label="值班部门"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="username"
-        label="值班人员"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="pos"
-        label="电话号码"
-      ></el-table-column>
+      <!-- <el-table-column prop="endTime" label="结束时间"></el-table-column> -->
       <el-table-column
         align="center"
         prop="remark"
         label="备注"
       ></el-table-column>
+      <el-table-column prop="url" label="工作安排表格">
+        <template slot-scope="scope">
+          <el-button
+            icon="el-icon-view"
+            size="small"
+            type="primary"
+            @click="openfile(scope.row.url)"
+            >查看</el-button
+          >
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="delHandle(scope.row)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
+    <!-- 删除提示 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="
+        () => {
+          dialogVisible = false;
+        }
+      "
+    >
+      <span>确认删除吗</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="doDelHandle">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="page-box">
       <el-pagination
         style="width: 100%"
@@ -104,8 +115,7 @@
 </template>
 
 <script>
-import { weekplanStatistics } from "@/api/weekplan"
-import { lastDept } from "@/api/system/dept"
+import { selectWorkupload, delWorkuploadById } from "@/api/workupload"
 import { dateFormat } from "@/utils/format"
 
 export default {
@@ -114,62 +124,67 @@ export default {
       list: [],
       currentPage: 1,
       pageSize: 10,
-      cateData: [],
       search: {
-        deptId: 0,
         time: ''
       },
-      total: 0, //分页总页数
+      total: 0,
       loading: true,
       dialogVisible: false,
       id: null,
-      deptList: [],
-      personList: [],
-      startTime: "",
-      endTime: ""
+      startTime: null,
+      endTime: null,
     };
   },
   methods: {
-    async getDeptList() {
-      const res = await lastDept()
-      if (res && res.code == 200 && res.data) {
-        this.deptList = res.data
-        this.deptList.unshift({ deptId: 0, deptName: "全部部门" });
-      }
-    },
     async getData() {
-      const res = await weekplanStatistics({
+      const res = await selectWorkupload({
         current: this.currentPage,
         size: this.pageSize,
-        deptId: this.search.deptId,
         startTime: this.startTime,
-        endTime: this.endTime,
+        type: 1,
       })
-      console.log(res);
+      //   console.log(res);
       if (res.code === '200' && res.data) {
+        res.data.records.map(rec => {
+          let startDate = new Date(rec.startTime)
+          let endDate = new Date(rec.endTime)
+          rec.showTime = startDate.getFullYear() + '年' + (startDate.getMonth() + 1) + '月' + startDate.getDate() + '日' + ' - ' +
+            endDate.getFullYear() + '年' + (endDate.getMonth() + 1) + '月' + endDate.getDate() + '日'
+        })
         this.list = res.data.records;
         this.total = res.data.total;
         this.loading = false;
       }
     },
     searchHandle() {
-      // this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[1])
-      // this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", this.search.time[0])
-
-
       this.getData();
     },
     reSetHandle() {
       const now = new Date()
-      this.endTime = dateFormat("YYYY-mm-dd HH:MM:SS", now)
-      this.startTime = dateFormat("YYYY-mm-dd HH:MM:SS", new Date(now - 7 * 24 * 3600 * 1000))
-      this.search.time = [this.startTime, this.endTime]
-      this.search.deptId = 0;
+      this.startTime = dateFormat("YYYY-mm-dd", this.getFirstDayOfWeek(now))
+      this.endTime = dateFormat("YYYY-mm-dd", this.getLastDayOfWeek(now))
+      this.search.time = new Date(this.startTime)
       this.getData();
     },
     handleCurrentChange(value) {
       this.currentPage = value;
       this.getData();
+    },
+    delHandle({ id }) {
+      this.dialogVisible = true
+      this.id = id
+    },
+    async doDelHandle() {
+      this.dialogVisible = false
+      const res = await delWorkuploadById(this.id)
+      this.$message({
+        message: '删除成功',
+        type: 'success'
+      })
+      this.getData()
+    },
+    openfile(url) {
+      window.open(url, "_blank");
     },
     fun(unixtimestamp) {
       var unixtimestamp = new Date(unixtimestamp);
@@ -193,12 +208,11 @@ export default {
     },
   },
   created() {
+    // this.search.time = dateFormat("YYYY-mm-dd", new Date())
     const now = new Date()
     this.startTime = dateFormat("YYYY-mm-dd", this.getFirstDayOfWeek(now))
     this.endTime = dateFormat("YYYY-mm-dd", this.getLastDayOfWeek(now))
     this.search.time = new Date(this.startTime)
-
-    this.getDeptList();
     this.getData();
   },
 

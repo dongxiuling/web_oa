@@ -486,7 +486,8 @@ export const constantRoutes = [{
       title: '修改外出类型'
     }
   }]
-}, {
+},
+/* {
   path: '/dutys',
   component: Layout,
   hidden: true,
@@ -505,7 +506,8 @@ export const constantRoutes = [{
       title: '修改值班'
     }
   }]
-}, {
+}, */
+{
   path: '/exposure_',
   component: Layout,
   hidden: true,
@@ -700,6 +702,30 @@ export const constantRoutes = [{
     name: 'SelectTotalDetail',
     meta: {
       title: '量化评比详情'
+    }
+  }]
+}, {
+  path: '/workuploads',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addUpload',
+    component: () => import('@/views/weekplan/uploadAdd'),
+    name: 'AddUpload',
+    meta: {
+      title: '创建周工作安排'
+    }
+  }]
+}, {
+  path: '/dutys',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addUpload',
+    component: () => import('@/views/duty/uploadAdd'),
+    name: 'AddDutyUpload',
+    meta: {
+      title: '创建周值班表'
     }
   }]
 }

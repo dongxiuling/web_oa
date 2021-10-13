@@ -136,7 +136,7 @@ export default {
     },
     handleCurrentChange(value) {
       this.currentPage = value;
-      this.getData();
+      this.getList();
     },
   },
   created() {
