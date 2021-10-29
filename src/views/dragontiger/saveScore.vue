@@ -110,7 +110,7 @@
         </el-table-column>
       </el-table>
 
-      <el-form-item>
+      <el-form-item class="toolbar">
         <el-button type="primary" @click="updateHandle('activity')"
           >保存成绩</el-button
         >
@@ -297,5 +297,9 @@ export default {
 <style scoped>
 .row {
   align-items: center;
+}
+.toolbar {
+  padding: 10px 10px 0 0;
+  text-align: right;
 }
 </style>
