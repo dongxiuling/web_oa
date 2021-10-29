@@ -156,6 +156,12 @@ export default {
             data: this.xData,
             axisTick: {
               alignWithLabel: true
+            },
+            axisLabel: {
+              inside: false,
+              textStyle: {
+                fontSize: 16,
+              }
             }
           }
         ],
@@ -182,7 +188,15 @@ export default {
             barCategoryGap: "5%", // 柱形的间距
             itemStyle: {
               normal: {
-                color: "#f00"
+                color: "#f00",
+                label: {
+                  show: true,		//开启显示
+                  position: 'top',	//在上方显示
+                  textStyle: {	    //数值样式
+                    color: 'black',
+                    fontSize: 16
+                  }
+                }
               },
               emphasis: {
                 color: "#eee114"
