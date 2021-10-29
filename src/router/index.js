@@ -728,7 +728,54 @@ export const constantRoutes = [{
       title: '创建周值班表'
     }
   }]
-}
+}, {
+  path: '/dragontigers',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: 'addCate',
+    component: () => import('@/views/dragontiger/cate/add'),
+    name: 'AddDragontigerCate',
+    meta: {
+      title: '创建分类'
+    }
+  }, {
+    path: 'addCate/:id',
+    component: () => import('@/views/dragontiger/cate/add'),
+    name: 'UpdateDragontigerCate',
+    meta: {
+      title: '修改分类'
+    }
+  }, {
+    path: 'addDragontiger/:id',
+    component: () => import('@/views/dragontiger/add'),
+    name: 'UpdateDragontiger',
+    meta: {
+      title: '修改活动'
+    }
+  }, {
+    path: 'saveScore/:id/:typeId',
+    component: () => import('@/views/dragontiger/saveScore'),
+    name: 'SaveScore',
+    meta: {
+      title: '成绩录入'
+    }
+  },{
+    path: 'deptScore/:id/:typeId',
+    component: () => import('@/views/dragontiger/deptScore'),
+    name: 'DeptScore',
+    meta: {
+      title: '连队排名'
+    }
+  },{
+    path: 'totalScore/:id/:typeId',
+    component: () => import('@/views/dragontiger/totalScore'),
+    name: 'TotalScore',
+    meta: {
+      title: '活动排名'
+    }
+  }]
+},
 ]
 
 export default new Router({

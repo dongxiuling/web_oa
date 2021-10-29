@@ -142,8 +142,9 @@ export default {
       });
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
-      this.$router.push("/duty/dutyList");
+      // this.$refs[formName].resetFields();
+      // this.$router.push("/duty/dutyList");
+      this.$router.go(-1)
     },
     async addHandle() {
 
