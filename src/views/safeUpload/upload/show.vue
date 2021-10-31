@@ -27,7 +27,7 @@ export default {
             let newArr = [];
             if (arr != undefined && arr.length > 0) {
               newArr = arr.map(item => {
-                item.symbolSize = [200, 50]
+                item.symbolSize = [120, 40]
                 item.symbol = 'rectangle'
                 if (item.children != undefined && item.children.length > 0) {
                   iteration(item.children);
@@ -41,7 +41,7 @@ export default {
           const data = {
             name: '安全责任图',
             value: 0,
-            symbolSize: [200, 50],
+            symbolSize: [120, 40],
             symbol: 'rectangle',
             itemStyle: {
               normal: {
@@ -83,15 +83,11 @@ export default {
               name: '安全责任图',
               type: 'tree',
               orient: 'vertical', // vertical horizontal
+              edgeShape: 'polyline',
               rootLocation: {
                 x: '50%',
                 y: '15%'
-              }, // 根节点位置  {x: 'center',y: 10}
-              // nodePadding: 30,
-              // layerPadding: 40,
-              // symbol: 'rectangle',
-              // borderColor: '#1890ff',
-
+              },
               itemStyle: {
                 normal: {
                   color: '#1890ff', //节点背景色
