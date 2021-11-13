@@ -160,3 +160,8 @@ export const getExamAnswerInfo = (data) => request({
     url: `/exam/getExamAnswerInfo/${data.userId}/${data.examId}`,
     method: 'get'
 })
+
+export const getAvgScore = (data) => request({
+    url: `/exam/getAvgScore/${data.id}`,
+    method: 'get'
+})

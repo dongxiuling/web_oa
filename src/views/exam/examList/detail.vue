@@ -40,55 +40,103 @@
       </el-form-item>
       <el-form-item label="考试总分：">{{ totalScore }} 分</el-form-item>
     </el-form>
-    <el-table
-      :data="examDetail.ue.records"
-      style="width: 100%"
-      v-loading="fullscreenLoading"
-    >
-      <el-table-column
-        align="center"
-        type="index"
-        label="序号"
-        :index="(currentPage - 1) * pageSize + 1"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="deptName"
-        label="部门"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="userName"
-        label="姓名"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="createTime"
-        label="考试时间"
-      ></el-table-column>
-      <el-table-column align="center" prop="score" label="成绩">
-        <template slot-scope="scope">
-          <span v-if="scope.row.score == null">0</span>
-          <span v-else>{{scope.row.score}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作" width="200">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-search"
-            @click="detailHandle(scope.row)"
-            >考试详情</el-button
-          >
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="连队排名" name="first">
+         <el-table
+          :data="avgList"
+          style="width: 100%"
+          v-loading="fullscreenLoading"
+        >
+          <el-table-column
+            align="center"
+            type="index"
+            label="排名"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="deptName"
+            label="部门"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="avgScore"
+            label="平均分"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="count"
+            label="参与人数"
+          ></el-table-column>
+          <!-- <el-table-column align="center" prop="score" label="成绩">
+            <template slot-scope="scope">
+              <span v-if="scope.row.score == null">0</span>
+              <span v-else>{{ scope.row.score }}</span>
+            </template>
+          </el-table-column> -->
+          <!-- <el-table-column align="center" label="操作" width="200">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-search"
+                @click="detailHandle(scope.row)"
+                >考试详情</el-button
+              >
+            </template>
+          </el-table-column> -->
+        </el-table>
+      </el-tab-pane>
+      <el-tab-pane label="个人排名" name="second">
+        <el-table
+          :data="examDetail.ue.records"
+          style="width: 100%"
+          v-loading="fullscreenLoading"
+        >
+          <el-table-column
+            align="center"
+            type="index"
+            label="排名"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="deptName"
+            label="部门"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="userName"
+            label="姓名"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="createTime"
+            label="考试时间"
+          ></el-table-column>
+          <el-table-column align="center" prop="score" label="成绩">
+            <template slot-scope="scope">
+              <span v-if="scope.row.score == null">0</span>
+              <span v-else>{{ scope.row.score }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="操作" width="200">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-search"
+                @click="detailHandle(scope.row)"
+                >考试详情</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
-import { getExamDetail } from "@/api/exam";
+import { getExamDetail, getAvgScore } from "@/api/exam";
 
 export default {
   data() {
@@ -109,7 +157,9 @@ export default {
         essayNum: 0,
         // essayScore: 0
       },
-      fullscreenLoading: true
+      fullscreenLoading: true,
+      activeName: 'first',
+      avgList: [],
     };
   },
   computed: {
@@ -131,13 +181,21 @@ export default {
     }
   },
   methods: {
-    getDetail() {
+    async getDetail() {
+      const res = await getAvgScore({
+        id: this.examId,
+      })
+      // console.log(res);
+      if(res.code == 200 && res.data){
+        this.avgList = res.data
+      }
+
       getExamDetail({
         id: this.examId,
         current: this.currentPage,
         size: this.pageSize
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         this.examDetail = res.data;
         // console.log(this.examDetail.ue.records);
         this.total = res.data.ue.total;
@@ -149,8 +207,6 @@ export default {
       this.getDetail();
     },
     async detailHandle(_data) {
-      console.log(146);
-      console.log(this.examDetail);
       this.$router.push({
         path: "/exams/testDetail/",
         query: {
@@ -172,6 +228,9 @@ export default {
       //   query: { id: _data.id }
       // });
     },
+    handleClick(tab, event) {
+      // console.log(tab, event);
+    }
   },
   created() {
     this.getDetail();
