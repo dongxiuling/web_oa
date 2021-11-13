@@ -248,10 +248,10 @@ export default {
               item.jobTypeName = '干部'
               break
             case '3':
-              item.jobTypeName = '义务兵'
+              item.jobTypeName = '战士'
               break
             default:
-              item.jobTypeName = '义务兵'
+              item.jobTypeName = '战士'
           }
         })
         this.list = res.data.records

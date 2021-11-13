@@ -117,7 +117,7 @@ export default {
           name: '干部'
         }, {
           id: '3',
-          name: '义务兵'
+          name: '战士'
         },
       ],
       rules: {

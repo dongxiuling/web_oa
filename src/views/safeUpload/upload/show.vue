@@ -1,33 +1,38 @@
 <template>
   <div class="app-container">
+    <el-button
+      class="filter-item"
+      type="primary"
+      icon="el-icon-back"
+      size="mini"
+      @click="$router.go(-1)"
+      >返回</el-button
+    >
     <div id="safeBox"></div>
   </div>
 </template>
 
 <script>
 import echarts from "echarts";
-import { selectSafety } from "@/api/safety.js";
+import { getSafetyById } from "@/api/safety.js";
 
 export default {
   data() {
     return {
-
+      id: this.$route.params.id
     };
   },
   methods: {
     drawSafe() {
       const myChart = echarts.init(document.getElementById("safeBox"));
-      selectSafety({
-        size: 100,
-        current: 1,
-      }).then((res) => {
-        if (res.data.records.length > 0) {
-          const userData = JSON.parse(res.data.records[0].url);
+      getSafetyById(this.id).then((res) => {
+        if (res.code == 200 && res.data) {
+          const userData = JSON.parse(res.data.url);
           const iteration = function (arr) {
             let newArr = [];
             if (arr != undefined && arr.length > 0) {
               newArr = arr.map(item => {
-                item.symbolSize = [120, 40]
+                item.symbolSize = [60, 30]
                 item.symbol = 'rectangle'
                 if (item.children != undefined && item.children.length > 0) {
                   iteration(item.children);
@@ -41,7 +46,7 @@ export default {
           const data = {
             name: '安全责任图',
             value: 0,
-            symbolSize: [120, 40],
+            symbolSize: [90, 30],
             symbol: 'rectangle',
             itemStyle: {
               normal: {
@@ -124,6 +129,8 @@ export default {
     },
   },
   mounted() {
+    this.id = this.$route.params.id
+
     this.drawSafe();
   }
 };

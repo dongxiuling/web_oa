@@ -332,7 +332,7 @@ export default {
             let newArr = [];
             if (arr != undefined && arr.length > 0) {
               newArr = arr.map(item => {
-                item.symbolSize = [200, 50]
+                item.symbolSize = [60, 30]
                 item.symbol = 'rectangle'
                 if (item.children != undefined && item.children.length > 0) {
                   iteration(item.children);
@@ -346,7 +346,7 @@ export default {
           const data = {
             name: '安全责任图',
             value: 0,
-            symbolSize: [200, 50],
+            symbolSize: [90, 30],
             symbol: 'rectangle',
             itemStyle: {
               normal: {
@@ -388,6 +388,7 @@ export default {
               name: '安全责任图',
               type: 'tree',
               orient: 'vertical', // vertical horizontal
+              edgeShape: 'polyline',
               rootLocation: {
                 x: '50%',
                 y: '15%'

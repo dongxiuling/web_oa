@@ -45,15 +45,31 @@
     </el-row>
     <el-table :data="list" style="width: 100%" v-loading="loading">
       <el-table-column
+        align="center"
         type="index"
         label="序号"
-        :index="(currentPage - 1) * pageSize + 1"
       ></el-table-column>
-      <el-table-column prop="title" label="工作名称"></el-table-column>
-      <el-table-column prop="content" label="工作内容"></el-table-column>
-      <el-table-column prop="startTime" label="开始时间"></el-table-column>
-      <el-table-column prop="endTime" label="结束时间"></el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column
+        align="center"
+        prop="title"
+        label="工作名称"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="content"
+        label="工作内容"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="startTime"
+        label="开始时间"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="endTime"
+        label="结束时间"
+      ></el-table-column>
+      <el-table-column align="center" label="操作" width="220">
         <template slot-scope="scope">
           <el-button
             size="mini"

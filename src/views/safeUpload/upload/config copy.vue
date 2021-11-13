@@ -8,7 +8,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd()"
-          >新增</el-button
+          >新增节点</el-button
         >
         <el-button
           class="filter-item"
@@ -16,7 +16,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleDel()"
-          >删除</el-button
+          >删除责任图</el-button
         >
       </el-form-item>
     </el-form>
@@ -143,7 +143,7 @@ export default {
         deptId: [{ required: true, message: "请选择部门", trigger: "blur" }],
         userId: [{ required: true, message: "请选择姓名", trigger: "blur" }],
       },
-      id: 0,
+      id: this.$route.params.id
     };
   },
   created() {
@@ -295,5 +295,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.id = this.$route.params.id
+    console.log(id)
+  }
 };
 </script>

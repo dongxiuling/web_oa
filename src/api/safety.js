@@ -18,3 +18,10 @@ export const delSafety = id => {
         method: 'get'
     })
 }
+
+export const getSafetyById = id => {
+    return request({
+        url: `/safety/getSafetyById/${id}`,
+        method: 'get'
+    })
+}
