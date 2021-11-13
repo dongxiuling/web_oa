@@ -110,10 +110,19 @@ export default {
             axisTick: {
               alignWithLabel: true
             },
+            // axisLabel: {
+            //   inside: false,
+            //   textStyle: {
+            //     fontSize: 16,
+            //   }
+            // },
             axisLabel: {
-              inside: false,
+              interval: 0,
               textStyle: {
                 fontSize: 16,
+              },
+              formatter: function (value) {
+                return value.split("").join("\n");
               }
             }
           }
