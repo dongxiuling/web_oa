@@ -4,6 +4,10 @@
       <el-form-item label="问卷名称" prop="title">
         <el-input v-model="question.title" style="width:400px"></el-input>
       </el-form-item>
+      <el-form-item label="是否匿名" prop="type" style="width: 400px">
+        <el-radio v-model="question.type" :label="1">实名调查</el-radio>
+        <el-radio v-model="question.type" :label="2">匿名调查</el-radio>
+      </el-form-item>
       <el-form-item label="问卷简介" prop="content">
         <el-input
           type="textarea"
@@ -49,12 +53,16 @@ export default {
     return {
       deptTree:[],
       question: {
-        title: ""
+        title: "",
+        type: 1,
+        content: '',
+        endDate: null
       },
       id: this.$route.query.id,
       rules: {
         title: [{ required: true, message: "请输入问卷名称", trigger: "blur" }],
-        endDate: [{ required: true, message: "请输入截止日期", trigger: "blur" }]
+        endDate: [{ required: true, message: "请输入截止日期", trigger: "blur" }],
+        type: [{ required: true, message: "请输入截止日期", trigger: "blur" }],
       },
       userIds: [],
       props: {

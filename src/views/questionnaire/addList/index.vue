@@ -49,14 +49,19 @@
       ></el-table-column>
       <el-table-column
         align="center"
+        prop="typeStr"
+        label="问卷类型"
+      ></el-table-column>
+      <el-table-column
+        align="center"
         prop="endDate"
         label="截止时间"
       ></el-table-column>
-      <el-table-column align="center" label="完成人数 / 总人数">
+     <!--  <el-table-column align="center" label="完成人数 / 总人数">
         <template slot-scope="scope">
           <span>{{ scope.row.completeNum }} / {{ totalPersonNum }}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column align="center" class="handle_row" label="操作">
         <template slot-scope="scope">
           <el-button
@@ -122,6 +127,13 @@ export default {
         pageSize: this.pageSize
       })
       if (res && res.code == 200 && res.data) {
+        res.data.records.map(elem => {
+          if (elem.type == 1) {
+            elem.typeStr = '实名调查'
+          } else if (elem.type == 2) {
+            elem.typeStr = '匿名调查'
+          }
+        })
         this.addList = res.data.records;
         this.total = res.data.total
 
@@ -152,8 +164,8 @@ export default {
             })
             this.$set(this.addList[index], 'completeNum', sum)
           })
-          console.log(111);
-          console.log(this.addList);
+          // console.log(111);
+          // console.log(this.addList);
         }
       }
     },
@@ -166,7 +178,7 @@ export default {
     look(_data) {
       this.$router.push({
         path: "/questions/detailList/",
-        query: { naireId: _data.id }
+        query: { naireId: _data.id, type: _data.type }
       });
     },
     handleCurrentChange(value) {
