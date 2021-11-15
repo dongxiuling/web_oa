@@ -242,11 +242,11 @@ export default {
       id: this.$route.query.id,
       rules: {
         time: [{ required: true, message: '请选择日期', trigger: 'change' }],
-        visibility: [{ required: true, message: '请输入能见度', trigger: 'blur' }],
+        /* visibility: [{ required: true, message: '请输入能见度', trigger: 'blur' }],
         conditions: [{ required: true, message: '请输入天气情况', trigger: 'blur' }],
         temp: [{ required: true, message: '请输入温度', trigger: 'blur' }],
         windPower: [{ required: true, message: '请输入风力', trigger: 'blur' }],
-        windDectition: [{ required: true, message: '请输入风向', trigger: 'blur' }]
+        windDectition: [{ required: true, message: '请输入风向', trigger: 'blur' }] */
       },
     }
   },
