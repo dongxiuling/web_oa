@@ -77,13 +77,13 @@
       ></el-table-column>
       <el-table-column align="center" label="操作" width="220">
         <template slot-scope="scope">
-           <el-button
+           <!-- <el-button
             size="mini"
             type="text"
             icon="el-icon-edit-outline"
             @click="scoreHandle(scope.row)"
             >成绩录入</el-button
-          >
+          > -->
           <el-button
             size="mini"
             type="text"
