@@ -46,8 +46,9 @@
       :data="personData"
       tooltip-effect="dark"
       style="width: 100%"
+      @selection-change="handleSelectionChange"
     >
-      <!-- <el-table-column type="selection" width="55"></el-table-column> -->
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column
         align="center"
@@ -97,6 +98,11 @@
         </template>
       </el-table-column>
     </el-table>
+    <div style="margin-top: 20px">
+      <el-button @click="toggleSelection()" type="primary" size="mini"
+        >批量审批</el-button
+      >
+    </div>
     <el-dialog
       title="外出审批"
       :visible.sync="dialogVisible"
@@ -121,6 +127,33 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="doHandle">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      title="外出审批"
+      :visible.sync="dialogVisibleAll"
+      width="40%"
+      :before-close="
+        () => {
+          dialogVisibleAll = false;
+        }
+      "
+    >
+      <!-- 审批 -->
+      <el-form ref="approveAll" :model="approveAll" label-width="110px">
+        <el-form-item label="是否通过：" prop="status">
+          <el-radio v-model="approveAll.status" :label="2">通过</el-radio>
+          <el-radio v-model="approveAll.status" :label="3">未通过</el-radio>
+        </el-form-item>
+        <el-form-item label="备注：" prop="remark">
+          <el-input type="textarea" v-model="approveAll.remark"></el-input>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="cancelAll">取 消</el-button>
+        <el-button type="primary" @click="doHandleAll">确 定</el-button>
       </span>
     </el-dialog>
     <div class="page-box">
@@ -152,7 +185,7 @@ export default {
       search: {
         userName: '',
         deptId: 0,
-        status: 0
+        status: 1
       },
       deptList: [],
       statusList: [{
@@ -176,7 +209,14 @@ export default {
         id: null,
         status: 1,
         remark: ''
-      }
+      },
+      multipleSelection: [],
+      dialogVisibleAll: false,
+      approveAll: {
+        id: null,
+        status: 1,
+        remark: ''
+      },
     };
   },
   methods: {
@@ -188,7 +228,7 @@ export default {
         size: this.pageSize,
         typeId: 0 // 全部类型
       })
-      console.log(res);
+      // console.log(res);
       if (res && res.data && res.data.records) {
         res.data.records.map(item => {
           switch (item.status) {
@@ -246,7 +286,7 @@ export default {
     },
     async doHandle() {
       const res = await updateStatus(this.approve)
-      console.log(res);
+      // console.log(res);
       if (res && res.code === '200') {
         this.$message({
           message: '审批成功',
@@ -271,9 +311,58 @@ export default {
       this.search = {
         userName: '',
         deptId: 0,
-        status: 0
+        status: 1
       }
       this.selectPerson()
+    },
+    toggleSelection(rows) {
+      if (this.multipleSelection.length > 0) {
+        this.dialogVisibleAll = true
+      } else {
+        this.$message({
+          message: '请选择要审批的数据',
+          type: 'error'
+        })
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val
+    },
+    cancelAll() {
+      this.dialogVisibleAll = false
+      this.approveAll = {
+        id: null,
+        status: 1,
+        remark: ''
+      }
+    },
+    doHandleAll() {
+      let promiseArr = []
+      this.multipleSelection.map(elem => {
+        let p = new Promise((resolve, reject) => {
+          updateStatus({...this.approveAll, id: elem.id}).then(res => {
+            resolve(res)
+          }).catch(err => {
+            reject(err)
+          })
+        })
+        promiseArr.push(p)
+      })
+
+      Promise.all(promiseArr).then(res => {
+        this.$message({
+          message: '批量审批成功',
+          type: 'success'
+        })
+        this.dialogVisibleAll = false
+        this.multipleSelection = []
+        this.selectPerson()
+      }).catch(err => {
+        this.$message({
+          message: '批量审批失败',
+          type: 'error'
+        })
+      })
     },
   },
   mounted() {
