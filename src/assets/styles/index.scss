@@ -194,3 +194,11 @@ aside {
   text-align: right;
   margin-top: 20px;
 }
+
+.el-table .warning-row {
+  background-color: #F56C6C;
+}
+
+.el-table .warning-row:hover > td {
+  background-color: #F56C6C!important;
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="content">
-      <el-table :data="dataList" style="width: 100%" v-loading="loading">
+      <el-table :data="dataList" style="width: 100%" v-loading="loading" :row-class-name="tableRowClassName">
         <el-table-column align="center" type="index" width="150" label="序号">
         </el-table-column>
         <el-table-column
@@ -13,6 +13,16 @@
           align="center"
           prop="cateName"
           label="类型"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="deptName"
+          label="部门"
+        ></el-table-column>
+        <el-table-column
+          align="center"
+          prop="contact"
+          label="联系人"
         ></el-table-column>
         <el-table-column
           align="center"
@@ -287,6 +297,12 @@ export default {
     closeDialog() {
       this.$refs.form.resetFields();
     },
+    tableRowClassName({ row, rowIndex }) {
+      if (row.count == 0) {
+        return 'warning-row'
+      }
+      return ''
+    }
   },
   created() {
     this.getList();

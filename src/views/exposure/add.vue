@@ -2,7 +2,7 @@
 <template>
   <div v-loading="loading" class="app-container">
     <el-form ref="form" :model="form" :rules="rules" label-width="130px">
-      <el-form-item label="曝光标题" prop="title">
+      <el-form-item label="申请标题" prop="title">
         <el-input v-model="form.title" style="width: 300px"></el-input>
       </el-form-item>
       <el-form-item label="选择分类" prop="cateId">

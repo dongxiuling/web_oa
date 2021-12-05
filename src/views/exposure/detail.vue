@@ -8,6 +8,9 @@
       >返回</el-button
     >
     <div class="title">{{ dataInfo.title }}</div>
+    <div class="dept">
+      部门：{{ dataInfo.deptName }} 联系人：{{ dataInfo.contact }}
+    </div>
     <div class="time">{{ dataInfo.createTime }}</div>
     <div class="content" v-html="dataInfo.content"></div>
   </div>
@@ -55,5 +58,9 @@ export default {
 .container .content {
   width: 1000px;
   margin: 50px auto 0;
+}
+.dept {
+  text-align: center;
+  margin-bottom: 20px;
 }
 </style>
