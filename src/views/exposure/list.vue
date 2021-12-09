@@ -1,7 +1,12 @@
 <template>
   <div class="app-container">
     <div class="content">
-      <el-table :data="dataList" style="width: 100%" v-loading="loading" :row-class-name="tableRowClassName">
+      <el-table
+        :data="dataList"
+        style="width: 100%"
+        v-loading="loading"
+        :row-class-name="tableRowClassName"
+      >
         <el-table-column align="center" type="index" width="150" label="序号">
         </el-table-column>
         <el-table-column
@@ -110,8 +115,16 @@
               autocomplete="off"
             ></el-input>
           </el-form-item>
-          <el-form-item v-if="appealForm.createTime" label="反馈时间" label-width="120px" prop="content">
-            <el-input v-model="appealForm.createTime" autocomplete="off"></el-input>
+          <el-form-item
+            v-if="appealForm.createTime"
+            label="反馈时间"
+            label-width="120px"
+            prop="content"
+          >
+            <el-input
+              v-model="appealForm.createTime"
+              autocomplete="off"
+            ></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -298,7 +311,11 @@ export default {
       this.$refs.form.resetFields();
     },
     tableRowClassName({ row, rowIndex }) {
-      if (row.count == 0) {
+      const now = new Date();
+      const millisecond = now.getTime() - new Date(row.createTime).getTime();
+      const days = millisecond / (24 * 3600 * 1000)
+
+      if (row.count == 0 && days > 3) {
         return 'warning-row'
       }
       return ''
