@@ -1,14 +1,16 @@
 <template>
-  <div class="app-container">
-    <el-button
-      type="primary"
-      icon="el-icon-back"
-      size="mini"
-      @click="$router.go(-1)"
-      >返回</el-button
-    >
-    <h2 class="title" v-if="activity">{{ activity.title }}龙虎榜</h2>
-    <!-- <el-form-item label="活动名称:" prop="title">
+  <el-main>
+    <div class="main-content">
+      <div class="app-container">
+        <el-button
+          type="primary"
+          icon="el-icon-back"
+          size="mini"
+          @click="$router.go(-1)"
+          >返回</el-button
+        >
+        <h2 class="title" v-if="activity">{{ activity.title }}龙虎榜</h2>
+        <!-- <el-form-item label="活动名称:" prop="title">
       <div>{{ activity.title }}</div>
     </el-form-item>
     <el-form-item label="活动分类:" prop="cateId">
@@ -25,51 +27,65 @@
       <div>{{ activity.remark }}</div>
     </el-form-item> -->
 
-    <el-table :data="list" style="width: 100%" v-loading="loading">
-      <el-table-column
-        align="center"
-        type="index"
-        label="排名"
-      ></el-table-column>
-      <el-table-column property="avatar" label="照片" align="center">
-        <template slot-scope="scope">
-          <el-image
-            v-if="scope.row.avatar"
-            style="width: 60px; height: 60px"
-            :src="scope.row.avatar"
-          >
-          </el-image>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        prop="name"
-        label="姓名"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="deptName"
-        label="所属连队"
-      ></el-table-column>
-      <el-table-column
-        align="center"
-        prop="result"
-        label="成绩"
-      ></el-table-column>
-      <!-- <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit-outline"
-            @click="scoreHandle(scope.row)"
-            >上传头像</el-button
-          >
-        </template>
-      </el-table-column> -->
-    </el-table>
+        <el-table :data="list" style="width: 100%" v-loading="loading">
+          <el-table-column
+            align="center"
+            type="index"
+            label="排名"
+          ></el-table-column>
+          <el-table-column property="avatar" label="照片" align="center">
+            <template slot-scope="scope">
+              <el-image
+                v-if="scope.row.avatar"
+                style="width: 60px; height: 60px"
+                :src="scope.row.avatar"
+              >
+              </el-image>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            prop="name"
+            label="姓名"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="deptName"
+            label="所属连队"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="result1"
+            label="引体向上/俯卧撑"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="result2"
+            label="仰卧起坐"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="result3"
+            label="30米×2蛇形跑"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="result4"
+            label="3000米跑"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="score"
+            label="总成绩"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="resultStr"
+            label="级别"
+          ></el-table-column>
+        </el-table>
 
-    <!-- <div class="page-box">
+        <!-- <div class="page-box">
       <el-pagination
         style="width: 100%"
         background
@@ -80,7 +96,9 @@
         @current-change="handleCurrentChange"
       ></el-pagination>
     </div> -->
-  </div>
+      </div>
+    </div>
+  </el-main>
 </template>
 
 <script>
@@ -114,11 +132,6 @@ export default {
       })
       if (res.code === '200' && res.data) {
         res.data.records.map((elem, index) => {
-          if (elem.count) {
-            elem.result = elem.count + '个'
-          } else {
-            elem.result = elem.minute + '分' + elem.second + '秒'
-          }
 
           if (index < 10) {
             if (elem.url) {
@@ -128,6 +141,51 @@ export default {
             }
           } else {
             elem.avatar = ''
+          }
+          if (elem.item1) {
+            elem.result1 = `${elem.score1}（${elem.item1}个）`
+          } else {
+            elem.result1 = 0
+          }
+          if (elem.item2) {
+            elem.result2 = `${elem.score2}（${elem.item2}个）`
+          } else {
+            elem.result2 = 0
+          }
+          if (elem.item3) {
+            const item3Arr = elem.item3.split('-')
+            elem.result3 = `${elem.score3}（${item3Arr[0]}″${item3Arr[1]}）`
+          } else {
+            elem.result3 = 0
+          }
+
+          if (elem.item4) {
+            const item4Arr = elem.item4.split('-')
+            elem.result4 = `${elem.score4}（${item4Arr[0]}″${item4Arr[1]}）`
+          } else {
+            elem.result4 = 0
+          }
+
+          if (elem.flag == 0) {
+            elem.resultStr = '不及格'
+          } else {
+            if (elem.score == 0) {
+              elem.resultStr = '无成绩'
+            } else if (elem.score > 0 && elem.score < 240) {
+              elem.resultStr = '不及格'
+            } else if (elem.score >= 240 && elem.score < 320) {
+              elem.resultStr = '及格'
+            } else if (elem.score >= 320 && elem.score < 360) {
+              elem.resultStr = '良好'
+            } else if (elem.score >= 360 && elem.score < 440) {
+              elem.resultStr = '优秀'
+            } else if (elem.score >= 440 && elem.score < 480) {
+              elem.resultStr = '特3级'
+            } else if (elem.score >= 480 && elem.score < 500) {
+              elem.resultStr = '特2级'
+            } else if (elem.score >= 500) {
+              elem.resultStr = '特1级'
+            }
           }
         })
         this.list = res.data.records;
@@ -181,7 +239,7 @@ export default {
 
     this.getActivity()
     this.getData();
-    this.getCateList();
+    // this.getCateList();
   },
 
 };
@@ -196,5 +254,6 @@ export default {
 }
 .title {
   text-align: center;
+  margin-bottom: 30px;
 }
 </style>

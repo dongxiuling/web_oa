@@ -4,7 +4,7 @@
       <el-form-item label="活动名称" prop="title">
         <el-input v-model="activity.title" style="width: 400px"></el-input>
       </el-form-item>
-      <el-form-item label="活动分类" prop="cateId">
+     <!--  <el-form-item label="活动分类" prop="cateId">
         <el-select
           style="width: 400px"
           v-model="activity.cateId"
@@ -17,7 +17,7 @@
             :value="item.id"
           ></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="活动时间" prop="time">
         <el-date-picker
           v-model="activity.time"
@@ -72,16 +72,16 @@ export default {
       cateData: [],
       id: this.$route.query.id,
       activity: {
-        cateId: '',
+        // cateId: '',
         title: '',
         content: '',
         time: ''
       },
       rules: {
         title: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
-        cateId: [
-          { required: true, message: "请选择活动分类", trigger: "change" }
-        ],
+        // cateId: [
+        //   { required: true, message: "请选择活动分类", trigger: "change" }
+        // ],
         content: [{ required: true, message: "请输入活动内容", trigger: "blur" }],
         time: [{ required: true, message: "请输入活动时间", trigger: "blur" }],
       }
@@ -161,7 +161,7 @@ export default {
     }
   },
   async mounted() {
-    this.selectCate()
+    // this.selectCate()
 
     const { id } = this.$route.params
     if (id) { // 修改

@@ -1,127 +1,228 @@
 <template>
-  <div class="app-container">
-    <el-form
-      ref="activity"
-      :model="activity"
-      :rules="rules"
-      label-width="120px"
-    >
-      <el-form-item label="活动名称:" prop="title">
-        <div>{{ activity.title }}</div>
-      </el-form-item>
-      <el-form-item label="活动分类:" prop="cateId">
-        <div>{{ activity.type }}</div>
-      </el-form-item>
-      <el-form-item label="活动时间:" prop="time">
-        <div>{{ activity.time }}</div>
-      </el-form-item>
-
-      <el-form-item label="活动内容:" prop="content">
-        <div>{{ activity.content }}</div>
-      </el-form-item>
-      <el-form-item label="备注:" prop="remark">
-        <div>{{ activity.remark }}</div>
-      </el-form-item>
-
-      <el-table :data="personList" style="width: 100%">
-        <el-table-column
-          align="center"
-          type="index"
-          label="序号"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="name"
-          label="姓名"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="deptName"
-          label="所属连队"
-        ></el-table-column>
-        <!-- <el-table-column
-          align="center"
-          prop="idCard"
-          width="180"
-          label="身份证号码"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="jobName"
-          label="部职别"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="jobTypeName"
-          label="身份"
-        ></el-table-column>
-        <el-table-column
-          align="center"
-          prop="remark1"
-          label="军衔"
-        ></el-table-column> -->
-        <el-table-column align="center" label="成绩录入" width="300">
-          <template slot-scope="scope">
-            <!-- <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-tickets"
-            @click="lookHandle(scope.row)"
-            >详情</el-button
-          > -->
-            <div v-if="activity.typeId == 1">
-              <el-form :inline="true">
-                <el-row type="flex" class="row" justify="space-between">
-                  <el-col :span="12">
-                    <el-form-item>
-                      <el-input
-                        placeholder="分钟数"
-                        v-model="personList[scope.$index].minute"
-                        type="number"
-                      >
-                        <template slot="append">分</template>
-                      </el-input>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
-                    <el-form-item>
-                      <el-input
-                        placeholder="秒数"
-                        v-model="personList[scope.$index].second"
-                        type="number"
-                      >
-                        <template slot="append">秒</template>
-                      </el-input>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </div>
-            <div v-else-if="activity.typeId == 2">
-              <el-input
-                placeholder="请输入个数"
-                v-model="personList[scope.$index].count"
-                type="number"
-              >
-                <template slot="append">个</template>
-              </el-input>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <el-form-item class="toolbar">
-        <el-button type="primary" @click="updateHandle('activity')"
-          >保存成绩</el-button
+  <el-main>
+    <div class="main-content">
+      <div class="app-container">
+        <el-form
+          ref="activity"
+          :model="activity"
+          :rules="rules"
+          label-width="120px"
         >
-        <el-button @click="resetForm('activity')">取消</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+          <el-card class="box-card">
+            <el-form-item label="活动名称:" prop="title">
+              <div>{{ activity.title }}</div>
+            </el-form-item>
+            <!-- <el-form-item label="活动分类:" prop="cateId">
+              <div>{{ activity.type }}</div>
+            </el-form-item> -->
+            <el-form-item label="活动时间:" prop="time">
+              <div>{{ activity.time }}</div>
+            </el-form-item>
+
+            <el-form-item label="活动内容:" prop="content">
+              <div>{{ activity.content }}</div>
+            </el-form-item>
+            <el-form-item label="备注:" prop="remark">
+              <div>{{ activity.remark }}</div>
+            </el-form-item>
+          </el-card>
+        </el-form>
+
+        <el-table
+          :data="personList"
+          style="width: 100%"
+          :row-style="{ height: '60px' }"
+          border
+        >
+          <el-table-column
+            align="center"
+            type="index"
+            label="序号"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="name"
+            label="姓名"
+            width="80"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="age"
+            label="年龄"
+            width="60"
+          ></el-table-column>
+           <el-table-column
+            align="center"
+            prop="height"
+            label="身高(m)"
+            width="70"
+          ></el-table-column>
+           <el-table-column
+            align="center"
+            prop="weight"
+            label="体重(kg)"
+            width="76"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="bmi"
+            label="BMI"
+            width="60"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="deptName"
+            label="所属连队"
+          ></el-table-column>
+
+          <el-table-column align="center" label="是否参加" width="160">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="personList[scope.$index].type"
+                active-text="参加"
+                inactive-text="不参加"
+                :active-value="0"
+                :inactive-value="1"
+                @change="
+                  handleSwitchChange(
+                    personList[scope.$index],
+                    personList[scope.$index].type
+                  )
+                "
+              >
+              </el-switch>
+            </template>
+          </el-table-column>
+
+          <el-table-column
+            align="center"
+            label="引体向上（女单杠曲臂悬垂）/ 俯卧撑"
+            width="160"
+          >
+            <template slot-scope="scope">
+              <div
+                v-if="
+                  personList[scope.$index] &&
+                  personList[scope.$index].resultShow
+                "
+              >
+                <el-input
+                  size="small"
+                  v-model="personList[scope.$index].item1"
+                  type="number"
+                >
+                  <template slot="append">个</template>
+                </el-input>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="仰卧起坐" width="160">
+            <template slot-scope="scope">
+              <div
+                v-if="
+                  personList[scope.$index] &&
+                  personList[scope.$index].resultShow
+                "
+              >
+                <el-input
+                  size="small"
+                  v-model="personList[scope.$index].item2"
+                  type="number"
+                >
+                  <template slot="append">个</template>
+                </el-input>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="30米×2蛇形跑" width="300">
+            <template slot-scope="scope">
+              <div
+                v-if="
+                  personList[scope.$index] &&
+                  personList[scope.$index].resultShow
+                "
+              >
+                <el-form :inline="true">
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item class="form-item">
+                        <el-input
+                          size="small"
+                          v-model="personList[scope.$index].minute1"
+                          type="number"
+                        >
+                          <template slot="append">秒″</template>
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item class="form-item">
+                        <el-input
+                          size="small"
+                          v-model="personList[scope.$index].second1"
+                          type="number"
+                        >
+                          <template slot="append">厘秒</template>
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" label="3000米跑" width="300">
+            <template slot-scope="scope">
+              <div
+                v-if="
+                  personList[scope.$index] &&
+                  personList[scope.$index].resultShow
+                "
+              >
+                <el-form :inline="true">
+                  <el-row>
+                    <el-col :span="12">
+                      <el-form-item class="form-item">
+                        <el-input
+                          size="small"
+                          v-model="personList[scope.$index].minute2"
+                          type="number"
+                        >
+                          <template slot="append">分′</template>
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-form-item class="form-item">
+                        <el-input
+                          size="small"
+                          v-model="personList[scope.$index].second2"
+                          type="number"
+                        >
+                          <template slot="append">秒″</template>
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                  </el-row>
+                </el-form>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+
+        <div class="toolbar">
+          <el-button type="primary" @click="updateHandle('activity')"
+            >保存成绩</el-button
+          >
+          <el-button @click="resetForm('activity')">取消</el-button>
+        </div>
+      </div>
+    </div>
+  </el-main>
 </template>
 
 <script>
-import { selectCate, saveActivity, getActivityById, selectDeptScore, selectPersonByDept, saveScore } from "@/api/activity.js";
+import { saveActivity, getActivityById, selectDeptScore, selectPersonByDept, saveScore } from "@/api/activity.js";
 import { selectPerson } from "@/api/insider.js";
 import { lastDept } from "@/api/system/dept";
 import { dateFormat } from "@/utils/format"
@@ -147,7 +248,7 @@ export default {
         time: [{ required: true, message: "请输入活动时间", trigger: "blur" }],
       },
       activityArr: [],
-      isUpdate: false
+      // isUpdate: false
     };
   },
   methods: {
@@ -185,7 +286,18 @@ export default {
       }
     },
     async updateHandle() {
+      this.personList.map(elem => {
+        if (elem.minute1 && elem.second1) {
+          elem.item3 = elem.minute1 + '-' + elem.second1
+        }
+        if (elem.minute2 && elem.second2) {
+          elem.item4 = elem.minute2 + '-' + elem.second2
+        }
+      })
+      // console.log(this.personList)
+
       const res = await saveScore(this.personList)
+      console.log(res)
       if (res && res.code === '200') {
         this.$message({
           message: '保存成功',
@@ -205,17 +317,15 @@ export default {
         this.file = res.data;
       });
     },
-    async selectCate() {
+    /* async selectCate() {
       const res = await selectCate()
-      // console.log(res);
       if (res.code == 200) {
         this.cateData = res.data.records
       }
-    },
+    }, */
     async getPersonList() {
       const res = await selectPersonByDept()
       const deptRes = await lastDept()
-      console.log(res);
       if (res.code === '200' && res.data) {
         res.data.map(item => {
           switch (item.jobType) {
@@ -242,64 +352,78 @@ export default {
           item.second = 0
           item.count = 0
           item.url = ''
-          if (!this.isUpdate) {
-            delete item.id
-          }
+          item.type = 0
+          item.resultShow = true
+          // if (!this.isUpdate) {
+          //   delete item.id
+          // }
         })
         this.personList = res.data
-        console.log(250);
-        console.log(this.personList);
       }
     },
+    handleSwitchChange(a, b) {
+      this.$set(a, 'resultShow', b == 1 ? false : true)
+    }
   },
   async mounted() {
-    await this.selectCate()
+    // await this.selectCate()
 
-    const { id, typeId } = this.$route.params
+    const { id } = this.$route.params
     if (id) { // 修改
       const res = await getActivityById(id)
       if (res && res.code === '200') {
-        this.cateData.map(item => {
+        /* this.cateData.map(item => {
           if (res.data.cateId == item.id) {
             res.data.type = item.cateName
           }
-        })
+        }) */
         res.data.time = res.data.startTime + ' 至 ' + res.data.endTime
         this.activity = res.data
       }
 
       const deptScore = await selectDeptScore({
         activityId: id,
-        typeId: typeId
       })
-      console.log(272);
-      console.log(deptScore);
       if (deptScore.code === '200' && deptScore.data && deptScore.data.records && deptScore.data.records.length > 0) {
-        this.isUpdate = true
+        // this.isUpdate = true
         deptScore.data.records.map(elem => {
-          if (elem.count) {
-            elem.result = elem.count
+          if (elem.item3) {
+            elem.minute1 = elem.item3.split('-')[0]
+            elem.second1 = elem.item3.split('-')[1]
+          }
+          if (elem.item4) {
+            elem.minute2 = elem.item4.split('-')[0]
+            elem.second2 = elem.item4.split('-')[1]
+          }
+
+          if (elem.type == 0) {
+            elem.resultShow = true
           } else {
-            elem.result = elem.minute + '分' + elem.second + '秒'
+            elem.resultShow = false
           }
         })
         this.personList = deptScore.data.records;
         this.total = deptScore.data.total;
         this.loading = false;
-      } else {
-        this.isUpdate = false
-        this.getPersonList()
       }
+      // else {
+      //   this.isUpdate = false
+      //   this.getPersonList()
+      // }
     }
   }
 };
 </script>
 <style scoped>
-.row {
-  align-items: center;
-}
 .toolbar {
   padding: 10px 10px 0 0;
   text-align: right;
+}
+.box-card {
+  margin-bottom: 20px;
+}
+.form-item {
+ margin-bottom: 0;
+ height: 32px;
 }
 </style>

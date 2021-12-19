@@ -103,6 +103,16 @@
         prop="remark1"
         label="军衔"
       ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="height"
+        label="身高（m）"
+      ></el-table-column>
+      <el-table-column
+        align="center"
+        prop="weight"
+        label="体重（kg）"
+      ></el-table-column>
       <el-table-column align="center" label="操作" width="220">
         <template slot-scope="scope">
           <!-- <el-button

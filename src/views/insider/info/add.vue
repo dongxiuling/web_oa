@@ -64,6 +64,27 @@
         ></el-input>
       </el-form-item>
 
+      <el-form-item label="身高" prop="height">
+        <el-input
+          v-model="info.height"
+          style="width: 300px"
+          placeholder="请输入身高"
+        >
+          <template slot="append">米（m）</template>
+        </el-input>
+        <span class="tip">例：身高为1米75，就输入1.75</span>
+      </el-form-item>
+
+      <el-form-item label="体重" prop="weight">
+        <el-input
+          v-model="info.weight"
+          style="width: 300px"
+          placeholder="请输入体重"
+        >
+          <template slot="append">公斤（kg）</template>
+        </el-input>
+      </el-form-item>
+
       <!-- <el-form-item label="备注" prop="remark1">
         <el-input
           type="textarea"
@@ -106,7 +127,9 @@ export default {
         idCard: '',
         jobName: '',
         sex: '男',
-        jobType: '1'
+        jobType: '1',
+        height: 0,
+        weight: 0
       },
       jobTypes: [
         {
@@ -130,6 +153,8 @@ export default {
         ],
         sex: [{ required: true, message: "请输入工作内容", trigger: "change" }],
         jobType: [{ required: true, message: "请输入身份", trigger: "change" }],
+        height: [{ required: true, message: "请输入身高", trigger: "blur" }],
+        weight: [{ required: true, message: "请输入体重", trigger: "blur" }],
       }
     };
   },
@@ -184,7 +209,7 @@ export default {
     const { id } = this.$route.params
     if (id) { // 修改
       const res = await getPersonById(id)
-        console.log(res)
+      console.log(res)
       if (res && res.code === '200') {
         this.info = res.data
       }
@@ -192,3 +217,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.tip {
+  color: #f00;
+}
+</style>

@@ -754,25 +754,25 @@ export const constantRoutes = [{
       title: '修改活动'
     }
   }, {
-    path: 'saveScore/:id/:typeId',
+    path: 'saveScore/:id',
     component: () => import('@/views/dragontiger/saveScore'),
     name: 'SaveScore',
     meta: {
       title: '成绩录入'
     }
   }, {
-    path: 'deptScore/:id/:typeId',
+    path: 'deptScore/:id',
     component: () => import('@/views/dragontiger/deptScore'),
     name: 'DeptScore',
     meta: {
       title: '连队排名'
     }
   }, {
-    path: 'totalScore/:id/:typeId',
+    path: 'totalScore/:id',
     component: () => import('@/views/dragontiger/totalScore'),
     name: 'TotalScore',
     meta: {
-      title: '活动排名'
+      title: '龙虎榜'
     }
   }]
 }, {
