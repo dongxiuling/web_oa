@@ -296,11 +296,11 @@ export default {
     async getActivity() {
       const res = await getActivityById(this.activityId)
       if (res && res.code === '200') {
-        this.cateData.map(item => {
+        /* this.cateData.map(item => {
           if (res.data.cateId == item.id) {
             res.data.type = item.cateName
           }
-        })
+        }) */
         res.data.time = res.data.startTime + ' 至 ' + res.data.endTime
         this.activity = res.data
       }

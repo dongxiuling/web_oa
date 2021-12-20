@@ -2,13 +2,41 @@
   <el-main>
     <div class="main-content">
       <div class="app-container">
-        <el-button
-          type="primary"
-          icon="el-icon-back"
-          size="mini"
-          @click="$router.go(-1)"
-          >返回</el-button
-        >
+        <el-form ref="queryForm" :inline="true">
+          <el-form-item label="性别">
+            <el-select
+              size="mini"
+              v-model="search.sex"
+              placeholder="请选择性别"
+            >
+              <el-option
+                v-for="item in sexData"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              size="mini"
+              @click="searchHandle()"
+              >搜索</el-button
+            >
+            <el-button icon="el-icon-refresh" size="mini" @click="reSetHandle()"
+              >重置</el-button
+            >
+            <el-button
+              type="primary"
+              icon="el-icon-back"
+              size="mini"
+              @click="$router.go(-1)"
+              >返回</el-button
+            >
+          </el-form-item>
+        </el-form>
         <h2 class="title" v-if="activity">{{ activity.title }}龙虎榜</h2>
         <!-- <el-form-item label="活动名称:" prop="title">
       <div>{{ activity.title }}</div>
@@ -111,9 +139,15 @@ export default {
       currentPage: 1,
       pageSize: 9999,
       cateData: [],
+      sexData: [{
+        id: '男',
+        name: '男'
+      }, {
+        id: '女',
+        name: '女'
+      }],
       search: {
-        title: "",
-        cateId: 0,
+        sex: '男',
       },
       total: 0, //分页总页数
       loading: true,
@@ -127,8 +161,9 @@ export default {
   methods: {
     async getData() {
       const res = await selectScore({
+        ...this.search,
         activityId: this.activityId,
-        typeId: this.typeId
+        // typeId: this.typeId
       })
       if (res.code === '200' && res.data) {
         res.data.records.map((elem, index) => {
@@ -153,15 +188,13 @@ export default {
             elem.result2 = 0
           }
           if (elem.item3) {
-            const item3Arr = elem.item3.split('-')
-            elem.result3 = `${elem.score3}（${item3Arr[0]}″${item3Arr[1]}）`
+            elem.result3 = `${elem.score3}（${elem.item3}）`
           } else {
             elem.result3 = 0
           }
 
           if (elem.item4) {
-            const item4Arr = elem.item4.split('-')
-            elem.result4 = `${elem.score4}（${item4Arr[0]}″${item4Arr[1]}）`
+            elem.result4 = `${elem.score4}（${elem.item4}）`
           } else {
             elem.result4 = 0
           }
@@ -207,8 +240,7 @@ export default {
       this.getData();
     },
     reSetHandle() {
-      this.search.title = "";
-      this.search.cateId = 0;
+      this.search.sex = "男";
       this.getData();
     },
     handleCurrentChange(value) {
