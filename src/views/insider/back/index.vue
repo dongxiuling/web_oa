@@ -28,6 +28,17 @@
           clearable
         />
       </el-form-item>
+      <el-form-item label="实际归队时间">
+        <el-date-picker
+          style="width: 390px"
+          v-model="search.time"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
+        ></el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -190,6 +201,7 @@ export default {
         userName: '',
         deptId: 0,
         status: 2, // 已通过、待销假
+        time: ''
       },
       deptList: [],
       statusList: [{
@@ -220,7 +232,16 @@ export default {
   methods: {
     async selectPerson(status = 2) {
       this.loading = true;
+      let start = null
+      let end = null
+      if (this.search.time) {
+        start = this.search.time[0]
+        end = this.search.time[1]
+      }
+
       const res = await selectPersonOut({
+        startTime: start,
+        endTime: end,
         ...this.search,
         current: this.currentPage,
         size: this.pageSize,
@@ -299,7 +320,8 @@ export default {
       this.search = {
         userName: '',
         deptId: 0,
-        status: 2
+        status: 2,
+        time: ''
       }
       this.selectPerson()
     },
